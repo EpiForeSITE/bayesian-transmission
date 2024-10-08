@@ -1,2 +1,5 @@
 # Ignoring all files, with the exception of source code C++ files
 # and the CMakeLists.txt file
+.Rproj.user
+*.Rproj
+.Rhistory
