@@ -1,4 +1,10 @@
 
+#pragma once
+
+#include <string.h>
+
+#include "Allocator.h"
+
 class Object : public Allocator
 {
 private:
@@ -38,7 +44,7 @@ public:
 	{
 		os << className() << "[" << index << "]";
 	}
-	
+
 	friend ostream &operator <<(ostream &os, Object *x);
 };
 

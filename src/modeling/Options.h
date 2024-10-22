@@ -39,7 +39,7 @@ public:
 		case 3: sscanf(argv[2],"%d",&clinical);
 		case 2: sscanf(argv[1],"%d",&nstates);
 		}
-	
+
 		switch(nstates)
 		{
 		case 2:
@@ -48,7 +48,7 @@ public:
 		default:
 			errors++;
 		}
-	
+
 		switch(clinical)
 		{
 		case 0:
@@ -57,7 +57,7 @@ public:
 		default:
 			errors++;
 		}
-	
+
 		switch(densityModel)
 		{
 		case 0:
@@ -67,23 +67,46 @@ public:
 		default:
 			errors++;
 		}
-	
+
 		if (seed <= 0)
 			seed = 1;
-		
+
 		if (nburn < 0)
 			nburn = 0;
-	
+
 		if (nsims < 0)
 			nsims = 1000;
-	
+
 		if (nmetro < 0)
 			nmetro = 10;
-	
+
 		if (allout < 0)
 			allout = 0;
-	
+
 		if (verbose < 0)
 			verbose = 0;
+	}
+	Options():nstates(0), clinical(0), densityModel(0), seed(0), nburn(0), nsims(0), nmetro(0), allout(0), verbose(0), errors(0) {}
+	Options(
+	    int nstates,
+	    int clinical,
+	    int densityModel,
+	    int seed,
+	    int nburn,
+	    int nsims,
+	    int nmetro,
+	    int allout,
+	    int verbose)
+	{
+		this->nstates = nstates;
+		this->clinical = clinical;
+		this->densityModel = densityModel;
+		this->seed = seed;
+		this->nburn = nburn;
+		this->nsims = nsims;
+		this->nmetro = nmetro;
+		this->allout = allout;
+		this->verbose = verbose;
+		errors = 0;
 	}
 };
