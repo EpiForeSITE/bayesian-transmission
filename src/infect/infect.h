@@ -12,7 +12,7 @@
 	#include <complex>
         using namespace std;
 
-	#include "util.h"
+    #include "../util/util.h"
 
 	namespace infect
 	{
@@ -26,7 +26,7 @@
 	// Classes that read and sort raw data.
 
 		#include "RawEvent.h"
-		#include "RawEventList.h" 
+		#include "RawEventList.h"
 
 	// Basic data classes.
 
@@ -41,7 +41,7 @@
 
 		#include "Model.h"
 
-	// SystemHistory is the manager class, HistoryLink and the EpisodeHistory 
+	// SystemHistory is the manager class, HistoryLink and the EpisodeHistory
 	// classes store and maintain linked lists of the history.
 	// State stores the current states of patients, units, facilities, or
 	// the system.

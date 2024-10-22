@@ -3,7 +3,7 @@ Title: Bayesian Transmission Models
 Version: 0.0.0.9000
 Authors@R: c(
     person("Andrew", "Redd", , "andrew.redd@hsc.utah.edu", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-6149-2438"))
+           comment = c(ORCID = "0000-0002-6149-2438")))
 Description: TBD
 License: MIT + file LICENSE
 Encoding: UTF-8

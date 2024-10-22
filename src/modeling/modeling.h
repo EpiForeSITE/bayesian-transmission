@@ -2,7 +2,7 @@
 #ifndef _MODELS_DEFINED
 
 	#define _MODELS_DEFINED
-	
+
 	#include <stdlib.h>
 	#include <limits>
 	#include <math.h>
@@ -12,8 +12,8 @@
 
         using namespace std;
 
-	#include "util.h"
-	#include "infect.h"
+    #include "../util/util.h"
+    #include "../infect/infect.h"
 
 	namespace models
 	{

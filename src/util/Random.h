@@ -1,4 +1,10 @@
 
+#pragma once
+#include "Object.h"
+#include <stdlib.h>
+#define srandom std::srand
+#define random std::rand
+
 class Random : public Object
 {
 private:
@@ -20,7 +26,7 @@ private:
 				if (runif() <= pow(x,a-1))
 					return x;
 			}
-		}	
+		}
 	}
 
 	double chengFeast(double a)
@@ -83,11 +89,11 @@ public:
 	{
 		return a * log(b) + (a-1) * log(x) - b * x - lgamma(a);
 	}
-	
+
 	inline double logdbeta(double x, double a, double b)
 	{
 		return (a-1) * log(x) + (b-1) * log(1-x) - lgamma(a) - lgamma(b) + lgamma(a+b);
-	
+
 	}
 
 	inline double logddirichlet(int n, double *p, double *x)
@@ -104,7 +110,7 @@ public:
 
 		return res + lgamma(tot);
 	}
-	
+
 	inline double logdnorm(double x, double m, double s)
 	{
 		return -0.5*log2pi - log(s) - 0.5 * (x-m)*(x-m)/s/s;
@@ -128,7 +134,7 @@ public:
 	{
 		return random() / (double) RAND_MAX;
 	}
-	
+
 	inline double runif(double a, double b)
 	{
 		return a + runif()*(b-a);
@@ -138,7 +144,7 @@ public:
 	{
 		return -log(runif());
 	}
-	
+
 	inline double rexp(double l)
 	{
 		return rexp()/l;
@@ -153,7 +159,7 @@ public:
 	{
 		double x = a;
 		double y = 0;
-		
+
 		for (int i=0; i<n; i++)
 		{
 			y = exp(log(x) + rnorm(0,sigma));
@@ -259,8 +265,8 @@ public:
 			if (U <= tot)
 				return i;
 		}
-		
+
 		return -1;
 	}
-		
+
 };
