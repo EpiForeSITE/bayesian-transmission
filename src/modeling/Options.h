@@ -112,6 +112,52 @@ public:
 		this->allout = allout;
 		this->verbose = verbose;
 		errors = 0;
+
+		switch(nstates)
+		{
+		case 2:
+		case 3:
+		    break;
+		default:
+		    errors++;
+		}
+
+		switch(clinical)
+		{
+		case 0:
+		case 1:
+		    break;
+		default:
+		    errors++;
+		}
+
+		switch(densityModel)
+		{
+		case 0:
+		case 1:
+		case 2:
+		    break;
+		default:
+		    errors++;
+		}
+
+		if (seed <= 0)
+		    seed = 1;
+
+		if (nburn < 0)
+		    nburn = 0;
+
+		if (nsims < 0)
+		    nsims = 1000;
+
+		if (nmetro < 0)
+		    nmetro = 10;
+
+		if (allout < 0)
+		    allout = 0;
+
+		if (verbose < 0)
+		    verbose = 0;
 	}
 };
 #endif // ALUN_MODELING_OPTIONS_H
