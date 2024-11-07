@@ -1,5 +1,10 @@
+// file infect/EventCoding.h:
+#ifndef ALUN_INFECT_EVENTCODING_H
+#define ALUN_INFECT_EVENTCODING_H
 
-class EventCoding 
+#include <string>
+
+class EventCoding
 {
 public:
 	// Make sure that this is larger than any of the event codes below.
@@ -11,24 +16,24 @@ public:
 
 		// Observed events.
 
-		admission 	 = 0,
-		negsurvtest 	 = 1,
-		possurvtest 	 = 2,
-		discharge 	 = 3,
-		negclintest	 = 4,
-		posclintest	 = 5,
+		admission 	= 0,
+		negsurvtest = 1,
+		possurvtest = 2,
+		discharge 	= 3,
+		negclintest	= 4,
+		posclintest	= 5,
 		abxdose		= 9,
 		abxon		= 10,
 		abxoff		= 11,
 
 		postest 	= 7,
-		negtest		= 8,
+		negtest     = 8,
 
 		// Inferred events.
 
-		admission0	 = 14,
-		admission1	 = 15,
-		admission2	 = 16,
+		admission0	= 14,
+		admission1	= 15,
+		admission2	= 16,
 
 		insitu 		 = 6,
 		insitu0		 = 17,
@@ -36,7 +41,7 @@ public:
 		insitu2		 = 19,
 
 		acquisition	 = 31,
-		progression 	 = 32,
+		progression  = 32,
 		clearance	 = 33,
 
 		// Marker events.
@@ -47,12 +52,12 @@ public:
 		error 		 = -999
 	};
 
-	static string eventString(int x)
+	static std::string eventString(int x)
 	{
 		return eventString((EventCode)x);
 	}
 
-	static string eventString(EventCode x)
+	static std::string eventString(EventCode x)
 	{
 		switch(x)
 		{
@@ -77,7 +82,7 @@ public:
 		case insitu1:		return "insitu1";
 		case insitu2:		return "insitu2";
 		case marker: 		return "marker";
-		case stop: 		return "stop";
+		case stop: 		    return "stop";
 		case abxdose: 		return "abxdose";
 		case abxon: 		return "abxon";
 		case abxoff: 		return "abxoff";
@@ -87,3 +92,5 @@ public:
 		return "CAN'T REACH THIS";
 	}
 };
+
+#endif // ALUN_INFECT_EVENTCODING_H

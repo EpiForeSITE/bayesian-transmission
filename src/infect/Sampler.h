@@ -1,3 +1,9 @@
+// infect/Sampler.h
+#ifndef ALUN_INFECT_SAMPLER_H
+#define ALUN_INFECT_SAMPLER_H
+
+#include "../util/util.h"
+#include "SystemHistory.h"
 
 class Sampler : public Object
 {
@@ -56,10 +62,10 @@ public:
 				EpisodeHistory *eh = (EpisodeHistory *) e->nextValue();
 				eh->unapply();
 			}
-	
+
                 	for (HistoryLink *l = hist->getSystemHead(); l != 0; l = l->sNext())
                 		l->setCopyApply();
-	
+
 			for (Map *e = hist->getEpisodes(); e->hasNext(); )
 			{
 				EpisodeHistory *eh = (EpisodeHistory *) e->nextValue();
@@ -70,3 +76,5 @@ public:
 		delete pos;
 	}
 };
+
+#endif // ALUN_INFECT_SAMPLER_H

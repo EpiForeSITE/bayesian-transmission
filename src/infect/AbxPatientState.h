@@ -1,7 +1,12 @@
+// infect/AbxPatientState.h
+#ifndef ALUN_INFECT_ABXPATIENTSTATE_H
+#define ALUN_INFECT_ABXPATIENTSTATE_H
+
+#include "PatientState.h"
 
 class AbxPatientState : public PatientState, public AbxCoding
 {
-protected: 
+protected:
 
 	int abc;
 	int ever;
@@ -42,7 +47,7 @@ public:
 	{
 		if (getOwner() != e->getPatient())
 			return;
-		
+
 		PatientState::apply(e);
 
 		switch(e->getType())
@@ -60,7 +65,7 @@ public:
 			break;
 		}
 
-		if (abc < 0) 
+		if (abc < 0)
 			abc = 0;
 
 		if (abc)
@@ -73,3 +78,4 @@ public:
 
 	}
 };
+#endif // ALUN_INFECT_ABXPATIENTSTATE_H

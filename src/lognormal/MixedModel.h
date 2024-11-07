@@ -1,3 +1,8 @@
+#ifndef ALUN_LOGNORMAL_MIXEDMODEL_H
+#define ALUN_LOGNORMAL_MIXEDMODEL_H
+
+#include "LogNormalModel.h"
+
 class MixedModel : public LogNormalModel
 {
 public:
@@ -11,11 +16,11 @@ public:
 		string sdump;
 		double p, q, r;
 		int up, uq, ur;
-		
+
 		int nstates = 0;
 		double abxd = 0.0;
 		double abxl = 0.0;
-		
+
 		is >> sdump >> nstates;
 
 		switch(nstates)
@@ -42,10 +47,10 @@ public:
 		model->setAbxDelay(abxd);
 		model->setAbxLife(abxl);
 
-	// In situ parameters. 
+	// In situ parameters.
 
 		InsituParams *isp = model->getInsituParams();
-		
+
 		is >> sdump >> p >> up;
 		is.getline(c,maxline);
 
@@ -69,7 +74,7 @@ public:
 		q = q/p;
 		p = 1-q-r;
 		up = ur;
-		
+
 		isp->set(p,q,r);
 		isp->setPriors(p*up,q*up,r*ur);
 		isp->setUpdate(up,uq,ur);
@@ -147,10 +152,10 @@ public:
 			is.getline(c,maxline);
 			is.getline(c,maxline);
 
-			ctsp->setRates(p,q,r);	
+			ctsp->setRates(p,q,r);
 			ctsp->setUpdateRates(up,uq,ur);
 		}
-		
+
 	// Out of unit infection parameters.
 
 		OutColParams *ocp = model->getOutColParams();
@@ -198,7 +203,7 @@ public:
 		icp->set(0,0,p,up,p,up,timsig);
 
 			// constant term: set at rough colonization rate eg 0.001;
-		is >> sdump >> p >> up; 
+		is >> sdump >> p >> up;
 		is.getline(c,maxline);
 		icp->set(0,1,p,up,p,up);
 
@@ -276,7 +281,7 @@ public:
 	// Abx parameters.
 
 		AbxParams *abxp = model->getAbxParams();
-	
+
 		is >> sdump >> p >> up;
 		is.getline(c,maxline);
 		if (nstates == 2)
@@ -312,3 +317,4 @@ public:
 		survtsp = new TestParams(nst);
 	}
 };
+#endif // ALUN_LOGNORMAL_MIXEDMODEL_H

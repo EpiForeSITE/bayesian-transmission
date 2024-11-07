@@ -1,5 +1,9 @@
+#ifndef ALUN_LOGNORMAL_LOGNORMALCP_H
+#define ALUN_LOGNORMAL_LOGNORMALCP_H
 
-class LogNormalICP : public InColParams 
+#include "../modeling/InColParams.h"
+
+class LogNormalICP : public InColParams
 {
 protected:
 
@@ -69,7 +73,7 @@ public:
 			privar[i] = cleanAlloc(n[i]);
 			doit[i] = cleanAllocInt(n[i]);
 			for (int j=0; j<n[i]; j++)
-				doit[i][j] = 1; 
+				doit[i][j] = 1;
 			sigmaprop[i] = cleanAlloc(n[i]);
 			for (int j=0; j<n[i]; j++)
 				sigmaprop[i][j] = 0.1;
@@ -98,7 +102,7 @@ public:
 	}
 
 // For models that have a time trend.
-	
+
 	void setTimeOrigin(double t)
 	{
 		tOrigin = t;
@@ -114,7 +118,7 @@ public:
 	virtual double logAcquisitionRate(double time, PatientState *p, LocationState *s) = 0;
 
 	virtual double logAcquisitionGap(double t0, double t1, LocationState *s) = 0;
-	
+
 	virtual double *acquisitionRates(double time, PatientState *p, LocationState *s) = 0;
 
 	virtual double logProgressionRate(double time, PatientState *p, LocationState *s) = 0;
@@ -131,7 +135,7 @@ public:
 	{
 		return exp(par[i][j]);
 	}
-	
+
 	virtual void set(int i, int j, double value, int update, double prival, double priorn, double sig = 0.1)
 	{
 		setWithLogTransform(i,j,value,update,prival,priorn,sig);
@@ -143,15 +147,15 @@ public:
 		//
 		// The prior is specified as having positive mean prival that was worth priorn observations.
 		//
-		// A Gamma(a,b) prior can be specified with these properties if 
-		//	a = prival*priorn 
+		// A Gamma(a,b) prior can be specified with these properties if
+		//	a = prival*priorn
 		//	b = priorn.
 		//
 		// If we transform the variable with a log transformation
 		// the mean and variance are
-		//	digamma(a) + log(b) 
-		//and 
-		// 	trigamma(a) 
+		//	digamma(a) + log(b)
+		//and
+		// 	trigamma(a)
 		//
 		// Assume that the transformed variable has a Gaussian distribution with this mean and variance.
 
@@ -170,15 +174,15 @@ public:
 		//
 		// The prior is specified as having mean prival, in (0,1), that was worth priorn observations.
 		//
-		// A Beta(a,b) prior can be specified with these properties if 
-		//	a = prival * priorn, 
+		// A Beta(a,b) prior can be specified with these properties if
+		//	a = prival * priorn,
 		//	b = priorn * (1 - prival)
 		//
 		// If we transform the variable with a logit transformation
 		// the mean and variance are
 		//	digamma(a) - digamma(b)
 		// 	trigamma(a) + trigamma(b)
-		// 
+		//
 		// Assume that the transformed variable has a Gaussian distribution with this mean and variance.
 
 		double prin = priorn > 1 ? priorn : 1;
@@ -227,7 +231,7 @@ public:
 		}
 
 		int t = 0;
-		
+
 		for (int i=0; i<ns; i++)
 		{
 			if (i == 1 && nstates != 3)
@@ -303,7 +307,7 @@ public:
 			Q[2][0] = eventRate(time,clearance,p,u);
 			Q[2][2] = -Q[2][0];
 		}
-	
+
 		return Q;
 	}
 
@@ -371,7 +375,7 @@ public:
 				for (int j=0; j<n[i]; j++)
 					if (doit[i][j])
 						oldlogpost += r->logdnorm(par[i][j],primean[i][j],privar[i][j]);
-	
+
 		for (m->init(); m->hasNext(); )
 		{
 			HistoryLink *h = (HistoryLink *) m->next();
@@ -390,7 +394,7 @@ public:
 						newlr[i][j] += r->rnorm(0,sigmaprop[i][j]);
 						par[i][j] = newlr[i][j];
 						newlogpost = 0;
-		
+
 						if (!max)
 						{
 							for (int ii=0; ii<ns; ii++)
@@ -400,15 +404,15 @@ public:
 										newlogpost += r->logdnorm(par[ii][jj],primean[ii][jj],privar[ii][jj]);
 								}
 						}
-		
+
 						for (m->init(); m->hasNext(); )
 						{
 							HistoryLink *h = (HistoryLink *) m->next();
 							HistoryLink *g = (HistoryLink *) m->get(h);
 							newlogpost += logProb(h) + logProbGap(g,h);
 						}
-		
-	
+
+
 						if ( (max ? 0 : log(r->runif()) ) <= newlogpost - oldlogpost)
 						{
 							oldlogpost = newlogpost;
@@ -427,3 +431,4 @@ public:
 		delete [] newlr;
 	}
 };
+#endif // ALUN_LOGNORMAL_LOGNORMALCP_H

@@ -1,3 +1,8 @@
+// infect/Unit.h
+#ifndef ALUN_INFECT_UNIT_H
+#define ALUN_INFECT_UNIT_H
+
+#include "../util/util.h"
 
 class Unit : public Object
 {
@@ -13,9 +18,9 @@ public:
 		f = fac;
 	}
 
-	inline int getId() 
-	{	
-		return number; 
+	inline int getId()
+	{
+		return number;
 	}
 
 	inline string getName()
@@ -30,3 +35,5 @@ public:
         	os << f << ":" << number;
 	}
 };
+
+#endif // ALUN_INFECT_UNIT_H

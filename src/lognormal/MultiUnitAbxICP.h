@@ -1,7 +1,11 @@
+#ifndef ALUN_LOGNORMAL_MULTIUNITABXICP_H
+#define ALUN_LOGNORMAL_MULTIUNITABXICP_H
+
+#include "LogNormalAbxICP.h"
 
 class MultiUnitAbxICP: public LogNormalAbxICP
 {
-private: 
+private:
 
 	virtual double acqRate(int unit, int onabx, double ncolabx, double ncol, double tot)
 	{
@@ -23,7 +27,7 @@ private:
 
 public:
 
-	MultiUnitAbxICP(List *u, int nst, int isDensity, int nmet) : LogNormalAbxICP(nst,isDensity,nmet,7+u->size()) 
+	MultiUnitAbxICP(List *u, int nst, int isDensity, int nmet) : LogNormalAbxICP(nst,isDensity,nmet,7+u->size())
 	{
                 setNormal(0,0,0,0,0,1,0.001);
                 set(0,1,0.001,1,0,1);
@@ -39,13 +43,13 @@ public:
 			setNormal(0,2,0,0,0,1);
 			setNormal(0,3,1,0,0,1);
 			break;
-		
+
 		case 2: // Constant.
 			setNormal(0,2,0,0,0,1);
 			setNormal(0,3,0,0,0,1);
 			break;
 		}
-	
+
 		setNormal(0,4,0,0,0,1);
 		setNormal(0,5,0,0,0,1);
 		setNormal(0,6,0,0,0,1);
@@ -127,3 +131,4 @@ public:
                 return P;
 	}
 };
+#endif // ALUN_LOGNORMAL_MULTIUNITABXICP_H

@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_TESTPARAMSABX_H
+#define ALUN_MODELING_TESTPARAMSABX_H
+
+#include "TestParams.h"
 
 class TestParamsAbx : public TestParams //public Parameters
 {
@@ -34,7 +38,7 @@ public:
 		counts = cleanAlloc(l,m,n);
 		priors = cleanAlloc(l,m,n);
 		doit = cleanAllocInt(l,m);
-		
+
 		set(0,0,0,0.80);
 		set(1,0,0,0.80);
 		setUpdate(0,0,0,1);
@@ -122,7 +126,7 @@ public:
 
 	inline virtual void update(Random *r, int max)
 	{
-		double **newpos = cleanAlloc(l,m); 
+		double **newpos = cleanAlloc(l,m);
 
 		for (int i=0; i<l; i++)
 			for (int j=0; j<m; j++)
@@ -137,7 +141,7 @@ public:
 				else
 					newpos[i][j] = probs[i][j][1];
 			}
-				
+
 		set(0,newpos[0][0],newpos[1][0],newpos[2][0]);
 		set(1,newpos[0][1],newpos[1][1],newpos[2][1]);
 
@@ -197,7 +201,7 @@ public:
 			res[4] = "ATest.P(+|lat+)";
 			res[5] = "ATest.P(+|col+)";
 		}
-	
+
 		if (nstates == 2)
 		{
 			res[0] = "ATest.P(+|unc-)";
@@ -218,7 +222,7 @@ public:
 		if (nstates == 3)
 		{
 			sprintf(buffer,"%12.10f\t",probs[1][0][1]);
-			os << buffer; 
+			os << buffer;
 		}
 		sprintf(buffer,"%12.10f",probs[2][0][1]);
 		os << buffer;
@@ -230,7 +234,7 @@ public:
 			if (nstates == 3)
 			{
 				sprintf(buffer,"%12.10f\t",probs[1][1][1]);
-				os << buffer; 
+				os << buffer;
 			}
 			sprintf(buffer,"%12.10f",probs[2][1][1]);
 			os << buffer;
@@ -239,3 +243,4 @@ public:
 		delete [] buffer;
 	}
 };
+#endif //ALUN_MODELING_TESTPARAMSABX_H

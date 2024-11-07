@@ -1,4 +1,8 @@
+// infect/UnitEpisodeHistory.h
+#ifndef ALUN_INFECT_UNITEPISODEHISTORY_H
+#define ALUN_INFECT_UNITEPISODEHISTORY_H
 
+#include "EpisodeHistory.h"
 
 class UnitEpisodeHistory : public EpisodeHistory
 {
@@ -117,3 +121,5 @@ public:
 	{
 	}
 };
+
+#endif // ALUN_INFECT_UNITEPISODEHISTORY_H

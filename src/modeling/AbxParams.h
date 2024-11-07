@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_ABXPARAMS_H
+#define ALUN_MODELING_ABXPARAMS_H
+
+#include "Parameters.h"
 
 class AbxParams : public Parameters
 {
@@ -14,7 +18,7 @@ private:
 
 public:
 
-	AbxParams(int k) 
+	AbxParams(int k)
 	{
 		nstates = k;
 		n = 3;
@@ -78,7 +82,7 @@ public:
 		AbxLocationState *s = (AbxLocationState *) h->uPrev()->getUState();
 		return - (h->getEvent()->getTime() - g->getEvent()->getTime()) *
 			(
-				s->getNoAbxSusceptible() * rates[0] + 
+				s->getNoAbxSusceptible() * rates[0] +
 				s->getNoAbxLatent() * rates[1] +
 				s->getNoAbxColonized() * rates[2]
 			);
@@ -146,7 +150,7 @@ public:
 		double na = pna > 1 ? pna : 1;
 		double nb = pnb > 1 ? pnb : 1;
 		double nc = pnc > 1 ? pnc : 1;
-		
+
 		priorshape[0] = va*na;
 		priorrate[0] = na;
 		priorshape[1] = vb*nb;
@@ -170,21 +174,21 @@ public:
 	virtual string *paramNames()
 	{
 		string *res = new string[nstates];
-		
+
 		if (nstates == 3)
 		{
 			res[0] = "Abx.rateUnc";
 			res[1] = "Abx.rateLat";
 			res[2] = "Abx.rateCol";
 		}
-	
+
 		if (nstates == 2)
 		{
 			res[0] = "Abx.rateUnc";
 			res[1] = "Abx.rateCol";
 		}
 
-		return res;	
+		return res;
 	}
 
 	virtual void write (ostream &os)
@@ -202,3 +206,4 @@ public:
 		delete[] buffer;
 	}
 };
+#endif // ALUN_MODELING_ABXPARAMS_H

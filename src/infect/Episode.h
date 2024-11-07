@@ -1,3 +1,9 @@
+// infect/Episode.h
+#ifndef ALUN_INFECT_EPISODE_H
+#define ALUN_INFECT_EPISODE_H
+
+#include "../util/util.h"
+#include "Event.h"
 
 class Episode : public Object
 {
@@ -28,36 +34,37 @@ public:
 		os << d;
 	}
 
-	inline void setAdmission(Event *e) 
-	{ 
-		a = e; 
-		s->prepend(e); 
+	inline void setAdmission(Event *e)
+	{
+		a = e;
+		s->prepend(e);
 	}
 
-	inline Event *getAdmission() 
-	{ 
-		return a; 
+	inline Event *getAdmission()
+	{
+		return a;
 	}
 
-	inline void setDischarge(Event *e) 
-	{ 
-		d = e; 
-		s->append(e); 
+	inline void setDischarge(Event *e)
+	{
+		d = e;
+		s->append(e);
 	}
 
-	inline Event *getDischarge() 
-	{ 
-		return d; 
+	inline Event *getDischarge()
+	{
+		return d;
 	}
 
-	inline void addEvent(Event *e) 
-	{ 
-		s->append(e); 
+	inline void addEvent(Event *e)
+	{
+		s->append(e);
 	}
 
-	inline SortedList *getEvents() 
-	{ 
-		s->init(); 
-		return s; 
+	inline SortedList *getEvents()
+	{
+		s->init();
+		return s;
 	}
 };
+#endif // ALUN_INFECT_EPISODE_H

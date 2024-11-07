@@ -1,3 +1,10 @@
+// infect/SystemHistory.h
+#ifndef ALUN_INFECT_SYSTEMHISTORY_H
+#define ALUN_INFECT_SYSTEMHISTORY_H
+
+#include "../util/util.h"
+#include "EventCoding.h"
+#include "HistoryLink.h"
 
 class SystemHistory: public Object, public EventCoding
 {
@@ -62,7 +69,7 @@ private:
 		case stop:
 		case marker:
 			return 1;
-			
+
 		default:
 			return 0;
 		}
@@ -90,7 +97,7 @@ public:
 			}
 			delete ep2ephist;
 		}
-	
+
 		for (pheads->init(); pheads->hasNext(); )
 		{
 			for (HistoryLink *l = (HistoryLink *)pheads->nextValue(); l != 0; )
@@ -116,7 +123,7 @@ public:
 		mylinks = new List();
 
 		ep2ephist = 0;
-		
+
 		ep2adm = new Map();
 		adm2ep = new Map();
 		ep2dis = new Map();
@@ -128,15 +135,15 @@ public:
 
 		fheads = new Map();
 
-		shead = makeHistoryLink(m,0,0,s->startTime(),0,start); 
+		shead = makeHistoryLink(m,0,0,s->startTime(),0,start);
 		HistoryLink *stail = makeHistoryLink(m,0,0,s->endTime(),0,stop);
 		shead->insertBeforeS(stail);
-		
+
 		for (IntMap *facs = s->getFacilities(); facs->hasNext(); )
 		{
 			Facility *f = (Facility *) facs->nextValue();
 
-			HistoryLink *fhead = makeHistoryLink(m,f,0,s->startTime(),0,start); 
+			HistoryLink *fhead = makeHistoryLink(m,f,0,s->startTime(),0,start);
 			fheads->put(f,fhead);
 			HistoryLink *ftail = makeHistoryLink(m,f,0,s->endTime(),0,stop);
 
@@ -144,12 +151,12 @@ public:
 
 			ftail->insertBeforeS(stail);
 			fhead->insertBeforeS(shead->sNext());
-	
+
 			tails->put(f,ftail);
-	
+
 		// Make map of units to list heads and tails.
 		// Initialize to contain just links to start and stop events.
-	
+
 			for (IntMap *i = f->getUnits(); i->hasNext(); )
 			{
 				Unit *u = (Unit *) i->nextValue();
@@ -167,7 +174,7 @@ public:
 				utail->insertBeforeS(ftail);
 				uhead->insertBeforeS(fhead->sNext());
 			}
-	
+
 		}
 
 		HistoryLink **hx = new HistoryLink*[s->getPatients()->size()];
@@ -190,7 +197,7 @@ public:
 					Event *e = (Event *) t->next();
 
 					HistoryLink *x = makeHistoryLink(m,e);
-					
+
 					if (prev == 0)
 					{
 						pheads->put(patient,x);
@@ -238,7 +245,7 @@ public:
 			hx[i]->insertBeforeU((HistoryLink *)tails->get(hx[i]->getEvent()->getUnit()));
 
 			hx[i] = hx[i]->pNext();
-			
+
 			if (hx[i] == 0)
 			{
 				i++;
@@ -262,7 +269,7 @@ public:
 		}
 
 		delete [] hx;
-		delete tails; 
+		delete tails;
 
 	// Filter events model then propagate events.
 
@@ -313,27 +320,27 @@ public:
 		return pheads;
 	}
 
-	inline Map *getUnitHeads() 
-	{ 
-		uheads->init(); 
-		return uheads; 
-	} 
+	inline Map *getUnitHeads()
+	{
+		uheads->init();
+		return uheads;
+	}
 
-	inline Map *getFacilityHeads() 
-	{ 
-		fheads->init(); 
-		return fheads; 
-	} 
+	inline Map *getFacilityHeads()
+	{
+		fheads->init();
+		return fheads;
+	}
 
-	inline HistoryLink *getSystemHead() 
-	{ 
-		return shead; 
-	} 
+	inline HistoryLink *getSystemHead()
+	{
+		return shead;
+	}
 
-	inline Map *getEpisodes() 
-	{ 
-		ep2ephist->init(); 
-		return ep2ephist; 
+	inline Map *getEpisodes()
+	{
+		ep2ephist->init();
+		return ep2ephist;
 	}
 
 	inline Map *getAdmissions()
@@ -464,7 +471,7 @@ public:
 			}
 			break;
 
-		case 0: // By system, observable events only. 
+		case 0: // By system, observable events only.
 		default:
 			for (HistoryLink *l = shead; l != 0; l = l->sNext())
 				if (l->getEvent()->isObservable())
@@ -473,3 +480,5 @@ public:
 		}
 	}
 };
+
+#endif // ALUN_INFECT_SYSTEMHISTORY_H

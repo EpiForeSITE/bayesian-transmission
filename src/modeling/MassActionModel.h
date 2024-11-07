@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_MASSACTIONMODEL_H
+#define ALUN_MODELING_MASSACTIONMODEL_H
+
+#include "BasicModel.h"
 
 class MassActionModel : public BasicModel
 {
@@ -22,3 +26,4 @@ public:
 		delete icp;
 	}
 };
+#endif // ALUN_MODELING_MASSACTIONMODEL_H

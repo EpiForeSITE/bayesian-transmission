@@ -1,3 +1,8 @@
+// infect/RawEventList.h
+#ifndef ALUN_INFECT_RAWEVENTLIST_H
+#define ALUN_INFECT_RAWEVENTLIST_H
+
+#include "RawEvent.h"
 
 class RawEventList : public SortedList
 {
@@ -27,15 +32,15 @@ public:
 				err << "::\t" << c << "\n";
 				continue;
 			}
-			
+
 			append(new RawEvent(facility,unit,time,patient,type));
 		}
-		
+
 		init();
 
 		delete [] c;
 	}
-	
+
 	~RawEventList()
 	{
 		for (init(); hasNext(); )
@@ -94,3 +99,5 @@ public:
 };
 
 int RawEventList::maxline = 1000;
+
+#endif // ALUN_INFECT_RAWEVENTLIST_H

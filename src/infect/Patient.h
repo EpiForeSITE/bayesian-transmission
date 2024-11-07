@@ -1,3 +1,8 @@
+// infect/Patient.h
+#ifndef ALUN_INFECT_PATIENT_H
+#define ALUN_INFECT_PATIENT_H
+
+#include "../util/util.h"
 
 class Patient : public Object
 {
@@ -15,13 +20,15 @@ public:
 	{
 	}
 
-	inline int getId() 
-	{ 
-		return name; 
-	} 
+	inline int getId()
+	{
+		return name;
+	}
 
 	void write(ostream &os)
 	{
         	os << name;
 	}
 };
+
+#endif // ALUN_INFECT_PATIENT_H

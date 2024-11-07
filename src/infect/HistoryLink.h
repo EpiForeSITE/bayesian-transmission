@@ -1,3 +1,8 @@
+// infect/HistoryLink.h
+#ifndef ALUN_INFECT_HISTORYLINK_H
+#define ALUN_INFECT_HISTORYLINK_H
+
+#include "LocationState.h"
 
 class HistoryLink : public Object
 {
@@ -10,11 +15,11 @@ private:
 	// Pointers to unit's adjacent links.
 	HistoryLink *uprev;
 	HistoryLink *unext;
-	
+
 	// Pointers to facility's adjacent links.
 	HistoryLink *fprev;
 	HistoryLink *fnext;
-	
+
 	// Pointers to whole system's adjacent links.
 	HistoryLink *sprev;
 	HistoryLink *snext;
@@ -43,7 +48,7 @@ public:
 	HistoryLink(Event *event, int l = 1)
 	{
 		e = event;
-	
+
 		setStates(0,0,0,0);
 
 		pprev = 0;
@@ -64,7 +69,7 @@ public:
 	HistoryLink(Event *event, LocationState *s, LocationState *f, LocationState *u, PatientState *p, int l = 1)
 	{
 		e = event;
-	
+
 		setStates(s,f,u,p);
 
 		pprev = 0;
@@ -254,7 +259,7 @@ public:
 		os << ustate;
 		os << "\t::\t";
 		os << pstate;
-		
+
 	}
 
 	void write(ostream &os)
@@ -264,114 +269,115 @@ public:
 
 // Trivial accessors.
 
-	inline void setLinked(int i) 
-	{ 
-		linked = i; 
+	inline void setLinked(int i)
+	{
+		linked = i;
 	}
 
-	inline int isLinked() 
-	{ 
-		return linked; 
+	inline int isLinked()
+	{
+		return linked;
 	}
 
-	inline void setHidden(int i) 
-	{ 
-		hidden = i; 
+	inline void setHidden(int i)
+	{
+		hidden = i;
 	}
 
-	inline int isHidden() 
-	{ 
-		return hidden; 
+	inline int isHidden()
+	{
+		return hidden;
 	}
 
-	inline HistoryLink *hPrev() 
-	{ 
-		return hprev; 
-	} 
-
-	inline HistoryLink *hNext() 
-	{ 
-		return hnext; 
+	inline HistoryLink *hPrev()
+	{
+		return hprev;
 	}
 
-	inline void setHPrev(HistoryLink *l) 
-	{ 
+	inline HistoryLink *hNext()
+	{
+		return hnext;
+	}
+
+	inline void setHPrev(HistoryLink *l)
+	{
 		hprev = l;
 	}
 
-	inline void setHNext(HistoryLink *l) 
-	{ 
-		hnext = l; 
+	inline void setHNext(HistoryLink *l)
+	{
+		hnext = l;
 	}
 
-	inline Event *getEvent() 
-	{ 
-		return e; 
-	} 
+	inline Event *getEvent()
+	{
+		return e;
+	}
 
 	inline void clearEvent()
 	{
 		e = 0;
 	}
 
-	inline HistoryLink *pPrev() 
-	{ 
-		return pprev; 
-	} 
-
-	inline HistoryLink *pNext() 
-	{ 
-		return pnext; 
+	inline HistoryLink *pPrev()
+	{
+		return pprev;
 	}
 
-	inline HistoryLink *uPrev() 
-	{ 
-		return uprev; 
-	} 
-
-	inline HistoryLink *uNext() 
-	{ 
-		return unext; 
+	inline HistoryLink *pNext()
+	{
+		return pnext;
 	}
 
-	inline HistoryLink *fPrev() 
-	{ 
-		return fprev; 
-	} 
-
-	inline HistoryLink *fNext() 
-	{ 
-		return fnext; 
+	inline HistoryLink *uPrev()
+	{
+		return uprev;
 	}
 
-	inline HistoryLink *sPrev() 
-	{ 
-		return sprev; 
-	} 
-
-	inline HistoryLink *sNext() 
-	{ 
-		return snext; 
+	inline HistoryLink *uNext()
+	{
+		return unext;
 	}
 
-	inline PatientState *getPState() 
-	{ 
+	inline HistoryLink *fPrev()
+	{
+		return fprev;
+	}
+
+	inline HistoryLink *fNext()
+	{
+		return fnext;
+	}
+
+	inline HistoryLink *sPrev()
+	{
+		return sprev;
+	}
+
+	inline HistoryLink *sNext()
+	{
+		return snext;
+	}
+
+	inline PatientState *getPState()
+	{
 		return pstate;
 	}
 
-	inline LocationState *getUState() 
-	{ 
-		return ustate; 
+	inline LocationState *getUState()
+	{
+		return ustate;
 	}
 
-	inline LocationState *getFState() 
-	{ 
-		return fstate; 
+	inline LocationState *getFState()
+	{
+		return fstate;
 	}
 
-	inline LocationState *getSState() 
-	{ 
-		return sstate; 
+	inline LocationState *getSState()
+	{
+		return sstate;
 	}
 };
 
+#endif // ALUN_INFECT_HISTORYLINK_H

@@ -1,7 +1,14 @@
+// infect/AbxLocationState.h
+#ifndef ALUN_INFECT_ABXLOCATIONSTATE_H
+#define ALUN_INFECT_ABXLOCATIONSTATE_H
+
+#include "../util/util.h"
+#include "AbxCoding.h"
+#include "LocationState.h"
 
 class AbxLocationState : public LocationState, AbxCoding
 {
-protected: 
+protected:
 
 	int abxinf;
 	int abxlat;
@@ -30,8 +37,8 @@ public:
 		delete ever;
 	}
 
-	inline void clear() 
-	{ 
+	inline void clear()
+	{
 		LocationState::clear();
 		abx->clear();
 		abxinf = 0;
@@ -39,7 +46,7 @@ public:
 		ever->clear();
 		everinf = 0;
 		everlat = 0;
-	} 
+	}
 
 	virtual void copy(State *s)
 	{
@@ -182,8 +189,8 @@ public:
 		Patient *p = e->getPatient();
 
 		// sysabx is a single system wide set of patient on abx.
-		// This will only work properly when initalizing the 
-		// system when the list of events is run through in 
+		// This will only work properly when initalizing the
+		// system when the list of events is run through in
 		// time order.
 		// The events here that depend on sysabx cannot
 		// be applied or unapplied in the MCMC process.
@@ -224,7 +231,7 @@ public:
 		default:
 			break;
 		}
-			
+
 		if (ever->got(p))
 		{
 			if (n == 2)
@@ -237,11 +244,11 @@ public:
 				case clearance:
 					everinf--;
 					break;
-				default: 
+				default:
 					break;
 				}
 			}
-	
+
 			if (n == 3)
 			{
 				switch(e->getType())
@@ -274,11 +281,11 @@ public:
 				case clearance:
 					abxinf--;
 					break;
-				default: 
+				default:
 					break;
 				}
 			}
-	
+
 			if (n == 3)
 			{
 				switch(e->getType())
@@ -323,7 +330,7 @@ public:
 					break;
 				}
 			}
-	
+
 			if (n == 3)
 			{
 				switch(e->getType())
@@ -360,7 +367,7 @@ public:
 					break;
 				}
 			}
-	
+
 			if (n == 3)
 			{
 				switch(e->getType())
@@ -382,3 +389,5 @@ public:
 		}
 	}
 };
+#endif // ALUN_INFECT_ABXLOCATIONSTATE_H
+

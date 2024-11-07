@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_OPTIONS_H
+#define ALUN_MODELING_OPTIONS_H
+
+#include "../infect/infect.h"
 
 class Options : public Object
 {
@@ -110,3 +114,4 @@ public:
 		errors = 0;
 	}
 };
+#endif // ALUN_MODELING_OPTIONS_H

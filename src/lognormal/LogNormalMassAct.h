@@ -1,3 +1,7 @@
+#ifndef ALUN_LOGNORMAL_LOGNORMALMASSACT_H
+#define ALUN_LOGNORMAL_LOGNORMALMASSACT_H
+
+#include "LogNormalICP.h"
 
 /*
  Use the LogNormalICP setup to mimic MassActionICP.
@@ -5,7 +9,7 @@
 
 class LogNormalMassAct: public LogNormalICP
 {
-private: 
+private:
 
 	// value 0 == frequency dependent; 1 == density dependent; 2 == constant;
 	int isDensity;
@@ -21,7 +25,7 @@ private:
 
 public:
 
-	LogNormalMassAct(int k, int isDen, int nmet=10) : LogNormalICP(k,3,1,1,nmet) 
+	LogNormalMassAct(int k, int isDen, int nmet=10) : LogNormalICP(k,3,1,1,nmet)
 	{
 		isDensity = isDen;
 
@@ -109,3 +113,4 @@ public:
                 return P;
 	}
 };
+#endif // ALUN_LOGNORMAL_LOGNORMALMASSACT_H

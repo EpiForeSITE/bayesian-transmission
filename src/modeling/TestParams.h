@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_TESTPARAMS_H
+#define ALUN_MODELING_TESTPARAMS_H
+
+#include "Parameters.h"
 
 class TestParams : public Parameters
 {
@@ -16,7 +20,7 @@ protected:
 
 public:
 
-	TestParams(int nst) 
+	TestParams(int nst)
 	{
 		nstates = nst;
 		n = 3;
@@ -27,7 +31,7 @@ public:
 		counts = cleanAlloc(n,m);
 		priors = cleanAlloc(n,m);
 		doit = cleanAllocInt(n);
-		
+
 		set(0,0,0.80);
 		setUpdate(0,0,1);
 		setPriors(1,1,1,1,1,1);
@@ -187,7 +191,7 @@ public:
 		}
 
 		return res;
-	}	
+	}
 
 	virtual void write (ostream &os)
 	{
@@ -197,10 +201,11 @@ public:
 		if (nstates == 3)
 		{
 			sprintf(buffer,"%12.10f\t",probs[1][1]);
-			os << buffer; 
+			os << buffer;
 		}
 		sprintf(buffer,"%12.10f",probs[2][1]);
 		os << buffer;
 		delete [] buffer;
 	}
 };
+#endif // ALUN_MODELING_TESTPARAMS_H

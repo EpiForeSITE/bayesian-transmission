@@ -1,3 +1,10 @@
+// infect/Event.h
+#ifndef ALUN_INFECT_EVENT_H
+#define ALUN_INFECT_EVENT_H
+
+#include "Facility.h"
+#include "Patient.h"
+#include "EventCoding.h"
 
 class Event : public Object, public EventCoding
 {
@@ -20,9 +27,9 @@ public:
 		type = tp;
 	}
 
-	inline double getTime() 
-	{ 
-		return time; 
+	inline double getTime()
+	{
+		return time;
 	}
 
 	inline void setTime(double t)
@@ -30,29 +37,29 @@ public:
 		time = t;
 	}
 
-	inline Facility *getFacility() 
-	{ 
-		return fac; 
+	inline Facility *getFacility()
+	{
+		return fac;
 	}
 
-	inline Unit *getUnit() 
-	{ 
-		return unit; 
+	inline Unit *getUnit()
+	{
+		return unit;
 	}
 
-	inline Patient *getPatient() 
-	{ 
-		return pat; 
+	inline Patient *getPatient()
+	{
+		return pat;
 	}
 
-	inline EventCode getType() 
-	{ 
-		return type; 
+	inline EventCode getType()
+	{
+		return type;
 	}
 
-	inline void setType(EventCode c) 
-	{ 
-		type = c; 
+	inline void setType(EventCode c)
+	{
+		type = c;
 	}
 
 	inline bool isTest()
@@ -61,7 +68,7 @@ public:
 		{
 		case postest:
 		case negtest:
-		case negsurvtest: 	
+		case negsurvtest:
 		case possurvtest:
 		case negclintest:
 		case posclintest:
@@ -109,7 +116,7 @@ public:
 			return 0;
 		}
 	}
-	
+
 	inline bool isInsitu()
 	{
 		switch(type)
@@ -137,7 +144,7 @@ public:
 		case admission1:
 		case admission2:
 		case discharge:
-		case negsurvtest: 	
+		case negsurvtest:
 		case possurvtest:
 		case negclintest:
 		case posclintest:
@@ -216,3 +223,5 @@ public:
 		os.unsetf(ios::fixed | ios::scientific);
 	}
 };
+
+#endif // ALUN_INFECT_EVENT_H

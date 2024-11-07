@@ -1,8 +1,12 @@
+#ifndef ALUN_MODELING_INCOLPARAMS_H
+#define ALUN_MODELING_INCOLPARAMS_H
 
-class InColParams : public Parameters 
+#include "Parameters.h"
+
+class InColParams : public Parameters
 {
 protected:
-	
+
 	int nstates;
 
 public:
@@ -18,3 +22,4 @@ public:
 
 	virtual double **rateMatrix(double time, PatientState *p, LocationState *u) = 0;
 };
+#endif //ALUN_MODELING_INCOLPARAMS_H

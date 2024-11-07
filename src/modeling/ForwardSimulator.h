@@ -1,3 +1,8 @@
+#ifndef ALUN_MODELING_FORWARD_SIMULATOR_H
+#define ALUN_MODELING_FORWARD_SIMULATOR_H
+
+#include "../infect/infect.h"
+#include "UnitLinkedModel.h"
 
 class ForwardSimulator : public Object, EventCoding, InfectionCoding
 {
@@ -43,7 +48,7 @@ public:
 			case negclintest:
 				randTestResult(mod,l,rand);
 				break;
-	
+
 			default:
 				break;
 			}
@@ -64,7 +69,7 @@ public:
 
 				if (pl == 0)
 					cerr << "SHOULDN'T GET HERE IN SIMULATE\n";
-				
+
 				Unit *u = (Unit *) pl->getEvent()->getUnit();
 				HistoryLink *ul = l;
 				for ( ; ul != 0; ul = ul->sPrev() )
@@ -155,7 +160,7 @@ protected:
 		Unit *u = h->getEvent()->getUnit();
 		Patient *p = h->getEvent()->getPatient();
 		double atime = h->getEvent()->getTime();
-		
+
 		InfectionStatus prev = nullstatus;
 		double time = 0;
 
@@ -169,7 +174,7 @@ protected:
 			h->getEvent()->setType(insitu0);
 		if (h->getEvent()->isAdmission())
 			h->getEvent()->setType(admission0);
-	
+
 		double U = rand->runif();
 
 		if (mod->getNStates() == 2)
@@ -276,3 +281,4 @@ protected:
 		return time ;
 	}
 };
+#endif // ALUN_MODELING_FORWARD_SIMULATOR_H

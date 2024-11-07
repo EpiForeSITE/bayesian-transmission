@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_OUTCOLPARAMS_H
+#define ALUN_MODELING_OUTCOLPARAMS_H
+
+#include "Parameters.h"
 
 class OutColParams : public Parameters
 {
@@ -50,7 +54,7 @@ private:
 	}
 
 	double logpost(Random *r, int x)
-	{ 
+	{
 		// log prior.
 		double f = 0;
 		for (int i=0; i<nstates; i++)
@@ -78,7 +82,7 @@ private:
 
 		return f;
 	}
-	
+
 	virtual double prob(int i, int j, double t)
 	{
 	       	if (j < 0)
@@ -115,7 +119,7 @@ private:
 
 			for (int i=0; i<nstates; i++)
 			{
-				oldrates[i] = rates[i];	
+				oldrates[i] = rates[i];
 				if (doit[i])
 					newrates[i] = exp(log(rates[i])+r->rnorm(0,1.0));
 				else
@@ -139,7 +143,7 @@ private:
 
 public:
 
-	OutColParams(int nst, int nmet) 
+	OutColParams(int nst, int nmet)
 	{
 		admits = new Map();
 		countscount = 0;
@@ -249,7 +253,7 @@ public:
 		PatientState *prev = 0;
 		double time = 0;
 		PatientState *cur = h->getPState();
-		
+
 		if (h->pPrev() != 0)
 		{
 			prev = h->pPrev()->getPState();
@@ -264,7 +268,7 @@ public:
 			j = stateIndex(cur->infectionStatus());
 		return log(prob(i,j,time));
 	}
-	
+
 	virtual inline void initCounts()
 	{
 		countscount++;
@@ -389,7 +393,7 @@ public:
 		double na = pna > 1 ? pna : 1;
 		double nb = pnb > 1 ? pnb : 1;
 		double nc = pnc > 1 ? pnc : 1;
-	
+
 		priorshape[0] = va*na;
 		priorrate[0] = na;
 		priorshape[1] = vb*nb;
@@ -406,14 +410,14 @@ public:
 	virtual string *paramNames()
 	{
 		string *res = new string[nstates];
-		
+
 		if (nstates == 3)
 		{
 			res[0] = "Out.acq";
 			res[1] = "Out.pro";
 			res[2] = "Out.clr";
 		}
-		
+
 		if (nstates == 2)
 		{
 			res[0] = "Out.acq";
@@ -436,3 +440,4 @@ public:
 		delete [] buffer;
 	}
 };
+#endif // ALUN_MODELING_OUTCOLPARAMS_H

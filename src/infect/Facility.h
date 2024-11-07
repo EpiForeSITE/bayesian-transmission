@@ -1,3 +1,9 @@
+// infect/facility.h
+#ifndef ALUN_INFECT_FACILITY_H
+#define ALUN_INFECT_FACILITY_H
+
+#include "../util/util.h"
+#include "Unit.h"
 
 class Facility : public Object
 {
@@ -25,24 +31,26 @@ public:
         	os << number;
 	}
 
-	inline void addUnit(Unit *u) 
-	{ 
-		unit->put(u->getId(),u); 
-	} 
+	inline void addUnit(Unit *u)
+	{
+		unit->put(u->getId(),u);
+	}
 
-	inline Unit *getUnit(int i) 
-	{ 
-		return (Unit *) unit->get(i); 
-	} 
+	inline Unit *getUnit(int i)
+	{
+		return (Unit *) unit->get(i);
+	}
 
-	inline IntMap *getUnits() 
-	{ 
-		unit->init(); 
-		return unit; 
-	} 
+	inline IntMap *getUnits()
+	{
+		unit->init();
+		return unit;
+	}
 
-	inline int getId() 
-	{	
-		return number; 
+	inline int getId()
+	{
+		return number;
 	}
 };
+
+#endif // ALUN_INFECT_FACILITY_H

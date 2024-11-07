@@ -1,3 +1,8 @@
+// infect/AbxCoding.h
+#ifndef ALUN_INFECT_ABXCODING_H
+#define ALUN_INFECT_ABXCODING_H
+
+#include "../util/util.h"
 
 class AbxCoding
 {
@@ -27,3 +32,5 @@ public:
 
 Map *AbxCoding::sysabx = new Map();
 Map *AbxCoding::syseverabx = new Map();
+
+#endif // ALUN_INFECT_ABXCODING_H

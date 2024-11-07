@@ -1,3 +1,8 @@
+// infect/FacilityEpisodeHistory.h
+#ifndef ALUN_INFECT_FACILITY_EPISODE_HISTORY_H
+#define ALUN_INFECT_FACILITY_EPISODE_HISTORY_H
+
+#include "EpisodeHistory.h"
 
 class FacilityEpisodeHistory : public EpisodeHistory
 {
@@ -66,7 +71,7 @@ protected:
 			{
 				if (ll->getFState() != 0)
 					ll->getFState()->apply(l->getEvent());
-	
+
 				if (ll->getUState() != 0)
 					ll->getUState()->apply(l->getEvent());
 			}
@@ -133,8 +138,10 @@ protected:
 	}
 
 public:
-	
+
 	FacilityEpisodeHistory(HistoryLink *aa, HistoryLink *dd): EpisodeHistory(aa,dd)
 	{
 	}
 };
+
+#endif // ALUN_INFECT_FACILITY_EPISODE_HISTORY_H

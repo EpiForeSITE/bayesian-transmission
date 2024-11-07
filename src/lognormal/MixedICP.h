@@ -1,8 +1,12 @@
+#ifndef ALUN_LOGNORMAL_MIXEDICP_H
+#define ALUN_LOGNORMAL_MIXEDICP_H
+
+#include "LogNormalAbxICP.h"
 
 class MixedICP: public LogNormalAbxICP
 {
 public:
-	MixedICP(int nst, int isDensity, int nmet, int cap=8) : LogNormalAbxICP(nst, isDensity, nmet, cap) 
+	MixedICP(int nst, int isDensity, int nmet, int cap=8) : LogNormalAbxICP(nst, isDensity, nmet, cap)
 	{
 		pnames[0][0] = "MICP.base";
 		pnames[0][1] = "MICP.mix";
@@ -23,7 +27,7 @@ public:
 	// Number abx colonized parameter is par[0][5]
 	// Susceptible patient on Abx effect on colonizeation is par[0][6].
 	// Susceptible patient ever on Abx effect on colonizeation is par[0][7].
-	
+
 	virtual double acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot)
 	{
 		double gamma = logistic(par[0][1]);
@@ -35,9 +39,9 @@ public:
 		double x = par[0][0] +
 			par[0][4] * (time -tOrigin) +
 			par[0][5] * ncolabx +
-			par[0][6] * onabx + 
+			par[0][6] * onabx +
 			par[0][7] * everabx;
-		
+
 		return y * exp(x);
 	}
 
@@ -52,7 +56,7 @@ public:
 			return logistic(par[i][j]);
 		return exp(par[i][j]);
 	}
-	
+
 	virtual void set(int i, int j, double value, int update, double prival, double priorn, double sig = 0.1)
 	{
 		if (i == 0 && j == 1)
@@ -61,3 +65,4 @@ public:
 			setWithLogTransform(i,j,value,update,prival,priorn,sig);
 	}
 };
+#endif // ALUN_LOGNORMAL_MIXEDICP_H

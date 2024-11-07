@@ -1,3 +1,8 @@
+#ifndef ALUN_MODELING_CONTRAINTEDSIMULATOR_H
+#define ALUN_MODELING_CONTRAINTEDSIMULATOR_H
+
+#include "../infect/infect.h"
+#include "UnitLinkedModel.h"
 
 class ConstrainedSimulator : public Object, EventCoding, InfectionCoding
 {
@@ -125,7 +130,7 @@ protected:
 		for (l=p, n=0; l!=0; )
 		{
 			n++;
-			l = (l->getEvent()->getPatient()==pat && l->getEvent()->getType()==discharge ? l->pNext() : l->uNext()); 
+			l = (l->getEvent()->getPatient()==pat && l->getEvent()->getType()==discharge ? l->pNext() : l->uNext());
 		}
 
 		double *time = new double[n];
@@ -133,11 +138,11 @@ protected:
 		double **S = new double*[n];
 		double ***Q = new double **[n];
 
-		for 
+		for
 		(
-			first=true, l=p, n=0; 
-			l!=0; 
-			l = (l->getEvent()->getPatient()==pat && l->getEvent()->getType()==discharge ? l->pNext() : l->uNext()) 
+			first=true, l=p, n=0;
+			l!=0;
+			l = (l->getEvent()->getPatient()==pat && l->getEvent()->getType()==discharge ? l->pNext() : l->uNext())
 		)
 		{
 			doit[n] = true;
@@ -159,7 +164,7 @@ protected:
 					}
 					Q[n] = mod->getInColParams()->rateMatrix(l->getEvent()->getTime(),l->getPState(),l->getUState());
 					break;
-	
+
 				case admission:
 				case admission0:
 				case admission1:
@@ -171,7 +176,7 @@ protected:
 					}
 					Q[n] = mod->getInColParams()->rateMatrix(l->getEvent()->getTime(),l->getPState(),l->getUState());
 					break;
-	
+
 				case postest:
 				case possurvtest:
 				case negtest:
@@ -182,12 +187,12 @@ protected:
 				case negclintest:
 					S[n] =  mod->getClinicalTestParams()->resultProbs(l->getPState()->onAbx(),l->getEvent()->getType());
 					break;
-	
+
 				case discharge:
 					Q[n] = mod->getOutColParams()->rateMatrix();
 					doit[n] = false;
 					break;
-	
+
 				default:
 					continue;
 				}
@@ -222,7 +227,7 @@ protected:
 	}
 
 public:
-	
+
 	static void sampleEpisodes(UnitLinkedModel *mod, SystemHistory *h, int max, Random *rand)
 	{
 		for (Map *p = h->getPatientHeads(); p->hasNext(); )
@@ -261,11 +266,11 @@ public:
 		int nalloc = 0;
 		double *mytime = 0;
 		double **myS = 0;
-		double ***myQ = 0; 
+		double ***myQ = 0;
 		bool *mydoit = 0;
 
 		Markov *mark = getMarkovProcess(mod,plink,rand,&nalloc,&mytime,&mydoit,&myS,&myQ);
-	
+
 		oldpropprob = mark->logProcessProb(neps,on,ot,os);
 
 		newpropprob = mark->simulateProcess(neps,nn,nt,ns);
@@ -281,7 +286,7 @@ public:
 
 		double accept = newloglike-oldloglike;
 		double logU = 0;
-		if (!max) 
+		if (!max)
 		{
 			accept += oldpropprob - newpropprob;
 			logU = log(rand->runif());
@@ -302,7 +307,7 @@ public:
 				eh[i]->clearProposal();
 			}
 		}
-			
+
 		cleanFree(&os,neps);
 		cleanFree(&ns,neps);
 		cleanFree(&ot,neps);
@@ -324,7 +329,7 @@ public:
 			cheatInitEpisodeHistory(mod,eh);
 			return;
 		}
-	
+
 		if (haspostest)
 		{
 			Facility *f = eh->admissionLink()->getEvent()->getFacility();
@@ -348,7 +353,7 @@ public:
 
 	static void cheatInitEpisodeHistory(UnitLinkedModel *mod, EpisodeHistory *eh)
 	{
-// This is ok as long as the Sampler that calls it does a clean up 
+// This is ok as long as the Sampler that calls it does a clean up
 // step. But it needs work.
 
 		Facility *f = eh->admissionLink()->getEvent()->getFacility();
@@ -400,3 +405,4 @@ public:
 	//	eh->apply(); Don't do this. It applied events already in there.
 	}
 };
+#endif //ALUN_MODELING_CONTRAINTEDSIMULATOR_H

@@ -1,3 +1,9 @@
+// infect/InfectionCoding.h
+#ifndef INFECTIONCODING_H
+#define INFECTIONCODING_H
+
+
+#include <string>
 
 class InfectionCoding
 {
@@ -11,7 +17,7 @@ public:
 		colonized 	= 3
 	};
 
-	static string codeString(InfectionStatus x)
+	static std::string codeString(InfectionStatus x)
 	{
 		switch(x)
 		{
@@ -23,3 +29,5 @@ public:
 		}
 	}
 };
+
+#endif // INFECTIONCODING_H

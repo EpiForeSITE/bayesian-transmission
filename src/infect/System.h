@@ -1,3 +1,11 @@
+#ifndef ALUN_INFECT_SYSTEM_H
+#define ALUN_INFECT_SYSTEM_H
+
+#include "../util/util.h"
+#include "EventCoding.h"
+#include "RawEventList.h"
+#include "Patient.h"
+#include "Episode.h"
 
 class lab : public Object, public EventCoding
 {
@@ -61,7 +69,7 @@ private:
 					case admission2:
 						v->setType(insitu2);
 						break;
-					default: 
+					default:
 						break;
 					}
 				}
@@ -139,12 +147,12 @@ public:
 			}
 		}
 	}
-		
-	inline IntMap *getFacilities() 
-	{ 
-		fac->init(); 
-		return fac; 
-	} 
+
+	inline IntMap *getFacilities()
+	{
+		fac->init();
+		return fac;
+	}
 
 	inline List *getUnits()
 	{
@@ -157,21 +165,21 @@ public:
 		return l;
 	}
 
-	inline IntMap *getPatients() 
-	{ 
-		pat->init(); 
-		return pat; 
+	inline IntMap *getPatients()
+	{
+		pat->init();
+		return pat;
 	}
 
-	inline double startTime() 
-	{ 
-		return start; 
-	} 
+	inline double startTime()
+	{
+		return start;
+	}
 
-	inline double endTime() 
-	{ 
-		return end; 
-	} 
+	inline double endTime()
+	{
+		return end;
+	}
 
 private:
 
@@ -239,9 +247,9 @@ private:
 
 	bool gotAdmission(List *l, lab *x)
 	{
-		return getEvent(l,admission,x->f,x->u) 
-			|| getEvent(l,admission0,x->f,x->u) 
-			|| getEvent(l,admission1,x->f,x->u) 
+		return getEvent(l,admission,x->f,x->u)
+			|| getEvent(l,admission0,x->f,x->u)
+			|| getEvent(l,admission1,x->f,x->u)
 			|| getEvent(l,admission2,x->f,x->u) ;
 	}
 
@@ -379,7 +387,7 @@ private:
 					addEpisode(p,ep);
 					*cur = ep;
 					Event *v = 0;
-	
+
 					switch(isimp)
 					{
 					case -1: v = makeEvent(*f,*u,e->getTime(),p,admission);
@@ -445,7 +453,7 @@ private:
 					n->remove(e);
 					continue;
 				}
-						
+
 				e = (RawEvent *)n->getFirst();
 				if (e != 0)
 				{
@@ -503,7 +511,7 @@ private:
 	{
 		RawEvent *prev = 0;
 		List *s = new List();
-		
+
 		for (l->init(); ; )
 		{
 			RawEvent *e = (RawEvent *)l->next();
@@ -551,3 +559,5 @@ private:
 		return p;
 	}
 };
+
+#endif // ALUN_INFECT_SYSTEM_H

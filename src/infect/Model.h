@@ -1,4 +1,14 @@
 
+// file infect/Model.h:
+#ifndef ALUN_INFECT_MODEL_H
+#define ALUN_INFECT_MODEL_H
+
+#include "../util/util.h"
+#include "EventCoding.h"
+#include "InfectionCoding.h"
+#include "Facility.h"
+#include "Patient.h"
+
 class LocationState;
 class PatientState;
 class HistoryLink;
@@ -64,7 +74,7 @@ public:
 		return abxdelay;
 	}
 
-	virtual void handleAbxDoses(HistoryLink *shead) 
+	virtual void handleAbxDoses(HistoryLink *shead)
 	{
 	}
 
@@ -82,3 +92,4 @@ public:
 
 	virtual void writeHeader(ostream &os) = 0;
 };
+#endif // ALUN_INFECT_MODEL_H

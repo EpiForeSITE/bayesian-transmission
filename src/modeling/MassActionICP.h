@@ -1,5 +1,8 @@
+#ifndef ALUN_MODELING_MASSACTIONICP_H
+#define ALUN_MODELING_MASSACTIONICP_H
 
-class MassActionICP : public InColParams 
+#include "InColParams.h"
+class MassActionICP : public InColParams
 {
 private:
 
@@ -15,7 +18,7 @@ private:
 	// value 0 == frequency dependent; 1 == density dependent; 2 == constant;
 	int isDensity;
 
-	// The following function should be the only thing depending on 
+	// The following function should be the only thing depending on
 	// isDensity in the whole class.
 	virtual inline double acquisitionFactor(int c, int n)
 	{
@@ -136,7 +139,7 @@ public:
 			Q[2][0] = eventRate(time,clearance,p,u);
 			Q[2][2] = -Q[2][0];
 		}
-	
+
 		return Q;
 	}
 // Implement Parameters.
@@ -162,8 +165,8 @@ public:
 		LocationState *s = h->uPrev()->getUState();
 		return - (h->getEvent()->getTime() - g->getEvent()->getTime()) *
 		(
-			(s->getSusceptible() == 0 ? 0 : s->getSusceptible() * eventRate(g->getEvent()->getTime(),acquisition,0,s)) + 
-			(s->getLatent() == 0 ? 0 : s->getLatent() * eventRate(g->getEvent()->getTime(),progression,0,s)) + 
+			(s->getSusceptible() == 0 ? 0 : s->getSusceptible() * eventRate(g->getEvent()->getTime(),acquisition,0,s)) +
+			(s->getLatent() == 0 ? 0 : s->getLatent() * eventRate(g->getEvent()->getTime(),progression,0,s)) +
 			(s->getColonized() == 0 ? 0 : s->getColonized() * eventRate(g->getEvent()->getTime(),clearance,0,s))
 		);
 	}
@@ -227,7 +230,7 @@ public:
 		double na = pna > 1 ? pna : 1 ;
 		double nb = pnb > 1 ? pnb : 1 ;
 		double nc = pnc > 1 ? pnc : 1 ;
-		
+
 		priorshape[0] = va*na;
 		priorrate[0] = na;
 		priorshape[1] = vb*nb;
@@ -251,7 +254,7 @@ public:
 	virtual string *paramNames()
 	{
 		string *res = new string[nstates];
-		
+
 		if (nstates == 3)
 		{
 			res[0] = "MAICP.acq";
@@ -283,3 +286,4 @@ public:
 		delete[] buffer;
 	}
 };
+#endif // ALUN_MODELING_MASSACTIONICP_H

@@ -1,3 +1,7 @@
+#ifndef ALUN_LOGNORMAL_LOGNORMALABXICP_H
+#define ALUN_LOGNORMAL_LOGNORMALABXICP_H
+
+#include  "LogNormalICP.h"
 
 class LogNormalAbxICP: public LogNormalICP
 {
@@ -21,8 +25,8 @@ private:
 		pnames[2][1] = "LNAX.clrAbx";
 		pnames[2][2] = "LNAX.clrEver";
 	}
-	
-protected: 
+
+protected:
 
         // Parameters are log rates.
         // Progression parameter is par[1][0].
@@ -41,7 +45,7 @@ protected:
 	// Number abx colonized parameter is par[0][5]
 	// Susceptible patient on Abx effect on colonizeation is par[0][6].
 	// Susceptible patient ever on Abx effect on colonizeation is par[0][7].
-	
+
 	virtual inline double timePar()
 	{
 		return par[0][0];
@@ -81,7 +85,7 @@ protected:
 
 public:
 
-	LogNormalAbxICP(int nst, int isDensity, int nmet, int cap=8) : LogNormalICP(nst,cap,3,3,nmet) 
+	LogNormalAbxICP(int nst, int isDensity, int nmet, int cap=8) : LogNormalICP(nst,cap,3,3,nmet)
 	{
 		// Density model
 
@@ -99,13 +103,13 @@ public:
 			setNormal(0,2,0,0,0,1);
 			setNormal(0,3,1,0,0,1);
 			break;
-		
+
 		case 2: // Constant.
 			setNormal(0,2,0,0,0,1);
 			setNormal(0,3,0,0,0,1);
 			break;
 		}
-	
+
 		setNormal(0,4,0,0,0,1);
 		setNormal(0,5,0,0,0,1);
 		setNormal(0,6,0,0,0,1);
@@ -177,13 +181,13 @@ public:
 		if (as->getSusceptible() > 0)
 		{
 			if (as->getNeverAbxSusceptible() > 0)
-				x += as->getNeverAbxSusceptible() 
+				x += as->getNeverAbxSusceptible()
 					* acqRate(tOrigin,0,0,as->getAbxColonized(),as->getColonized(),as->getTotal());
 			if (as->getEverAbxSusceptible()-as->getAbxSusceptible() > 0)
-				x += (as->getEverAbxSusceptible()-as->getAbxSusceptible()) 
+				x += (as->getEverAbxSusceptible()-as->getAbxSusceptible())
 					* acqRate(tOrigin,0,1,as->getAbxColonized(),as->getColonized(),as->getTotal());
 			if (as->getAbxSusceptible() > 0)
-				x += as->getAbxSusceptible() 
+				x += as->getAbxSusceptible()
 					* acqRate(tOrigin,1,1,as->getAbxColonized(),as->getColonized(),as->getTotal());
 		}
 
@@ -214,3 +218,4 @@ public:
                 return P;
 	}
 };
+#endif // ALUN_LOGNORMAL_LOGNORMALABXICP_H

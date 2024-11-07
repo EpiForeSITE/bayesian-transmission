@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_INSITUPARAMS_H
+#define ALUN_MODELING_INSITUPARAMS_H
+
+#include "Parameters.h"
 
 class InsituParams : public Parameters
 {
@@ -18,7 +22,7 @@ private:
 
 public:
 
-	InsituParams(int nst) 
+	InsituParams(int nst)
 	{
 		nstates = nst;
 
@@ -55,11 +59,11 @@ public:
 
 	~InsituParams()
 	{
-		if (probs) 
+		if (probs)
 			delete [] probs;
-		if (logprobs) 
+		if (logprobs)
 			delete [] logprobs;
-		if (counts) 
+		if (counts)
 			delete [] counts;
 		if (priors)
 			delete [] priors;
@@ -100,13 +104,13 @@ public:
 		for (int i=0; i<3; i++)
 			counts[i] = priors[i];
 	}
-	
+
 	virtual inline void count(HistoryLink *h)
 	{
 		int i = stateIndex(h->getPState()->infectionStatus());
 		if (i >= 0)
 			counts[i] += 1;
-	} 
+	}
 
 	virtual inline void update(Random *r, int max)
 	{
@@ -151,7 +155,7 @@ public:
 		for (int i=0; i<3; i++)
 			logprobs[i] = log(probs[i]);
 	}
-		
+
 	inline void setPriors(double pu, double pl, double pc)
 	{
 		// Relative values of probs, sum is equivalent number of obs.
@@ -175,7 +179,7 @@ public:
 	virtual inline string *paramNames()
 	{
 		string *res = new string[nstates];
-		
+
 		if (nstates == 3)
 		{
 			res[0] = "Insit.P(unc)";
@@ -187,7 +191,7 @@ public:
 			res[0] = "Insit.P(unc)";
 			res[1] = "Insit.P(col)";
 		}
-	
+
 		return res;
 	}
 
@@ -209,3 +213,4 @@ public:
 		delete [] buffer;
 	}
 };
+#endif // ALUN_MODELING_INSITUPARAMS_H

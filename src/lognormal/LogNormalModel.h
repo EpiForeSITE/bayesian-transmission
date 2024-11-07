@@ -1,3 +1,9 @@
+#ifndef ALUN_LOGNORMAL_LOGNORMALMODEL_H
+#define ALUN_LOGNORMAL_LOGNORMALMODEL_H
+
+#include "../infect/modeling.h"
+
+
 class LogNormalModel : public BasicModel
 {
 private:
@@ -19,12 +25,12 @@ public:
 		string sdump;
 		double p, q, r;
 		int up, uq, ur;
-		
+
 		int nstates = 0;
 		int abxtest = 0;
 		double abxd = 0.0;
 		double abxl = 0.0;
-		
+
 		is >> sdump >> nstates;
 
 		switch(nstates)
@@ -54,10 +60,10 @@ public:
 		model->setAbxDelay(abxd);
 		model->setAbxLife(abxl);
 
-	// In situ parameters. 
+	// In situ parameters.
 
 		InsituParams *isp = model->getInsituParams();
-		
+
 		is >> sdump >> p >> up;
 		is.getline(c,maxline);
 
@@ -81,7 +87,7 @@ public:
 		q = q/p;
 		p = 1-q-r;
 		up = ur;
-		
+
 		isp->set(p,q,r);
 		isp->setPriors(p*up,q*up,r*ur);
 		isp->setUpdate(up,uq,ur);
@@ -115,7 +121,7 @@ public:
 		{
 			is >> sdump >> p >> up;
 			is.getline(c,maxline);
-	
+
 			if (nstates == 2)
 			{
 				q = 0;
@@ -126,10 +132,10 @@ public:
 				is >> sdump >> q >> uq;
 				is.getline(c,maxline);
 			}
-	
+
 			is >> sdump >> r >> ur;
 			is.getline(c,maxline);
-	
+
 			stsp->set(1,p,q,r);
 			stsp->setPriors(1,p,up,q,uq,r,ur);
 			stsp->setUpdate(1,up,uq,ur);
@@ -183,10 +189,10 @@ public:
 			is.getline(c,maxline);
 			is.getline(c,maxline);
 
-			ctsp->setRates(p,q,r);	
+			ctsp->setRates(p,q,r);
 			ctsp->setUpdateRates(up,uq,ur);
 		}
-		
+
 	// Out of unit infection parameters.
 
 		OutColParams *ocp = model->getOutColParams();
@@ -228,7 +234,7 @@ public:
 
 		// Set parameters on rate scale using set() or on log-rate scale using setNormal().
 		// These are not equivalent.
-		// Formats are 
+		// Formats are
 			// setNormal(paridi, paridj, log value, update?, prior mean log, prior var);
 			// set(paridi, paridj, value, update?, prior mean value, equiv prior obs);
 
@@ -240,7 +246,7 @@ public:
 		icp->set(0,0,p,up,p,up,timsig);
 
 			// constant term: set at rough colonization rate eg 0.001;
-		is >> sdump >> p >> up; 
+		is >> sdump >> p >> up;
 		is.getline(c,maxline);
 
 		if (l == 0)
@@ -328,7 +334,7 @@ public:
 	// Abx parameters.
 
 		AbxParams *abxp = model->getAbxParams();
-	
+
 		is >> sdump >> p >> up;
 		is.getline(c,maxline);
 		if (nstates == 2)
@@ -452,7 +458,7 @@ public:
 			for ( ; onpnext != 0; onpnext = onpnext->pNext())
 				if (onpnext->getEvent()->getTime() >= ont)
 					break;
-		
+
 			double offt = l->getEvent()->getTime();
 			offt += getAbxLife();
 
@@ -483,7 +489,7 @@ public:
 						if (snext->getEvent()->getTime() >= offt)
 							break;
 				}
-	
+
 				Event *off = new Event(offpnext->getEvent()->getFacility(),offpnext->getEvent()->getUnit(),offt,offpnext->getEvent()->getPatient(),abxoff);
 				HistoryLink *loff = new HistoryLink
 						(
@@ -493,7 +499,7 @@ public:
 							makeUnitState(off->getUnit()),
 							makePatientState(off->getPatient())
 						);
-	
+
 				loff->insertAsap(snext);
 				dumpers->append(off);
 			}
@@ -514,7 +520,7 @@ public:
 						if (snext->getEvent()->getTime() >= ont)
 							break;
 				}
-	
+
 				Event *on = new Event(onpnext->getEvent()->getFacility(),onpnext->getEvent()->getUnit(),ont,onpnext->getEvent()->getPatient(),abxon);
 				HistoryLink *lon = new HistoryLink
 						(
@@ -524,7 +530,7 @@ public:
 							makeUnitState(on->getUnit()),
 							makePatientState(on->getPatient())
 						);
-	
+
 				lon->insertAsap(snext);
 				dumpers->append(on);
 			}
@@ -567,7 +573,7 @@ public:
 			}
 		}
 		else
-		{	
+		{
 			switch(e)
 			{
 			case insitu:
@@ -593,3 +599,4 @@ public:
 		}
 	}
 };
+#endif // ALUN_LOGNORMAL_LOGNORMALMODEL_H

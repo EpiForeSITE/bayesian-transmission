@@ -1,7 +1,13 @@
+// infect/LocationState.h
+#ifndef ALUN_INFECT_LOCATIONSTATE_H
+#define ALUN_INFECT_LOCATIONSTATE_H
+
+#include "State.h"
+#include "Event.h"
 
 class LocationState : public State
 {
-protected: 
+protected:
 
 	int tot;
 	int inf;
@@ -18,31 +24,31 @@ public:
 		n = nstates;
 	}
 
-	virtual inline void clear() 
-	{ 
-		tot = 0; 
-		inf = 0; 
+	virtual inline void clear()
+	{
+		tot = 0;
+		inf = 0;
 		lat = 0;
-	} 
-
-	virtual inline int getTotal() 
-	{ 
-		return tot; 
 	}
 
-	virtual inline int getColonized() 
-	{ 
-		return inf; 
+	virtual inline int getTotal()
+	{
+		return tot;
 	}
 
-	virtual inline int getLatent() 
-	{ 
-		return lat; 
+	virtual inline int getColonized()
+	{
+		return inf;
 	}
 
-	virtual inline int getSusceptible() 
-	{ 
-		return tot - inf - lat; 
+	virtual inline int getLatent()
+	{
+		return lat;
+	}
+
+	virtual inline int getSusceptible()
+	{
+		return tot - inf - lat;
 	}
 
 	virtual void copy(State *s)
@@ -79,7 +85,7 @@ public:
 		default:
 			break;
 		}
-		
+
 		if (n == 2)
 		{
 			switch(e->getType())
@@ -87,11 +93,11 @@ public:
 			case acquisition:
 				inf++;
 				break;
-	
+
 			case clearance:
 				inf--;
 				break;
-	
+
 			default:
 				break;
 			}
@@ -104,16 +110,16 @@ public:
 			case acquisition:
 				lat++;
 				break;
-	
+
 			case progression:
 				lat--;
 				inf++;
 				break;
-	
+
 			case clearance:
 				inf--;
 				break;
-	
+
 			default:
 				break;
 			}
@@ -132,11 +138,11 @@ public:
 			case acquisition:
 				inf--;
 				break;
-	
+
 			case clearance:
 				inf++;
 				break;
-	
+
 			default:
 				break;
 			}
@@ -149,16 +155,16 @@ public:
 			case acquisition:
 				lat--;
 				break;
-	
+
 			case progression:
 				lat++;
 				inf--;
 				break;
-	
+
 			case clearance:
 				inf++;
 				break;
-	
+
 			default:
 				break;
 			}
@@ -171,3 +177,5 @@ public:
 		os << " (" << getSusceptible() << "+" << getLatent() << "+" << getColonized() << "=" << getTotal() << ")";
 	}
 };
+
+#endif // ALUN_INFECT_LOCATIONSTATE_H

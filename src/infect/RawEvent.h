@@ -1,3 +1,8 @@
+// infect/RawEvent.h
+#ifndef ALUN_INFECT_RAWEVENT_H
+#define ALUN_INFECT_RAWEVENT_H
+
+#include "../util/util.h"
 
 class RawEvent : public Object
 {
@@ -10,7 +15,7 @@ private:
 	int type;
 
 public:
-	RawEvent(int f, int u, double t, int p, int tp) 
+	RawEvent(int f, int u, double t, int p, int tp)
 	{
 		facility = f;
 		unit = u;
@@ -25,7 +30,7 @@ public:
 	int compare (Object *e)
 	{
 		RawEvent *x = dynamic_cast<RawEvent *>(e);
-		
+
 		if (x->pat < pat)
 			return 1;
 		if (pat < x->pat)
@@ -58,28 +63,30 @@ public:
 		os << type;
 	}
 
-	inline double getTime() 
-	{ 
-		return time; 
-	} 
+	inline double getTime()
+	{
+		return time;
+	}
 
-	inline int getFacilityId() 
-	{ 
-		return facility; 
-	} 
-	
-	inline int getUnitId() 
-	{ 
-		return unit; 
-	} 
-	
-	inline int getPatientId() 
-	{ 
-		return pat; 
-	} 
-	
-	inline int getTypeId() 
-	{ 
-		return type; 
-	} 
+	inline int getFacilityId()
+	{
+		return facility;
+	}
+
+	inline int getUnitId()
+	{
+		return unit;
+	}
+
+	inline int getPatientId()
+	{
+		return pat;
+	}
+
+	inline int getTypeId()
+	{
+		return type;
+	}
 };
+
+#endif // ALUN_INFECT_RAWEVENT_H

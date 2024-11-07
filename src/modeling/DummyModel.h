@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_DUMMYMODEL_H
+#define ALUN_MODELING_DUMMYMODEL_H
+
+#include "BasicModel.h"
 
 class DummyModel : public BasicModel
 {
@@ -43,7 +47,7 @@ public:
 			}
 		}
 		else
-		{	
+		{
 			switch(e)
 			{
 			case insitu:
@@ -69,3 +73,4 @@ public:
 		}
 	}
 };
+#endif // ALUN_MODELING_DUMMYMODEL_H

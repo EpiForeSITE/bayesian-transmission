@@ -1,7 +1,13 @@
+// infect/SetLocationState.h
+#ifndef ALUN_INFECT_SETLOCATIONSTATE_H
+#define ALUN_INFECT_SETLOCATIONSTATE_H
+
+#include "LocationState.h"
+#include "InfectionCoding.h"
 
 class SetLocationState : public LocationState, public InfectionCoding
 {
-protected: 
+protected:
 
 	Map *pat;
 
@@ -17,10 +23,10 @@ public:
 		delete pat;
 	}
 
-	inline void clear() 
-	{ 
+	inline void clear()
+	{
 		pat->clear();
-	} 
+	}
 
 	inline Map *getPatients()
 	{
@@ -78,3 +84,4 @@ public:
 	}
 
 };
+#endif // ALUN_INFECT_SETLOCATIONSTATE_H

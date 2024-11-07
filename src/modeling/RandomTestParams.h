@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_RANDOMTESTPARAMS_H
+#define ALUN_MODELING_RANDOMTESTPARAMS_H
+
+#include "TestParams.h"
 
 class RandomTestParams : public TestParams
 {
@@ -29,7 +33,7 @@ public:
 			setUpdateRates(1,0,1);
 		if (nstates == 3)
 			setUpdateRates(1,1,1);
-	
+
 		initCounts();
 	}
 
@@ -130,7 +134,7 @@ public:
 		double na = pna > 1 ? pna : 1;
 		double nb = pnb > 1 ? pnb : 1;
 		double nc = pnc > 1 ? pnc : 1;
-		
+
 		shapeprior[0] = va*na;
 		rateprior[0] = na;
 		shapeprior[1] = vb*nb;
@@ -138,7 +142,7 @@ public:
 		shapeprior[2] = vc*nc;
 		rateprior[2] = nc;
 	}
-		
+
 	virtual int nParam()
 	{
 		return 2*nstates;
@@ -187,3 +191,4 @@ public:
 		delete [] buffer;
 	}
 };
+#endif // ALUN_MODELING_RANDOMTESTPARAMS_H

@@ -1,4 +1,11 @@
+// infect/Episode.h
+#ifndef ALUN_INFECT_EPISODEHISTORY_H
+#define ALUN_INFECT_EPISODEHISTORY_H
 
+#include "../util/util.h"
+#include "EventCoding.h"
+#include "Event.h"
+#include "HistoryLink.h"
 
 class EpisodeHistory : public Object, public EventCoding
 {
@@ -33,7 +40,7 @@ public:
 
 		ph = 0;
 		pt = 0;
-			
+
 		a = aa;
 		d = dd;
 
@@ -129,7 +136,7 @@ public:
 
 			if (l->getEvent()->getTime() != pl->getEvent()->getTime())
 				return 1;
-			
+
 			l = l->hNext();
 			pl = pl->hNext();
 		}
@@ -155,7 +162,7 @@ public:
 		HistoryLink *l = h;
 		h = ph;
 		ph = l;
-		
+
 		l = t;
 		t = pt;
 		pt = l;
@@ -192,24 +199,24 @@ public:
 		}
 	}
 
-	inline HistoryLink *admissionLink() 
-	{ 
-		return a; 
+	inline HistoryLink *admissionLink()
+	{
+		return a;
 	}
 
-	inline HistoryLink *dischargeLink() 
-	{ 
-		return d; 
+	inline HistoryLink *dischargeLink()
+	{
+		return d;
 	}
 
-	inline double admissionTime() 
-	{ 
-		return ta; 
+	inline double admissionTime()
+	{
+		return ta;
 	}
 
-	inline double dischargeTime() 
-	{ 
-		return td; 
+	inline double dischargeTime()
+	{
+		return td;
 	}
 
 	void write(ostream &os)
@@ -221,7 +228,7 @@ public:
 			else
 				os << "\t+\t" << l << "\n";
 		}
-		
+
 		//for (HistoryLink *l = a; ; l = l->pNext())
 		for (HistoryLink *l = a; ; l = l->uNext())
 		{

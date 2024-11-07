@@ -1,7 +1,16 @@
+#ifndef ALUN_MODELING_UNITLINKEDMODEL_H
+#define ALUN_MODELING_UNITLINKEDMODEL_H
+
+#include "../infect/infect.h"
+#include "InsituParams.h"
+#include "OutColParams.h"
+#include "TestParams.h"
+#include "InColParams.h"
+#include "AbxParams.h"
 
 /*
 	Manages models where it is only required that the
-	augmented data events are linked into the Patient and Unit 
+	augmented data events are linked into the Patient and Unit
 	history lists, not Facility or System lists.
 */
 
@@ -128,13 +137,13 @@ public:
 	virtual HistoryLink *makeHistLink(Facility *f, Unit *u, Patient *p, double time, EventCode type, int linked)
 	{
 		return new HistoryLink
-		(	
+		(
 			new Event(f,u,time,p,type),
-			makeSystemState(),	
-			makeFacilityState(f),	
-			makeUnitState(u),	
+			makeSystemState(),
+			makeFacilityState(f),
+			makeUnitState(u),
 			makePatientState(p),
-			linked	
+			linked
 		);
 	}
 
@@ -152,23 +161,23 @@ public:
 
 	virtual void writeHeader(ostream &os)
 	{
-		isp->writeHeader(os); 
+		isp->writeHeader(os);
 		os << "\t";
-		survtsp->writeHeader(os); 
+		survtsp->writeHeader(os);
 		os << "\t";
 		if (clintsp != survtsp)
 		{
-			clintsp->writeHeader(os); 
+			clintsp->writeHeader(os);
 			os << "\t";
 		}
-			
-		ocp->writeHeader(os); 
+
+		ocp->writeHeader(os);
 		os << "\t";
-		icp->writeHeader(os); 
+		icp->writeHeader(os);
 		os << "\t";
 		if (abxp != 0)
 		{
-			abxp->writeHeader(os); 
+			abxp->writeHeader(os);
 			os << "\t";
 		}
 	}
@@ -206,7 +215,7 @@ public:
 			}
 		}
 		else
-		{	
+		{
 			switch(e)
 			{
 			case insitu:
@@ -362,7 +371,7 @@ public:
 	virtual double logLikelihood(Patient *pat, HistoryLink *h, int opt)
 	{
 		double x = 0;
-		
+
 		for (HistoryLink *l = h; l != 0; )
 		{
 			Event *e = l->getEvent();
@@ -457,7 +466,7 @@ public:
 		case stop:
 			break;
 
-		default: 
+		default:
 			cerr << "Event not handled " << h->getEvent() << "\n";
 			break;
 		}
@@ -494,3 +503,4 @@ public:
 			abxp->update(r,max);
 	}
 };
+#endif // ALUN_MODELING_UNITLINKEDMODEL_H

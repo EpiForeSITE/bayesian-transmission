@@ -1,3 +1,7 @@
+#ifndef ALUN_MODELING_PARAMETERS_H
+#define ALUN_MODELING_PARAMETERS_H
+
+#include "../infect/infect.h"
 
 class Parameters : public Object, public EventCoding, public InfectionCoding
 {
@@ -77,3 +81,4 @@ public:
 		}
 	}
 };
+#endif // ALUN_MODELING_PARAMETERS_H

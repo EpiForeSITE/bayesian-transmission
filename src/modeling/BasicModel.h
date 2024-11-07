@@ -1,3 +1,8 @@
+#ifndef ALUN_MODELING_BASICMODEL_H
+#define ALUN_MODELING_BASICMODEL_H
+
+#include "UnitLinkedModel.h"
+
 class BasicModel : public UnitLinkedModel
 {
 public:
@@ -29,3 +34,4 @@ public:
 	}
 
 };
+#endif // ALUN_MODELING_BASICMODEL_H

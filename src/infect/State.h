@@ -1,3 +1,8 @@
+// infect/State.h
+#ifndef ALUN_INFECT_STATE_H
+#define ALUN_INFECT_STATE_H
+
+#include "Event.h"
 
 class State : public Object, public EventCoding
 {
@@ -43,8 +48,10 @@ public:
         	os << owner;
 	}
 
-	inline Object *getOwner() 
-	{ 
-		return owner; 	
+	inline Object *getOwner()
+	{
+		return owner;
 	}
 };
+
+#endif // ALUN_INFECT_STATE_H

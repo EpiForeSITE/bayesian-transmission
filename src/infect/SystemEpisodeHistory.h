@@ -1,3 +1,8 @@
+// infect/SystemEpisodeHistory.h
+#ifndef ALUN_INFECT_SYSTEMEPISODEHISTORY_H
+#define ALUN_INFECT_SYSTEMEPISODEHISTORY_H
+
+#include "EpisodeHistory.h"
 
 class SystemEpisodeHistory : public EpisodeHistory
 {
@@ -74,10 +79,10 @@ protected:
 			{
 				if (ll->getSState() != 0)
 					ll->getSState()->apply(l->getEvent());
-	
+
 				if (ll->getFState() != 0)
 					ll->getFState()->apply(l->getEvent());
-	
+
 				if (ll->getUState() != 0)
 					ll->getUState()->apply(l->getEvent());
 			}
@@ -161,3 +166,5 @@ public:
 	}
 
 };
+
+#endif // ALUN_INFECT_SYSTEMEPISODEHISTORY_H
