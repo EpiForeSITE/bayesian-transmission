@@ -2,6 +2,8 @@
 #ifndef ALUN_INFECT_RAWEVENTLIST_H
 #define ALUN_INFECT_RAWEVENTLIST_H
 
+#include <vector>
+
 #include "RawEvent.h"
 
 class RawEventList : public SortedList
@@ -39,6 +41,29 @@ public:
 		init();
 
 		delete [] c;
+	}
+
+	RawEventList(
+	    std::vector<int> facilities,
+	    std::vector<int> units,
+	    std::vector<double> times,
+	    std::vector<int> patients,
+	    std::vector<int> types
+    ) : SortedList()
+	{
+
+        if(facilities.size() != units.size() || facilities.size() != times.size() || facilities.size() != patients.size() || facilities.size() != types.size())
+        {
+            throw std::invalid_argument("All vectors must have the same size");
+        }
+
+	    for (auto i=0; i < facilities.size(); i++)
+	    {
+	        append(new RawEvent(facilities[i],units[i],times[i],patients[i],types[i]));
+	    }
+
+	    init();
+
 	}
 
 	~RawEventList()

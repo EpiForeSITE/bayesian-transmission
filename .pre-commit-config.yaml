@@ -1,0 +1,34 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+    -   id: trailing-whitespace
+        exclude: ^(inst/|man/|src/cpp11.cpp|playgroud/|R/cpp11.R)
+    -   id: end-of-file-fixer
+        exclude: ^(inst/|man/|src/cpp11.cpp|playgroud/|R/cpp11.R)
+    -   id: check-yaml
+        exclude: ^(inst/|man/|src/cpp11.cpp|playgroud/|R/cpp11.R)
+    -   id: check-added-large-files
+        exclude: ^(inst/|man/|src/cpp11.cpp|playgroud/|R/cpp11.R)
+    -   id: detect-private-key
+        exclude: ^(inst/|man/|src/cpp11.cpp|playgroud/|R/cpp11.R)
+
+-   repo: https://github.com/lorenzwalthert/precommit
+    # This version of precommit uses R 4.4.1 (renv.lock)
+    # See the pre-commit.yaml workflow file for more details.
+    rev: v0.4.3
+    hooks:
+      - id: style-files
+        args:
+          [
+            '--ignore-start="^# styler: off$"',
+            '--ignore-stop="^# styler: on$"',
+            '--strict=FALSE',
+            '--cache-root=styler-perm'
+          ]
+        exclude: ^(inst/|man/|src/cpp11.cpp|playgroud/|R/cpp11.R)
+      - id: readme-rmd-rendered
+      # - id: lintr
+      #   args: [--warn_only]
+      #   verbose: true
+      #   exclude: ^(inst/|man/|src/cpp11.cpp|playgroud/|R/cpp11.R)
