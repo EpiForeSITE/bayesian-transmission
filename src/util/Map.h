@@ -1,4 +1,8 @@
-
+// util/Map.h
+#ifndef ALUN_UTIL_MAP_H
+#define ALUN_UTIL_MAP_H
+#include "Object.h"
+#include "Random.h"
 class MapLink : public Object
 {
 friend class Map;
@@ -22,12 +26,12 @@ private:
 		tprev = 0;
 	}
 
-	string className()
+	std::string className()
 	{
 		return "MapLink";
 	}
 
-	void write(ostream &os)
+	void write(std::ostream &os)
 	{
 		Object::write(os);
 		os << "(" << key << "->" << value << ")";
@@ -37,7 +41,7 @@ private:
 class Map : public Object
 {
 private:
-	static int defcap;
+	static const unsigned long defcap = 10UL;
 
 	int cap;
 	int use;
@@ -131,12 +135,12 @@ private:
 			u = r->runif() * maxocc;
 		}
 		while (u > j);
-	
+
 		j = 0;
 		for (MapLink *l = tab[i]; l != 0; l = l->tnext)
 			if (u <= ++j)
 				return l;
-	
+
 		return 0;
 	}
 
@@ -183,7 +187,7 @@ private:
 
 		return res;
 	}
-	
+
 public:
 
 	Map(int c = defcap, double l = 0.75) : Object()
@@ -268,7 +272,7 @@ public:
 		MapLink *l = tabgot(k);
 		return l == 0 ? 0 : l->value;
 	}
-	
+
 	inline void add(Object *k)
 	{
 		put(k,0);
@@ -366,12 +370,12 @@ public:
 		return tabrand(r)->value;
 	}
 
-	string className()
+	std::string className()
 	{
 		return "Map";
 	}
 
-	void write (ostream &os)
+	void write (std::ostream &os)
 	{
 		Object::write(os);
 		os << "(" << use << "/" << cap << ")";
@@ -379,4 +383,4 @@ public:
 			os << "\n\t" << l;
 	}
 };
-
+#endif // ALUN_UTIL_MAP_H

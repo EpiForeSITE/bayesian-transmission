@@ -1,3 +1,9 @@
+// util/IntMap.h
+#ifndef ALUN_UTIL_INTMAP_H
+#define ALUN_UTIL_INTMAP_H
+
+#include "Object.h"
+
 
 class IntMapLink : public Object
 {
@@ -22,12 +28,12 @@ private:
 		tprev = 0;
 	}
 
-	string className()
+	std::string className()
 	{
 		return "IntMapLink";
 	}
 
-	void write(ostream &os)
+	void write(std::ostream &os)
 	{
 		Object::write(os);
 		os << "(" << key << "->" << value << ")";
@@ -37,7 +43,7 @@ private:
 class IntMap : public Object
 {
 private:
-	static int defcap;
+	static const unsigned long defcap = 10UL;
 
 	int cap;
 	int use;
@@ -130,7 +136,7 @@ private:
 
 		return res;
 	}
-	
+
 public:
 	IntMap(int c = defcap, double l = 0.75) : Object()
 	{
@@ -192,7 +198,7 @@ public:
 		IntMapLink *l = tabgot(k);
 		return l == 0 ? 0 : l->value;
 	}
-	
+
 	inline Object *remove(int k)
 	{
 		IntMapLink *l = tabgot(k);
@@ -262,12 +268,12 @@ public:
 		return tail == 0 ? 0 : tail->value;
 	}
 
-	string className()
+	std::string className()
 	{
 		return "IntMap";
 	}
 
-	void write (ostream &os)
+	void write (std::ostream &os)
 	{
 		Object::write(os);
 		os << "(" << use << "/" << cap << ")";
@@ -275,3 +281,4 @@ public:
 			os << "\n\t" << l;
 	}
 };
+#endif // ALUN_UTIL_INTMAP_H

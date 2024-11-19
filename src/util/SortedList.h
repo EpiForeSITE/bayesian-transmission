@@ -1,3 +1,8 @@
+// util/SortedList.h
+#ifndef ALUN_UTIL_SORTEDLIST_H
+#define ALUN_UTIL_SORTEDLIST_H
+
+#include "List.h"
 
 class SortedList : public List
 {
@@ -27,7 +32,7 @@ public:
 
 		if (prev != 0)
 		{
-			prev->next = l; 
+			prev->next = l;
 			l->prev = prev;
 		}
 		else
@@ -76,8 +81,9 @@ public:
 		}
 	}
 
-	string className()
+	std::string className()
 	{
 		return "SortedList";
 	}
 };
+#endif // ALUN_UTIL_SORTEDLIST_H

@@ -57,7 +57,7 @@ public:
             throw std::invalid_argument("All vectors must have the same size");
         }
 
-	    for (auto i=0; i < facilities.size(); i++)
+	    for (auto i=0UL; i < facilities.size(); i++)
 	    {
 	        append(new RawEvent(facilities[i],units[i],times[i],patients[i],types[i]));
 	    }

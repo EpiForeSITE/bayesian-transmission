@@ -1,8 +1,13 @@
+// util/Vector.h
+#ifndef ALUN_UTIL_VECTOR_H
+#define ALUN_UTIL_VECTOR_H
+
+#include "Object.h"
 
 class Vector : public Object
 {
 private:
-	static int defcap;
+	static const unsigned long defcap = 10UL;
 
 	Object **x;
 	int cap;
@@ -12,7 +17,7 @@ private:
 	{
 		if (m <= cap)
 			return;
-		
+
 		int newcap = cap;
 		while (m > newcap)
 			newcap *= 2;
@@ -99,3 +104,4 @@ public:
 			os << "\n\t" << x[i];
 	}
 };
+#endif // ALUN_UTIL_VECTOR_H

@@ -242,3 +242,4 @@ public:
 		}
 	}
 };
+#endif // ALUN_INFECT_EPISODEHISTORY_H

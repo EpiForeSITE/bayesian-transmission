@@ -15,7 +15,8 @@ Config/testthat/edition: 3
 Depends: 
     R (>= 4.2.0)
 LazyData: true
-LinkingTo: Rcpp
+LinkingTo: 
+    Rcpp
 Suggests: 
     testthat,
     knitr,

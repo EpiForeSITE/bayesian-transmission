@@ -20,8 +20,11 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _rcpp_module_boot_Infect();
+
 static const R_CallMethodDef CallEntries[] = {
     {"_bayestransmission_hello_world", (DL_FUNC) &_bayestransmission_hello_world, 0},
+    {"_rcpp_module_boot_Infect", (DL_FUNC) &_rcpp_module_boot_Infect, 0},
     {NULL, NULL, 0}
 };
 

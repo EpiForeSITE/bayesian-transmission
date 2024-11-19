@@ -1,14 +1,20 @@
+// infect/PatientState.h
+#ifndef ALUN_INFECT_PATIENTSTATE_H
+#define ALUN_INFECT_PATIENTSTATE_H
+
+#include "InfectionCoding.h"
+#include "State.h"
 
 class PatientState : public State, public InfectionCoding
 {
-protected: 
+protected:
 
 	Unit *u;
 	InfectionStatus s;
 	int n;
 
 public:
-	
+
 	PatientState(Patient *pp) : State(pp)
 	{
 		u = 0;
@@ -28,9 +34,9 @@ public:
 		return u;
 	}
 
-	inline InfectionStatus infectionStatus() 
-	{ 
-		return s; 
+	inline InfectionStatus infectionStatus()
+	{
+		return s;
 	}
 
 	inline virtual int onAbx()
@@ -79,7 +85,7 @@ public:
 			case clearance:
 				s = uncolonized;
 				break;
-	
+
 			default:
 				break;
 			}
@@ -98,7 +104,7 @@ public:
 			case clearance:
 				s = uncolonized;
 				break;
-	
+
 				default:
 				break;
 			}
@@ -120,8 +126,8 @@ public:
 			case clearance:
 				s = colonized;
 				break;
-	
-			default:	
+
+			default:
 				break;
 			}
 		}
@@ -139,8 +145,8 @@ public:
 			case clearance:
 				s = colonized;
 				break;
-	
-			default:	
+
+			default:
 				break;
 			}
 		}
@@ -154,3 +160,4 @@ public:
 		os << " \t" << codeString(s);
 	}
 };
+#endif // ALUN_INFECT_PATIENTSTATE_H

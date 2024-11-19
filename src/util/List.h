@@ -1,3 +1,9 @@
+// util/List.h
+#ifndef ALUN_UTIL_LIST_H
+#define ALUN_UTIL_LIST_H
+
+#include "Object.h"
+#include "Random.h"
 
 class ListLink : public Object
 {
@@ -22,12 +28,12 @@ public:
 		return key;
 	}
 
-	string className()
+	std::string className()
 	{
 		return "ListLink";
 	}
 
-	void write(ostream &os)
+	void write(std::ostream &os)
 	{
 		Object::write(os);
 		os << "(" << key << ")";
@@ -85,7 +91,7 @@ public:
 		return l;
 	}
 
-	Object *random(Random *r)
+	Object * random(Random *r)
 	{
 		int x = size();
 		if (x == 0)
@@ -106,7 +112,7 @@ public:
 	inline virtual void append(Object *k)
 	{
 		ListLink *l = new ListLink(k);
-	
+
 		if (head == 0)
 			head = l;
 
@@ -121,7 +127,7 @@ public:
 	inline virtual void prepend(Object *k)
 	{
 		ListLink *l = new ListLink(k);
-		
+
 		if (tail == 0)
 			tail = l;
 
@@ -145,7 +151,7 @@ public:
 			head = l->next;
 		else
 			l->prev->next = l->next;
-		
+
 		if (l->next == 0)
 			tail = l->prev;
 		else
@@ -242,22 +248,23 @@ public:
 			head->prev = 0;
 		else
 			tail = 0;
-		
+
 		Object *res = l->key;
 		delete l;
 
 		return res;
 	}
-		
-	string className()
+
+	std::string className()
 	{
 		return "List";
 	}
 
-	void write(ostream &os)
+	void write(std::ostream &os)
 	{
 		Object::write(os);
 		for (ListLink *l = head; l != 0; l = l->next)
 			os << "\n\t" << l;
 	}
 };
+#endif // ALUN_UTIL_LIST_H

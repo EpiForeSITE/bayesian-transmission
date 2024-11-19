@@ -1,3 +1,12 @@
+// util/Markoi.h
+#ifndef ALUN_UTIL_MARKOV_H
+#define ALUN_UTIL_MARKOV_H
+
+#include <vector>
+using std::vector;
+
+#include "Object.h"
+#include "Random.h"
 
 struct timepoint
 {
@@ -13,7 +22,7 @@ struct timepoint
 	}
 };
 
-struct checkpoint 
+struct checkpoint
 {
 	double time;
 	int state;
@@ -205,7 +214,7 @@ public:
 			v.push_back(vv[i++]);
 			while (i < (int) vv.size() && !vv[i].restart)
 				v.push_back(vv[i++]);
-			
+
 			ec[c] = (int) v.size();
 			et[c] = new double[ec[c]];
 			es[c] = new int[ec[c]];
@@ -216,7 +225,7 @@ public:
 				es[c][j] = v[j].state;
 			}
 		}
-		
+
 		return logProb(vv);
 	}
 
@@ -227,7 +236,7 @@ public:
 		for (int i=0; i<segs; i++)
 		{
 			v.push_back(timepoint(et[i][0],es[i][0],true));
-		
+
 			for (int j=1; j<ec[i]; j++)
 				v.push_back(timepoint(et[i][j],es[i][j],false));
 		}
@@ -265,7 +274,7 @@ public:
 					s = v[j].state;
 					j++;
 				}
-				
+
 				l +=  logpexp(x[i]->time-t,-Q[s][s]);
 				t = x[i]->time;
 			}
@@ -276,7 +285,7 @@ public:
 				s = v[j].state;
 				j++;
 			}
-			 
+
 			if (x[i]->S)
 			{
 				l += log(x[i]->S[s]);
@@ -299,7 +308,7 @@ public:
 		{
 			double tot = 0;
 			x[i-1]->clear(ns);
-			
+
 			for (int j=0; j<ns; j++)
 				for (int k = 0; k<ns; k++)
 				{
@@ -345,3 +354,4 @@ public:
 		}
 	}
 };
+#endif // ALUN_UTIL_MARKOV_H

@@ -1,15 +1,18 @@
+// util/Object.h
+#ifndef ALUN_UTIL_OBJECT_H
+#define ALUN_UTIL_OBJECT_H
 
-#pragma once
-
-#include <string.h>
+#include <string>
+using std::string;
+using std::ostream;
 
 #include "Allocator.h"
 
 class Object : public Allocator
 {
 private:
-	static long indexcounter;
-	long index;
+	static unsigned long indexcounter;
+	unsigned long index;
 
 public:
 	Object()
@@ -45,7 +48,7 @@ public:
 		os << className() << "[" << index << "]";
 	}
 
-	friend std::ostream &operator <<(std::ostream &os, Object *x);
+	//friend std::ostream& operator <<(std::ostream&, Object*);
 };
 
-std::ostream &operator <<(std::ostream &os, Object *x);
+#endif // ALUN_UTIL_OBJECT_H
