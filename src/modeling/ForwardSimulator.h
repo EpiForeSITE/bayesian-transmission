@@ -3,6 +3,7 @@
 
 #include "../infect/infect.h"
 #include "UnitLinkedModel.h"
+using namespaces infect;
 
 class ForwardSimulator : public Object, EventCoding, InfectionCoding
 {

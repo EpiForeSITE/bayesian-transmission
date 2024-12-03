@@ -2,6 +2,7 @@
 #define ALUN_MODELING_CONTRAINTEDSIMULATOR_H
 
 #include "../infect/infect.h"
+using namespace infect;
 #include "UnitLinkedModel.h"
 
 class ConstrainedSimulator : public Object, EventCoding, InfectionCoding

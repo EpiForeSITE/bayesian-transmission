@@ -10,7 +10,7 @@ class RawEventList : public SortedList
 {
 public:
 
-	static int maxline;
+	static const int maxline = 1000;
 
 	RawEventList(istream &is, stringstream &err) : SortedList()
 	{
@@ -122,7 +122,5 @@ public:
 		}
 	}
 };
-
-int RawEventList::maxline = 1000;
 
 #endif // ALUN_INFECT_RAWEVENTLIST_H

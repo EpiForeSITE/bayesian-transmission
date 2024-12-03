@@ -30,7 +30,4 @@ public:
 	}
 };
 
-Map *AbxCoding::sysabx = new Map();
-Map *AbxCoding::syseverabx = new Map();
-
 #endif // ALUN_INFECT_ABXCODING_H

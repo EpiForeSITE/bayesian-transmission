@@ -2,7 +2,7 @@
 #ifndef _LOGNORMAL_DEFINED
 
 	#define _LOGNORMAL_DEFINED
-	
+
 	#include <stdlib.h>
 	#include <limits>
 	#include <math.h>
@@ -12,9 +12,9 @@
 
         using namespace std;
 
-	#include "util.h"
-	#include "infect.h"
-	#include "modeling.h"
+    #include "../util/util.h"
+    #include "../infect/infect.h"
+    #include "../modeling/modeling.h"
 
 	namespace lognormal
 	{
@@ -27,7 +27,4 @@
 		#include "LogNormalModel.h"
 		#include "MixedModel.h"
 	}
-
-	using namespace lognormal;
-
 #endif

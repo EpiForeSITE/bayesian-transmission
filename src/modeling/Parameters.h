@@ -2,6 +2,7 @@
 #define ALUN_MODELING_PARAMETERS_H
 
 #include "../infect/infect.h"
+using namespaces infect;
 
 class Parameters : public Object, public EventCoding, public InfectionCoding
 {

@@ -8,6 +8,9 @@
 #include "InColParams.h"
 #include "AbxParams.h"
 
+using namespaces infect;
+
+
 /*
 	Manages models where it is only required that the
 	augmented data events are linked into the Patient and Unit

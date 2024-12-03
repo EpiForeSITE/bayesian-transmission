@@ -2,6 +2,7 @@
 #define ALUN_MODELING_OPTIONS_H
 
 #include "../infect/infect.h"
+using namespaces infect;
 
 class Options : public Object
 {

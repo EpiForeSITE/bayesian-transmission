@@ -1,7 +1,7 @@
 #ifndef ALUN_LOGNORMAL_LOGNORMALMODEL_H
 #define ALUN_LOGNORMAL_LOGNORMALMODEL_H
 
-#include "../infect/modeling.h"
+#include "../modeling/modeling.h"
 
 
 class LogNormalModel : public BasicModel
@@ -164,8 +164,8 @@ public:
 			is >> sdump >> abxl;
 			model->setAbxLife(abxl);
 			skipLine(is);
-		}		
-	
+		}
+
 		skipLine(is);
 
 	// In situ parameters.
@@ -374,7 +374,7 @@ protected:
 		string sdump;
 		double p, q, r;
 		double up, uq, ur;
-		
+
 		is >> sdump >> p >> up;
 		skipLine(is);
 

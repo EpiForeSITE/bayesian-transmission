@@ -64,7 +64,4 @@
 
 		#include "Sampler.h"
 	}
-
-	using namespace infect;
-
 #endif
