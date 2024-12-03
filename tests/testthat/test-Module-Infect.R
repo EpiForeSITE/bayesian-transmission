@@ -14,4 +14,20 @@ test_that("Can create RawEventList with data.frame", {
     expect_equal(test$FirstTime(), 1)
     expect_equal(test$LastTime(), 10)
 })
+test_that("Can Create system class", {
+    data(simulated.data, package = "bayestransmission")
 
+    test <- TransmissionSystem$new(
+        simulated.data$facility,
+        simulated.data$unit,
+        simulated.data$time,
+        simulated.data$patient,
+        simulated.data$type
+    )
+    expect_s4_class(test, "Rcpp_TransmissionSystem")
+    expect_equal(test$start, 0)
+    expect_equal(test$end, 1734)
+
+    expect_equal(test$log, "")
+
+})

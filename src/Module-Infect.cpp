@@ -17,4 +17,14 @@ RCPP_MODULE(Infect){
     .method("FirstTime", &RawEventList::firstTime)
     .method("LastTime", &RawEventList::lastTime)
     ;
+
+    class_<System>("TransmissionSystem")
+        .constructor<std::vector<int>, std::vector<int>, std::vector<double>, std::vector<int>, std::vector<int>>()
+        .property("log", &System::get_log)
+        .property("start", &System::startTime)
+        .property("end", &System::endTime)
+    ;
+
+
+
 }
