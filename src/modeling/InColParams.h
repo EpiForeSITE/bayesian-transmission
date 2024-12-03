@@ -16,6 +16,11 @@ public:
 		nstates = nst;
 	}
 
+	virtual int getNStates()
+	{
+		return nstates;
+	}
+
 	virtual double *acquisitionRates(double time, PatientState *p, LocationState *s) = 0;
 
 	virtual double eventRate(double time, EventCode c, PatientState *p, LocationState *s) = 0;

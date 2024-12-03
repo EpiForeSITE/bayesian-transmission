@@ -6,6 +6,7 @@
 #include "RawEventList.h"
 #include "Patient.h"
 #include "Episode.h"
+#include <exception>
 
 class lab : public Object, public EventCoding
 {
@@ -29,6 +30,11 @@ private:
 	IntMap *pat;
 	IntMap *fac;
 	Map *pepis;
+
+	void handleOutOfRangeEvent(Patient *p, int t)
+	{
+		p->setGroup(t);
+	}
 
 	void init(RawEventList *l, stringstream &err)
 	{
@@ -79,7 +85,15 @@ private:
 		}
 	}
 
+protected:
+    stringstream errlog;
+
 public:
+
+	System(RawEventList *l)
+	{
+		init(l,errlog);
+	}
 
 	System(RawEventList *l, stringstream &err)
 	{
@@ -90,6 +104,20 @@ public:
 	{
 		RawEventList *l = new RawEventList(is,err);
 		init(l,err);
+		delete l;
+	}
+
+	System(
+	    std::vector<int> facilities,
+        std::vector<int> units,
+        std::vector<double> times,
+        std::vector<int> patients,
+        std::vector<int> types
+	)
+	{
+
+		RawEventList *l = new RawEventList(facilities, units, times, patients, types);
+		init(l,errlog);
 		delete l;
 	}
 
@@ -180,6 +208,10 @@ public:
 	{
 		return end;
 	}
+
+    string get_log() {
+        return errlog.str();
+    }
 
 private:
 
@@ -484,6 +516,12 @@ private:
 		for (s->init(); ; )
 		{
 			curev = (RawEvent *) s->next();
+
+			if (curev != 0 && (curev->getTypeId() < 0 || curev->getTypeId() >= EventCoding::maxeventcode))
+			{
+				handleOutOfRangeEvent(p,curev->getTypeId());
+				continue;
+			}
 
 			if (curev == 0 || (prev != 0 && curev->getTime() > prev->getTime()))
 			{

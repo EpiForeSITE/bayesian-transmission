@@ -5,6 +5,24 @@
 
 class LogNormalAbxICP: public LogNormalICP
 {
+
+    // Parameters are log rates.
+    // Progression parameter is par[1][0].
+	// Latent patient on Abx effect on progression is par[1][1].
+	// Latent patient ever on Abx effect on progression is par[1][2].
+        // Clearance parameter is par[2][0].
+	// Colonized patient on Abx effect on clearance is par[2][1].
+	// Colonized patient ever on Abx effect on clearance is par[2][2].
+
+	// Acquisition model
+	// Time parameter is par[0][0].
+	// Constant parameter is par[0][1]
+	// log total in-patients parameter is par[0][2]
+	// log number colonized parameter is par[0][3]
+	// Number colonized parameter is par[0][4]
+	// Number abx colonized parameter is par[0][5]
+	// Susceptible patient on Abx effect on colonizeation is par[0][6].
+	// Susceptible patient ever on Abx effect on colonizeation is par[0][7].
 private:
 	void setParameterNames()
 	{
@@ -26,41 +44,57 @@ private:
 		pnames[2][2] = "LNAX.clrEver";
 	}
 
+public:
+	virtual string header()
+	{
+		stringstream s;
+
+		s << "LNAX.time";
+		s << "\t" "LNAX.base";
+		s << "\t" << "LNAX.ltot";
+		s << "\t" << "LNAX.lcol";
+		s << "\t" << "LNAX.col";
+		s << "\t" << "LNAX.colabx";
+		s << "\t" << "LNAX.susabx";
+		s << "\t" << "LNAX.susever";
+
+		if (nstates == 3)
+		{
+			s << "\t" << "LNAX.pro";
+			s << "\t" << "LNAX.proAbx";
+			s << "\t" << "LNAX.proEver";
+		}
+
+		s << "\t" << "LNAX.clr";
+		s << "\t" << "LNAX.clrAbx";
+		s << "\t" << "LNAX.clrEver";
+
+		return s.str();
+	}
+
 protected:
-
-        // Parameters are log rates.
-        // Progression parameter is par[1][0].
-	// Latent patient on Abx effect on progression is par[1][1].
-	// Latent patient ever on Abx effect on progression is par[1][2].
-        // Clearance parameter is par[2][0].
-	// Colonized patient on Abx effect on clearance is par[2][1].
-	// Colonized patient ever on Abx effect on clearance is par[2][2].
-
-	// Acquisition model
-	// Time parameter is par[0][0].
-	// Constant parameter is par[0][1]
-	// log total in-patients parameter is par[0][2]
-	// log number colonized parameter is par[0][3]
-	// Number colonized parameter is par[0][4]
-	// Number abx colonized parameter is par[0][5]
-	// Susceptible patient on Abx effect on colonizeation is par[0][6].
-	// Susceptible patient ever on Abx effect on colonizeation is par[0][7].
 
 	virtual inline double timePar()
 	{
 		return par[0][0];
 	}
 
-	virtual double acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot)
+	virtual double logAcqRate(int onabx, int everabx, int ncolabx, int ncol, int tot, double time)
 	{
 		double x = 0;
 
 		if (ncol > 0)
-			x = par[0][2] * log(tot) + par[0][3] * log(ncol);
+			x = par[0][3] * logint(ncol) + par[0][2] * logint(tot);
+		else
+			x = logint(0);
 
-		x += par[0][0] * (time-tOrigin) + par[0][1] + par[0][4] * ncol + par[0][5] * ncolabx + par[0][6] * onabx + par[0][7] * everabx;
+		x += par[0][0] * (time - tOrigin) + par[0][1] + par[0][4] * ncol + par[0][5] * ncolabx + par[0][6] * onabx + par[0][7] * everabx;
+		return x;
+	}
 
-		return exp(x);
+	virtual double acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot)
+	{
+		return exp(logAcqRate(onabx,everabx,ncolabx,ncol,tot,time));
 	}
 
 	virtual double progRate(int onabx, int ever)
@@ -73,6 +107,16 @@ protected:
 		return x;
 	}
 
+	virtual double logProgRate(int onabx, int ever)
+	{
+		double x = par[1][0];
+		if (onabx)
+			x += par[1][1];
+		if (ever)
+			x += par[1][2];
+		return x;
+	}
+
 	virtual double clearRate(int onabx, int ever)
 	{
 		double x = exp(par[2][0]);
@@ -80,6 +124,16 @@ protected:
 			x *= exp(par[2][1]);
 		if (ever)
 			x *= exp(par[2][2]);
+		return x;
+	}
+
+	virtual double logClearRate(int onabx, int ever)
+	{
+		double x = par[2][0];
+		if (onabx)
+			x += par[2][1];
+		if (ever)
+			x += par[2][2];
 		return x;
 	}
 
@@ -133,7 +187,7 @@ public:
 	{
 		int onabx = ((AbxLocationState *)s)->onAbx((Patient *)p->getOwner());
 		int everabx = ((AbxLocationState *)s)->everAbx((Patient *)p->getOwner());
-		return log(progRate(onabx,everabx));
+		return logProgRate(onabx,everabx);
 	}
 
 	virtual double logProgressionGap(double t0, double t1, LocationState *s)
@@ -150,7 +204,7 @@ public:
 	{
 		int onabx = ((AbxLocationState *)s)->onAbx((Patient *)p->getOwner());
 		int everabx = ((AbxLocationState *)s)->everAbx((Patient *)p->getOwner());
-		return log(clearRate(onabx,everabx));
+		return logClearRate(onabx,everabx);
 	}
 
 	virtual double logClearanceGap(double t0, double t1, LocationState *s)
@@ -180,15 +234,15 @@ public:
 
 		if (as->getSusceptible() > 0)
 		{
-			if (as->getNeverAbxSusceptible() > 0)
-				x += as->getNeverAbxSusceptible()
-					* acqRate(tOrigin,0,0,as->getAbxColonized(),as->getColonized(),as->getTotal());
-			if (as->getEverAbxSusceptible()-as->getAbxSusceptible() > 0)
-				x += (as->getEverAbxSusceptible()-as->getAbxSusceptible())
-					* acqRate(tOrigin,0,1,as->getAbxColonized(),as->getColonized(),as->getTotal());
-			if (as->getAbxSusceptible() > 0)
-				x += as->getAbxSusceptible()
-					* acqRate(tOrigin,1,1,as->getAbxColonized(),as->getColonized(),as->getTotal());
+			int inx = as->getNeverAbxSusceptible();
+			int ipx = as->getEverAbxSusceptible() - as->getAbxSusceptible();
+            int icx = as->getAbxSusceptible();
+			if (inx > 0)
+				x += inx * acqRate(tOrigin,0,0,as->getAbxColonized(),as->getColonized(),as->getTotal());
+			if (ipx > 0)
+				x += (ipx) * acqRate(tOrigin,0,1,as->getAbxColonized(),as->getColonized(),as->getTotal());
+			if (icx > 0)
+				x += icx * acqRate(tOrigin,1,1,as->getAbxColonized(),as->getColonized(),as->getTotal());
 		}
 
 		return -t*x;

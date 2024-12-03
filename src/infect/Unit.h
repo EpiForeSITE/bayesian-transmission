@@ -26,7 +26,7 @@ public:
 	inline string getName()
 	{
 		stringstream ss;
-		ss << "Unit" << number;
+		ss << f << ":" << number;
 		return ss.str();
 	}
 

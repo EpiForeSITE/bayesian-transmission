@@ -3,6 +3,7 @@
 #define ALUN_INFECT_EVENTCODING_H
 
 #include <string>
+using std::string;
 
 class EventCoding
 {
@@ -25,6 +26,8 @@ public:
 		abxdose		= 9,
 		abxon		= 10,
 		abxoff		= 11,
+		isolon		= 12,
+		isoloff		= 13,
 
 		postest 	= 7,
 		negtest     = 8,
@@ -52,12 +55,12 @@ public:
 		error 		 = -999
 	};
 
-	static std::string eventString(int x)
+	static string eventString(int x)
 	{
 		return eventString((EventCode)x);
 	}
 
-	static std::string eventString(EventCode x)
+	static string eventString(EventCode x)
 	{
 		switch(x)
 		{
@@ -86,6 +89,8 @@ public:
 		case abxdose: 		return "abxdose";
 		case abxon: 		return "abxon";
 		case abxoff: 		return "abxoff";
+		case isolon:		return "isolon";
+		case isoloff:		return "isoloff";
 		case error: 		return "EVENT_TYPE_ERROR";
 		//default: 		return "CAN'T REACH THIS";
 		}

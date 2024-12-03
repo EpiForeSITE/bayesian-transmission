@@ -110,37 +110,44 @@ public:
 		}
 	}
 
-	virtual inline void setUpdateRates(int a, int b, int c)
-	{
-		updaterate[0] = a;
-		updaterate[1] = b;
-		updaterate[2] = c;
-	}
-
-
 // Personal accessors.
 
-	void setRates(double a, double b, double c)
+	virtual inline void set(int i, double value, int update, double prival, double prin)
 	{
-		rates[0] = a;
-		rates[1] = b;
-		rates[2] = c;
+		TestParams::set(i,value,update,prival,prin);
 	}
 
-	void setRatePriors(double va, double pna, double vb, double pnb, double vc, double pnc)
+	virtual inline void set(int israte, int i, double value, int update, double prival, double prin)
 	{
-		// Value, #obs pairs.
+		if (!israte)
+		{
+			set(i,value,update,prival,prin);
+			return;
+		}
 
-		double na = pna > 1 ? pna : 1;
-		double nb = pnb > 1 ? pnb : 1;
-		double nc = pnc > 1 ? pnc : 1;
+		if (value < 0)
+		{
+			cerr << "Can't set rate parameter negative.\t" << value << "\n";
+			exit(1);
+		}
+		if (prival < 0)
+		{
+			cerr << "Can't set rate prior value negative.\t" << prival << "\n";
+			exit(1);
+		}
+		if (prin < 0)
+		{
+			cerr << "Can't set rate prior observations count negative.\t" << prin << "\n";
+			exit(1);
+		}
 
-		shapeprior[0] = va*na;
-		rateprior[0] = na;
-		shapeprior[1] = vb*nb;
-		rateprior[1] = nb;
-		shapeprior[2] = vc*nc;
-		rateprior[2] = nc;
+		rates[i] = value;
+
+		updaterate[i] = (update > 0);
+
+		double n = prin > 1 ? prin : 1;
+		shapeprior[i] = prival * n;
+		rateprior[i] = n;
 	}
 
 	virtual int nParam()

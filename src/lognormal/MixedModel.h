@@ -35,7 +35,7 @@ public:
 
 		is.getline(c,maxline);
 
-		is >> sdump >> abxd;
+		is >> sdump >> abxd; //abx_by_on_off
 		is.getline(c,maxline);
 
 		is >> sdump >> abxl;
@@ -79,7 +79,7 @@ public:
 		isp->setPriors(p*up,q*up,r*ur);
 		isp->setUpdate(up,uq,ur);
 
-	// Surveilence test parameters.
+	// Surveillance test parameters.
 
 		TestParams *stsp = model->getSurveilenceTestParams();
 

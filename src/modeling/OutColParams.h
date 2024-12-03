@@ -155,7 +155,7 @@ public:
 		priorshape = new double[nstates];
 		priorrate = new double[nstates];
 
-		P = new double[nstates];
+		P = cleanAlloc(nstates);
 		Q = cleanAlloc(nstates,nstates);
 		QQ = cleanAlloc(nstates,nstates);
 		I = cleanAlloc(nstates,nstates);
@@ -164,19 +164,11 @@ public:
 
 		doit = new int[nstates];
 
-		if (nstates == 2)
-		{
-			set(1,1);
-			setUpdate(1,1);
-			setPriors(1,1,1,1);
-		}
-
 		if (nstates == 3)
-		{
-			set(1,1,1);
-			setUpdate(1,1,1);
-			setPriors(1,1,1,1,1,1);
-		}
+			set(1.0,1.0,1.0);
+		set(0,1,1,1,1);
+		set(1,1,1,1,1);
+		set(2,1,1,1,1);
 	}
 
 	~OutColParams()
@@ -191,6 +183,21 @@ public:
 		delete [] priorshape;
 		delete [] priorrate;
 		delete [] doit;
+	}
+
+	virtual string header()
+	{
+		stringstream s;
+		s << "Out.acquire";
+		if (nstates == 3)
+                        s << "\t" << "Out.progress";
+		s << "\t" << "Out.clear";
+		return s.str();
+	}
+
+	virtual int getNStates()
+	{
+		return nstates;
 	}
 
 	virtual inline double transitionProb(InfectionStatus p, InfectionStatus c, double t)
@@ -286,15 +293,62 @@ public:
 		update(r,nmetro,max);
 	}
 
+	virtual inline void setNMetro(int n)
+	{
+		nmetro = n;
+	}
+
 // Personal accessors.
 
-	virtual inline void set(double *x)
+	virtual inline void set(int i, double value, int update, double prival, double prin)
 	{
-		if (nstates == 2)
-			set(x[0],x[1]);
+		if (value < 0)
+		{
+			cerr << "Can't set rate value negative\t." << value << "\n";
+			exit(1);
+		}
+		if (prival < 0)
+		{
+			cerr << "Can't set rate prior value negative\t." << prival << "\n";
+			exit(1);
+		}
+		if (prin < 0)
+		{
+			cerr << "Can't set prior observation count negative\t." << prin << "\n";
+			exit(1);
+		}
+	
+		int j = 0;
+
 		if (nstates == 3)
-			set(x[0],x[1],x[2]);
+			j = i;
+
+		if (nstates == 2)
+		{
+			switch(i)
+			{
+			case 0: j = 0;
+				break;
+
+			case 1: return;
+
+			case 2: j = 1;
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		rates[j] = value;
+		doit[j] = update;
+		double n = prin > 1 ? prin : 1;
+		priorshape[j] = prival * n;
+		priorrate[j] = n;
+
+		resetPQ();
 	}
+
 
 	virtual inline void set(double a, double b)
 	{
@@ -368,11 +422,6 @@ public:
 			doit[1] = b;
 			doit[2] = c;
 		}
-	}
-
-	virtual inline void setNMetro(int n)
-	{
-		nmetro = n;
 	}
 
 	virtual inline void setPriors(double va, double pna, double vb, double pnb)

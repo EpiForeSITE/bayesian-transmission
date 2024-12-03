@@ -9,14 +9,15 @@ protected:
 
 	// Parameters are log rates.
 	// Acquisition parameters are par[0][*].
-	// Progression parameter is par[1][*].
-	// Clearance parameter is par[2][*].
+	// Progression parameters are par[1][*].
+	// Clearance parameters are par[2][*].
 
 	static const int ns = 3;
 	int *n;
 	double **par;
+	double **epar;
 	double **primean;
-	double **privar;
+	double **pristdev;
 	double **sigmaprop;
 	int **doit;
 	double tOrigin;
@@ -24,6 +25,12 @@ protected:
 	Map *m;
 
 	string **pnames;
+
+	inline void setNormal(int i, int j, double x)
+	{
+		par[i][j] = x;
+		epar[i][j] = unTransform(i,j);
+	}
 
 	virtual void initParameterNames()
 	{
@@ -43,9 +50,9 @@ protected:
 	}
 
 public:
+
 	LogNormalICP(int k, int napar, int nppar, int ncpar, int nmet = 10) : InColParams(k)
 	{
-
 		tOrigin = 0;
 
 		nmetro = nmet;
@@ -61,16 +68,18 @@ public:
 		initParameterNames();
 
 		par = new double*[ns];
+		epar = new double*[ns];
 		primean = new double*[ns];
-		privar = new double*[ns];
+		pristdev = new double*[ns];
 		doit = new int*[ns];
 		sigmaprop = new double*[ns];
 
 		for (int i=0; i<ns; i++)
 		{
 			par[i] = cleanAlloc(n[i]);
+			epar[i] = cleanAlloc(n[i]);
 			primean[i] = cleanAlloc(n[i]);
-			privar[i] = cleanAlloc(n[i]);
+			pristdev[i] = cleanAlloc(n[i]);
 			doit[i] = cleanAllocInt(n[i]);
 			for (int j=0; j<n[i]; j++)
 				doit[i][j] = 1;
@@ -87,18 +96,28 @@ public:
 		for (int i=0; i<ns; i++)
 		{
 			delete [] par[i];
+			delete [] epar[i];
 			delete [] primean[i];
-			delete [] privar[i];
+			delete [] pristdev[i];
 			delete [] doit[i];
 			delete [] sigmaprop[i];
 		}
 
 		delete [] par;
+		delete [] epar;
 		delete [] primean;
-		delete [] privar;
+		delete [] pristdev;
 		delete [] doit;
 		delete [] sigmaprop;
 		delete m;
+	}
+
+	virtual inline int nParam(int i)
+	{
+		if (i >= 0 && i <=2)
+			return n[i];
+		else
+			return -1;
 	}
 
 // For models that have a time trend.
@@ -116,29 +135,25 @@ public:
 // Sufficient to implement LogNormalICP.
 
 	virtual double logAcquisitionRate(double time, PatientState *p, LocationState *s) = 0;
-
 	virtual double logAcquisitionGap(double t0, double t1, LocationState *s) = 0;
-
 	virtual double *acquisitionRates(double time, PatientState *p, LocationState *s) = 0;
 
 	virtual double logProgressionRate(double time, PatientState *p, LocationState *s) = 0;
-
 	virtual double logProgressionGap(double t0, double t1, LocationState *s) = 0;
 
 	virtual double logClearanceRate(double time, PatientState *p, LocationState *s) = 0;
-
 	virtual double logClearanceGap(double t0, double t1, LocationState *s) = 0;
 
 // Personal accessors.
 
-	virtual double unTransform(int i, int j)
-	{
-		return exp(par[i][j]);
-	}
-
 	virtual void set(int i, int j, double value, int update, double prival, double priorn, double sig = 0.1)
 	{
 		setWithLogTransform(i,j,value,update,prival,priorn,sig);
+	}
+
+	virtual double unTransform(int i, int j)
+	{
+		return exp(par[i][j]);
 	}
 
 	virtual void setWithLogTransform(int i, int j, double value, int update, double prival, double priorn, double sig = 0.1)
@@ -184,6 +199,7 @@ public:
 		// 	trigamma(a) + trigamma(b)
 		//
 		// Assume that the transformed variable has a Gaussian distribution with this mean and variance.
+		// Except, use the raw transform as the Gaussian mean!
 
 		double prin = priorn > 1 ? priorn : 1;
 		double a = prival*prin;
@@ -194,12 +210,18 @@ public:
 		setNormal(i,j,logit(value),update,mu,s2,sig);
 	}
 
-	virtual void setNormal(int i, int j, double value, int update, double prim, double priv, double sig = 0.1)
+	virtual void setNormal(int i, int j, double value, int update, double prim, double privar, double sig = 0.1)
 	{
 		par[i][j] = value;
+		epar[i][j] = unTransform(i,j);
 		doit[i][j] = update;
 		primean[i][j] = prim;
-		privar[i][j] = priv;
+		if (privar < 0)
+		{
+			cerr << "Error: Cannot set prior variance to be negative\n";
+			exit(1);
+		}
+		pristdev[i][j] = sqrt(privar);
 		sigmaprop[i][j] = sig;
 	}
 
@@ -257,7 +279,7 @@ public:
 
 			for (int j=0; j<n[i]; j++)
 			{
-				sprintf(buffer,"%12.10f",unTransform(i,j));
+				sprintf(buffer,"%12.10f",epar[i][j]);
 				os << buffer;
 				if (j != n[i]-1)
 					os << "\t";
@@ -357,31 +379,29 @@ public:
 		m->put(h,g);
 	}
 
-	virtual inline void update(Random *r, int max)
+	virtual inline double logpost(Random *r, int max)
 	{
-		double newlogpost = 0;
-		double oldlogpost = 0;
-
-		double **newlr = new double*[ns];
-		for (int i=0; i<ns; i++)
-		{
-			newlr[i] = new double[n[i]];
-			for (int j=0; j<n[i]; j++)
-				newlr[i][j] = par[i][j];
-		}
+		double x = 0;
 
 		if (!max)
 			for (int i=0; i<ns; i++)
 				for (int j=0; j<n[i]; j++)
 					if (doit[i][j])
-						oldlogpost += r->logdnorm(par[i][j],primean[i][j],privar[i][j]);
+						x += r->logdnorm(par[i][j],primean[i][j],pristdev[i][j]);
 
 		for (m->init(); m->hasNext(); )
 		{
 			HistoryLink *h = (HistoryLink *) m->next();
 			HistoryLink *g = (HistoryLink *) m->get(h);
-			oldlogpost += logProb(h) + logProbGap(g,h);
+			x += logProb(h) + logProbGap(g,h);
 		}
+
+		return x;
+	}
+
+	virtual inline void update(Random *r, int max)
+	{
+		double oldlogpost = logpost(r,max);
 
 		for (int its = 0; its < nmetro; its++)
 		{
@@ -390,28 +410,10 @@ public:
 				{
 					if (doit[i][j])
 					{
-						double oldone = newlr[i][j];
-						newlr[i][j] += r->rnorm(0,sigmaprop[i][j]);
-						par[i][j] = newlr[i][j];
-						newlogpost = 0;
-
-						if (!max)
-						{
-							for (int ii=0; ii<ns; ii++)
-								for (int jj=0; jj<n[ii]; jj++)
-								{
-									if (doit[ii][jj])
-										newlogpost += r->logdnorm(par[ii][jj],primean[ii][jj],privar[ii][jj]);
-								}
-						}
-
-						for (m->init(); m->hasNext(); )
-						{
-							HistoryLink *h = (HistoryLink *) m->next();
-							HistoryLink *g = (HistoryLink *) m->get(h);
-							newlogpost += logProb(h) + logProbGap(g,h);
-						}
-
+						double oldone = par[i][j];
+						double newone = oldone + r->rnorm(0,sigmaprop[i][j]);
+						setNormal(i,j,newone);
+						double newlogpost = logpost(r,max);
 
 						if ( (max ? 0 : log(r->runif()) ) <= newlogpost - oldlogpost)
 						{
@@ -419,16 +421,11 @@ public:
 						}
 						else
 						{
-							newlr[i][j] = oldone;
-							par[i][j] = newlr[i][j];
+							setNormal(i,j,oldone);
 						}
 					}
 				}
 		}
-
-		for (int i=0; i<ns; i++)
-			delete [] newlr[i];
-		delete [] newlr;
 	}
 };
 #endif // ALUN_LOGNORMAL_LOGNORMALCP_H

@@ -32,6 +32,14 @@ private:
 		}
 	}
 
+protected:
+
+	virtual inline void set(int i, double value)
+	{
+		rates[i] = value;
+		logrates[i] = log(rates[i]);
+	}
+
 public:
 
 	MassActionICP(int k, int isdens) : InColParams(k)
@@ -50,16 +58,17 @@ public:
 		switch(nstates)
 		{
 		case 2:
-			set(0.001,0,0.01);
-			setUpdate(1,0,1);
+			set(0,0.001,1,1,1);
+			set(1,0,0,1,1);
+			set(2,0.01,1,1,1);
 			break;
 		case 3:
-			set(0.001,0.01,0.01);
-			setUpdate(1,1,1);
+			set(0,0.001,1,1,1);
+			set(1,0.01,1,1,1);
+			set(2,0.01,1,1,1);
 			break;
 		}
 
-		setPriors(1,1,1,1,1,1);
 		initCounts();
 	}
 
@@ -79,6 +88,16 @@ public:
 			delete [] priorrate;
 		if (doit)
 			delete [] doit;
+	}
+
+	virtual string header()
+	{
+		stringstream s;
+		s <<  "MAICP.acq";
+		if (nstates == 3)
+			s << "\t" << "MAICP.pro";
+		s << "\t" << "MAICP.clr";
+		return s.str();
 	}
 
 // Implement InColParams.
@@ -209,42 +228,40 @@ public:
 				newrates[i] = (doit[i] ? r->rgamma(shapepar[i],ratepar[i]) : rates[i]);
 		}
 
-		set(newrates[0],newrates[1],newrates[2]);
+		for (int i=0; i<n; i++)
+			set(i,newrates[i]);
+
 		delete [] newrates;
 	}
 
 // Personal accessors.
 
-	virtual inline void set(double c, double p, double d)
+		virtual inline void set(int i, double value, int update, double prival, double prin)
 	{
-		rates[0] = c;
-		rates[1] = p;
-		rates[2] = d;
-		for (int i=0; i<n; i++)
-			logrates[i] = log(rates[i]);
+		if (value < 0)
+		{
+			cerr << "Can't set rate value negative\t." << value << "\n";
+			exit(1);
+		}
+		if (prival < 0)
+		{
+			cerr << "Can't set rate prior value negative\t." << prival << "\n";
+			exit(1);
+		}
+		if (prin < 0)
+		{
+			cerr << "Can't set prior observation count negative\t." << prin << "\n";
+			exit(1);
+		}
+	
+		set(i,value);
+
+		doit[i] = update;
+		double n = prin > 1 ? prin : 1;
+		priorshape[i] = prival * n;
+		priorrate[i] = n;
 	}
 
-	virtual inline void setPriors(double va, double pna, double vb, double pnb, double vc, double pnc)
-	{
-		// Value and number of observations pairs)
-		double na = pna > 1 ? pna : 1 ;
-		double nb = pnb > 1 ? pnb : 1 ;
-		double nc = pnc > 1 ? pnc : 1 ;
-
-		priorshape[0] = va*na;
-		priorrate[0] = na;
-		priorshape[1] = vb*nb;
-		priorrate[1] = nb;
-		priorshape[2] = vc*nc;
-		priorrate[2] = nc;
-	}
-
-	virtual inline void setUpdate(int c, int p, int d)
-	{
-		doit[0] = c;
-		doit[1] = p;
-		doit[2] = d;
-	}
 
 	virtual int nParam()
 	{
@@ -274,14 +291,14 @@ public:
 	virtual void write (ostream &os)
 	{
 		char *buffer = new char[100];
-		sprintf(buffer,"%12.10f\t",rates[2]);
+		sprintf(buffer,"%12.10f\t",rates[0]);
 		os << buffer;
 		if (nstates == 3)
 		{
 			sprintf(buffer,"%12.10f\t",rates[1]);
 			os << buffer;
 		}
-		sprintf(buffer,"%12.10f",rates[0]);
+		sprintf(buffer,"%12.10f",rates[2]);
 		os << buffer;
 		delete[] buffer;
 	}

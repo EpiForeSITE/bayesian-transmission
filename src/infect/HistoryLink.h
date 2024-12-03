@@ -89,10 +89,14 @@ public:
 
 	~HistoryLink()
 	{
-		delete sstate;
-		delete fstate;
-		delete ustate;
-		delete pstate;
+		if (sstate != 0)
+			delete sstate;
+		if (fstate != 0)
+			delete fstate;
+		if (ustate != 0)
+			delete ustate;
+		if (pstate != 0)
+			delete pstate;
 	}
 
 	void setStates(LocationState *s, LocationState *f, LocationState *u, PatientState *p)

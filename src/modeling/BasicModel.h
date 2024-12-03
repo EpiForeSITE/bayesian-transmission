@@ -2,6 +2,8 @@
 #define ALUN_MODELING_BASICMODEL_H
 
 #include "UnitLinkedModel.h"
+#include "ForwardSimulator.h"
+#include "ConstrainedSimulator.h"
 
 class BasicModel : public UnitLinkedModel
 {

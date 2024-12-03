@@ -18,18 +18,14 @@ public:
 
 	virtual void update(Random *r, int max) = 0;
 
+	virtual string header() = 0;
+
+	virtual int getNStates() = 0;
+
+
 	virtual void update(Random *r)
 	{
 		update(r,0);
-	}
-
-	virtual void writeHeader(ostream &os)
-	{
-		string *s = paramNames();
-		for (int i=0; i<nParam(); i++)
-		{
-			os << s[i] << "\t";
-		}
 	}
 
 	virtual inline int eventIndex(EventCode e)

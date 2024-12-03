@@ -18,6 +18,14 @@ protected:
 	double **priors;
 	int *doit;
 
+	virtual inline void set(int i, double value)
+	{
+		probs[i][0] = 1-value;
+		probs[i][1] = value;
+		logprobs[i][0] = log(probs[i][0]);
+		logprobs[i][1] = log(probs[i][1]);
+	}
+
 public:
 
 	TestParams(int nst)
@@ -32,9 +40,10 @@ public:
 		priors = cleanAlloc(n,m);
 		doit = cleanAllocInt(n);
 
-		set(0,0,0.80);
-		setUpdate(0,0,1);
-		setPriors(1,1,1,1,1,1);
+		set(0,0,0,0.5,2);
+		set(1,0,0,0.5,2);
+		set(2,0.8,1,0.5,2);
+
 		initCounts();
 	}
 
@@ -107,7 +116,21 @@ public:
 		if (max)
 		{
 			for (int i=0; i<n; i++)
-				newpos[i] = ( doit[i] ? (counts[i][1]-1)/(counts[i][0]+counts[i][1]-2) : probs[i][1] );
+			{
+				if (doit[i])
+				{
+					double mode = (counts[i][1]-1) / (counts[i][0]+counts[i][1]-2);
+					if (counts[i][1] < 1)
+						mode = 0;
+					if (counts[i][0] < 1)
+						mode = 1;
+					newpos[i] = mode;
+				}
+				else
+				{
+					newpos[i] = probs[i][1];
+				}
+			}
 		}
 		else
 		{
@@ -115,57 +138,40 @@ public:
 				newpos[i] = ( doit[i] ? r->rbeta(counts[i][1],counts[i][0]) : probs[i][1] );
 		}
 
-		set(newpos[0],newpos[1],newpos[2]);
+		for (int i=0; i<n; i++)
+			set(i,newpos[i]);
+
 		delete [] newpos;
 	}
 
 // Personal accessors.
 
-	virtual inline void set(int onabx, double punc, double plat, double pcol)
+	// Set value, update and Beta prior.
+	virtual void set(int i, double value, int update, double prival, double prin)
 	{
-		set(punc,plat,pcol);
-	}
+		if (value < 0 || value > 1)
+		{
+			cerr << "Error: can't set probablilty value outside of (0,1)\t" << value << "\n";
+			exit(1);
+		}
+		if (prival < 0 || prival > 1)
+		{
+			cerr << "Error: can't set probablilty value outside of (0,1)\t" << prival << "\n";
+			exit(1);
+		}
+		if (prin < 0)
+		{
+			cerr << "Error: can't set prior observations less than 0\t" << prin << "\n";
+			exit(1);
+		}
 
-	virtual inline void set(double punc, double plat, double pcol)
-	{
-		probs[0][0] = 1-punc;
-		probs[0][1] = punc;
-		probs[1][0] = 1-plat;
-		probs[1][1] = plat;
-		probs[2][0] = 1-pcol;
-		probs[2][1] = pcol;
+		set(i,value);
+		//set(i,0.5);
 
-		for (int i=0; i<n; i++)
-			for (int j=0; j<m; j++)
-				logprobs[i][j] = log(probs[i][j]);
-	}
+		doit[i] = (update != 0);
 
-	virtual inline void setPriors(int onabx, double a, double b, double c, double d, double e, double f)
-	{
-		setPriors(a,b,c,d,e,f);
-	}
-
-	virtual inline void setPriors(double a, double b, double c, double d, double e, double f)
-	{
-		// Probs determined by relative values of pairs. Equivalent #obs found by summing.
-		priors[0][0] = a;
-		priors[0][1] = b;
-		priors[1][0] = c;
-		priors[1][1] = d;
-		priors[2][0] = e;
-		priors[2][1] = f;
-	}
-
-	virtual inline void setUpdate(int onabx, int unc, int lat, int col)
-	{
-		setUpdate(unc,lat,col);
-	}
-
-	virtual inline void setUpdate(int unc, int lat, int col)
-	{
-		doit[0] = unc;
-		doit[1] = lat;
-		doit[2] = col;
+		priors[i][0] = (1-prival) * prin;
+		priors[i][1] = prival * prin;
 	}
 
 	virtual inline int nParam()

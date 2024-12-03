@@ -144,14 +144,10 @@ public:
 			Facility *f = (Facility *) facs->nextValue();
 
 			HistoryLink *fhead = makeHistoryLink(m,f,0,s->startTime(),0,start);
-			fheads->put(f,fhead);
 			HistoryLink *ftail = makeHistoryLink(m,f,0,s->endTime(),0,stop);
 
 			fhead->insertBeforeF(ftail);
-
-			ftail->insertBeforeS(stail);
-			fhead->insertBeforeS(shead->sNext());
-
+			fheads->put(f,fhead);
 			tails->put(f,ftail);
 
 		// Make map of units to list heads and tails.
@@ -162,17 +158,11 @@ public:
 				Unit *u = (Unit *) i->nextValue();
 
 				HistoryLink *uhead = makeHistoryLink(m,f,u,s->startTime(),0,start);
-				uheads->put(u,uhead);
 				HistoryLink *utail = makeHistoryLink(m,f,u,s->endTime(),0,stop);
-				tails->put(u,utail);
 
 				uhead->insertBeforeU(utail);
-
-				utail->insertBeforeF(ftail);
-				uhead->insertBeforeF(fhead->fNext());
-
-				utail->insertBeforeS(ftail);
-				uhead->insertBeforeS(fhead->sNext());
+				uheads->put(u,uhead);
+				tails->put(u,utail);
 			}
 
 		}
@@ -268,8 +258,33 @@ public:
 			}
 		}
 
-		delete [] hx;
-		delete tails;
+	// Put the sub lists into the full lists.
+
+		for (IntMap *facs = s->getFacilities(); facs->hasNext(); )
+		{
+			Facility *f = (Facility *) facs->nextValue();
+
+			HistoryLink *fhead = (HistoryLink *) fheads->get(f);
+			HistoryLink *ftail = (HistoryLink *) tails->get(f);
+
+			ftail->insertBeforeS(stail);
+			fhead->insertBeforeS(shead->sNext());
+	
+			for (IntMap *i = f->getUnits(); i->hasNext(); )
+			{
+				Unit *u = (Unit *) i->nextValue();
+
+				HistoryLink *uhead = (HistoryLink *) uheads->get(u);
+				HistoryLink *utail = (HistoryLink *) tails->get(u);
+
+				utail->insertBeforeF(ftail);
+				uhead->insertBeforeF(fhead->fNext());
+
+				utail->insertBeforeS(ftail);
+				uhead->insertBeforeS(fhead->sNext());
+			}
+	
+		}
 
 	// Filter events model then propagate events.
 
@@ -312,6 +327,11 @@ public:
 				ep2ephist->put(ep,eh);
 			}
 		}
+
+	// Clean up. 
+
+		delete [] hx;
+		delete tails; 
 	}
 
 	inline Map *getPatientHeads()
@@ -396,6 +416,17 @@ public:
 		return pos;
 	}
 
+	int sumocc()
+	{
+		int x = 0;
+
+		for (HistoryLink *l = shead; l != 0; l = l->sNext())
+			if (l->getUState() != 0)
+				x += l->getUState()->getTotal();
+
+		return x;
+	}
+
 	void write(ostream &os)
 	{
 		write(os,0);
@@ -403,8 +434,35 @@ public:
 
 	void write(ostream &os, int opt)
 	{
+		Map *count = new Map();
+
 		switch(opt)
 		{
+		case 9: // All events. With count data influencing performance.
+
+			for (uheads->init(); uheads->hasNext(); )
+			{
+				count->put(uheads->next(), new Integer(0));
+				cerr << count << "\n";
+			}
+			
+			for (HistoryLink *l = shead; l != 0; l = l->sNext())
+			{
+				l->getEvent()->write(os);
+
+				os << "\t";
+
+				Integer *cc = (Integer *) count->get(l->getEvent()->getUnit());
+				if (cc != 0)
+					cc->set(l->getUState()->getTotal());
+
+				for (count->init(); count->hasNext(); )
+					os << "\t" << count->nextValue();
+
+				os << "\n";
+			}
+			break;
+
 		case 8: // By unit. All link data.
 			for (Map *m = getUnitHeads(); m->hasNext(); )
 				for (HistoryLink *l = (HistoryLink *) m->nextValue(); l != 0; l = l->pNext())
@@ -478,6 +536,8 @@ public:
 					os << l->getEvent() << "\n";
 			break;
 		}
+
+		delete count;
 	}
 };
 

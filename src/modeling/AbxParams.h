@@ -32,16 +32,16 @@ public:
 		switch(nstates)
 		{
 		case 2:
-			set(1,0,1);
-			setUpdate(1,0,1);
+			set(0,1,1,1,1);
+			set(1,1,0,1,1);
+			set(2,1,1,1,1);
 			break;
 		case 3:
-			set(1,1,1);
-			setUpdate(1,1,1);
+			set(0,1,1,1,1);
+			set(1,1,1,1,1);
+			set(2,1,1,1,1);
 			break;
 		}
-
-		setPriors(1,1,1,1,1,1);
 
 		initCounts();
 	}
@@ -60,6 +60,21 @@ public:
 			delete [] priorrate;
 		if (doit)
 			delete [] doit;
+	}
+
+	virtual string header()
+	{
+		stringstream s;
+		s << "Abx.rateUnc";
+		if (nstates == 3)
+			s << "\t" << "Abx.rateLat";
+		s << "\t" << "Abx.rateCol";
+		return s.str();
+	}
+
+	virtual int getNStates()
+	{
+		return nstates;
 	}
 
 // Implement Parameters.
@@ -131,67 +146,40 @@ public:
 				newrates[i] = (doit[i] ? r->rgamma(shapepar[i],ratepar[i]) : rates[i]);
 		}
 
-		set(newrates[0],newrates[1],newrates[2]);
+		for (int i=0; i<n; i++)
+			rates[i] = newrates[i];
+
 		delete [] newrates;
 	}
 
 // Personal accessors.
 
-	virtual inline void set(double c, double p, double d)
+	virtual inline void set(int i, double value, int update, double prival, double prin)
 	{
-		rates[0] = c;
-		rates[1] = p;
-		rates[2] = d;
-	}
-
-	virtual inline void setPriors(double va, double pna, double vb, double pnb, double vc, double pnc)
-	{
-		// Value and number of observations pairs.
-		double na = pna > 1 ? pna : 1;
-		double nb = pnb > 1 ? pnb : 1;
-		double nc = pnc > 1 ? pnc : 1;
-
-		priorshape[0] = va*na;
-		priorrate[0] = na;
-		priorshape[1] = vb*nb;
-		priorrate[1] = nb;
-		priorshape[2] = vc*nc;
-		priorrate[2] = nc;
-	}
-
-	virtual inline void setUpdate(int c, int p, int d)
-	{
-		doit[0] = c;
-		doit[1] = p;
-		doit[2] = d;
-	}
-
-	virtual inline int nParam()
-	{
-		return nstates;
-	}
-
-	virtual string *paramNames()
-	{
-		string *res = new string[nstates];
-
-		if (nstates == 3)
+		if (value < 0)
 		{
-			res[0] = "Abx.rateUnc";
-			res[1] = "Abx.rateLat";
-			res[2] = "Abx.rateCol";
+			cerr << "Can't set rate value negative\t." << value << "\n";
+			exit(1);
 		}
-
-		if (nstates == 2)
+		if (prival < 0)
 		{
-			res[0] = "Abx.rateUnc";
-			res[1] = "Abx.rateCol";
+			cerr << "Can't set rate prior value negative\t." << prival << "\n";
+			exit(1);
 		}
-
-		return res;
+		if (prin < 0)
+		{
+			cerr << "Can't set prior observation count negative\t." << prin << "\n";
+			exit(1);
+		}
+	
+		rates[i] = value;
+		doit[i] = update;
+		double n = prin > 1 ? prin : 1;
+		priorshape[i] = prival * n;
+		priorrate[i] = n;
 	}
 
-	virtual void write (ostream &os)
+	virtual void write(ostream &os)
 	{
 		char *buffer = new char[100];
 		sprintf(buffer,"%12.10f\t",rates[0]);

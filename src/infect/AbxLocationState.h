@@ -4,9 +4,9 @@
 
 #include "../util/util.h"
 #include "AbxCoding.h"
-#include "LocationState.h"
+#include "CountLocationState.h"
 
-class AbxLocationState : public LocationState, AbxCoding
+class AbxLocationState : public CountLocationState, AbxCoding
 {
 protected:
 
@@ -21,7 +21,7 @@ public:
 	Map *abx;
 	Map *ever;
 
-	AbxLocationState(Object *own, int nstates) : LocationState(own,nstates)
+	AbxLocationState(Object *own, int nstates) : CountLocationState(own,nstates)
 	{
 		abx = new Map();
 		abxinf = 0;
@@ -39,7 +39,7 @@ public:
 
 	inline void clear()
 	{
-		LocationState::clear();
+		CountLocationState::clear();
 		abx->clear();
 		abxinf = 0;
 		abxlat = 0;
@@ -50,7 +50,7 @@ public:
 
 	virtual void copy(State *s)
 	{
-		LocationState::copy(s);
+		CountLocationState::copy(s);
 		AbxLocationState *as = (AbxLocationState *) s;
 
 		abx->clear();
@@ -121,32 +121,32 @@ public:
 
 	virtual inline int getNoAbxTotal()
 	{
-		return tot - abx->size();
+		return getTotal() - abx->size();
 	}
 
 	virtual inline int getNeverAbxTotal()
 	{
-		return tot - ever->size();
+		return getTotal() - ever->size();
 	}
 
 	virtual inline int getNoAbxColonized()
 	{
-		return inf - abxinf;
+		return getColonized() - abxinf;
 	}
 
 	virtual inline int getNeverAbxColonized()
 	{
-		return inf - everinf;
+		return getColonized() - everinf;
 	}
 
 	virtual inline int getNoAbxLatent()
 	{
-		return lat - abxlat;
+		return getLatent() - abxlat;
 	}
 
 	virtual inline int getNeverAbxLatent()
 	{
-		return lat - everlat;
+		return getLatent() - everlat;
 	}
 
 	virtual inline int getNoAbxSusceptible()
@@ -161,7 +161,7 @@ public:
 
 	virtual void write(ostream &os)
 	{
-		LocationState::write(os);
+		CountLocationState::write(os);
                 os << "\t(" << abx->size() << "," << ever->size() << ")";
 
 /*
@@ -181,7 +181,7 @@ public:
 
 	virtual void apply(Event *e)
 	{
-		LocationState::apply(e);
+		CountLocationState::apply(e);
 
 		if (!ownerWantsEvent(e))
 			return;
@@ -234,7 +234,7 @@ public:
 
 		if (ever->got(p))
 		{
-			if (n == 2)
+			if (nStates() == 2)
 			{
 				switch(e->getType())
 				{
@@ -249,7 +249,7 @@ public:
 				}
 			}
 
-			if (n == 3)
+			if (nStates() == 3)
 			{
 				switch(e->getType())
 				{
@@ -271,7 +271,7 @@ public:
 
 		if (abx->got(p))
 		{
-			if (n == 2)
+			if (nStates() == 2)
 			{
 				switch(e->getType())
 				{
@@ -286,7 +286,7 @@ public:
 				}
 			}
 
-			if (n == 3)
+			if (nStates() == 3)
 			{
 				switch(e->getType())
 				{
@@ -309,14 +309,14 @@ public:
 
 	virtual void unapply(Event *e)
 	{
-		LocationState::unapply(e);
+		CountLocationState::unapply(e);
 
 		if (!ownerWantsEvent(e))
 			return;
 
 		if (ever->got(e->getPatient()))
 		{
-			if (n == 2)
+			if (nStates() == 2)
 			{
 				switch(e->getType())
 				{
@@ -331,7 +331,7 @@ public:
 				}
 			}
 
-			if (n == 3)
+			if (nStates() == 3)
 			{
 				switch(e->getType())
 				{
@@ -353,7 +353,7 @@ public:
 
 		if (abx->got(e->getPatient()))
 		{
-			if (n == 2)
+			if (nStates() == 2)
 			{
 				switch(e->getType())
 				{
@@ -368,7 +368,7 @@ public:
 				}
 			}
 
-			if (n == 3)
+			if (nStates() == 3)
 			{
 				switch(e->getType())
 				{

@@ -14,6 +14,11 @@ public:
 		return value;
 	}
 
+	void set(int n) 
+	{
+		value = n;
+	}
+
 	string className()
 	{
 		return "Integer";

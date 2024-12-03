@@ -20,7 +20,7 @@ public:
 	{
 		delete ocp;
 		delete isp;
-		if (clintsp != survtsp)
+		if (clintsp != 0 && clintsp != survtsp)
 			delete clintsp;
 		delete survtsp;
 		delete icp;

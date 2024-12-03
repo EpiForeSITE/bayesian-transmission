@@ -146,6 +146,11 @@ public:
 
 // Personal accessors.
 
+	inline int getNStates()
+	{
+		return nstates;
+	}
+
 	inline void set(double u, double l, double c)
 	{
 		double tot = (u+l+c);

@@ -3,7 +3,7 @@
 
 #include "TestParams.h"
 
-class TestParamsAbx : public TestParams //public Parameters
+class TestParamsAbx : public TestParams
 {
 protected:
 
@@ -22,6 +22,14 @@ protected:
 
 	int useabx;
 
+	virtual inline void set(int i, int j, double value)
+	{
+		probs[i][j][0] = 1-value;
+		probs[i][j][1] = value;
+		logprobs[i][j][0] = log(probs[i][j][0]);
+		logprobs[i][j][1] = log(probs[i][j][1]);
+	}
+
 public:
 
 	TestParamsAbx(int nst, int abx) : TestParams(nst)
@@ -39,12 +47,14 @@ public:
 		priors = cleanAlloc(l,m,n);
 		doit = cleanAllocInt(l,m);
 
-		set(0,0,0,0.80);
-		set(1,0,0,0.80);
-		setUpdate(0,0,0,1);
-		setUpdate(1,0,0,0);
-		setPriors(0,1,1,1,1,1,1);
-		setPriors(1,1,1,1,1,1,1);
+		set(0,0,0,0,0.5,2);
+		set(1,0,0,0,0.5,2);
+		set(2,0,0.8,1,0.5,2);
+
+		set(0,1,0,0,0.5,2);
+		set(1,1,0,0,0.5,2);
+		set(2,1,0.8,1,0.5,2);
+
 		initCounts();
 	}
 
@@ -55,6 +65,31 @@ public:
 		cleanFree(&counts,l,m);
 		cleanFree(&priors,l,m);
 		cleanFree(&doit,l);
+	}
+
+	virtual string *paramNames()
+	{
+		string *res = new string[2*nstates];
+
+		if (nstates == 3)
+		{
+			res[0] = "ATest.P(+|unc-)";
+			res[1] = "ATest.P(+|lat-)";
+			res[2] = "ATest.P(+|col-)";
+			res[3] = "ATest.P(+|unc+)";
+			res[4] = "ATest.P(+|lat+)";
+			res[5] = "ATest.P(+|col+)";
+		}
+
+		if (nstates == 2)
+		{
+			res[0] = "ATest.P(+|unc-)";
+			res[1] = "ATest.P(+|col-)";
+			res[2] = "ATest.P(+|unc+)";
+			res[3] = "ATest.P(+|col+)";
+		}
+
+		return res;
 	}
 
 	inline void setUseAbx(int i)
@@ -142,45 +177,40 @@ public:
 					newpos[i][j] = probs[i][j][1];
 			}
 
-		set(0,newpos[0][0],newpos[1][0],newpos[2][0]);
-		set(1,newpos[0][1],newpos[1][1],newpos[2][1]);
+		for (int i=0; i<l; i++)
+			for (int j=0; j<m; j++)
+				set(i,j,newpos[i][j]);
 
 		cleanFree(&newpos,l);
 	}
 
 // Personal accessors.
 
-	virtual inline void set(int onabx, double punc, double plat, double pcol)
+	// Set value, update, and Beta priors.
+	virtual inline void set(int i, int j, double value, int update, double prival, double prin)
 	{
-		probs[0][onabx][0] = 1-punc;
-		probs[0][onabx][1] = punc;
-		probs[1][onabx][0] = 1-plat;
-		probs[1][onabx][1] = plat;
-		probs[2][onabx][0] = 1-pcol;
-		probs[2][onabx][1] = pcol;
+		if (value < 0 || value > 1)
+		{
+			cerr << "Can't set probability value outside (0,1)\t" << value << "\n";
+			exit(1);
+		}
+		if (prival < 0 || prival > 1)
+		{
+			cerr << "Can't set probability prior value outside (0,1)\t" << prival << "\n";
+			exit(1);
+		}
+		if (prin < 0)
+		{
+			cerr << "Can't set prior observation count negative\t" << prin << "\n";
+			exit(1);
+		}
 
-		for (int i=0; i<l; i++)
-			for (int j=0; j<m; j++)
-				for (int k=0; k<n; k++)
-					logprobs[i][j][k] = log(probs[i][j][k]);
-	}
+		set(i,j,value);
 
-	virtual inline void setPriors(int onabx, double a, double b, double c, double d, double e, double f)
-	{
-		// Probs determined by relative values of pairs. Equivalent #obs found by summing.
-		priors[0][onabx][0] = a;
-		priors[0][onabx][1] = b;
-		priors[1][onabx][0] = c;
-		priors[1][onabx][1] = d;
-		priors[2][onabx][0] = e;
-		priors[2][onabx][1] = f;
-	}
+		doit[i][j] = (update != 0);
 
-	virtual inline void setUpdate(int onabx, int unc, int lat, int col)
-	{
-		doit[0][onabx] = unc;
-		doit[1][onabx] = lat;
-		doit[2][onabx] = col;
+		priors[i][j][0] = (1-prival)*prin;
+		priors[i][j][1] = prival*prin;
 	}
 
 	virtual int nParams()
@@ -188,30 +218,6 @@ public:
 		return 2*nstates;
 	}
 
-	virtual string *paramNames()
-	{
-		string *res = new string[2*nstates];
-
-		if (nstates == 3)
-		{
-			res[0] = "ATest.P(+|unc-)";
-			res[1] = "ATest.P(+|lat-)";
-			res[2] = "ATest.P(+|col-)";
-			res[3] = "ATest.P(+|unc+)";
-			res[4] = "ATest.P(+|lat+)";
-			res[5] = "ATest.P(+|col+)";
-		}
-
-		if (nstates == 2)
-		{
-			res[0] = "ATest.P(+|unc-)";
-			res[1] = "ATest.P(+|col-)";
-			res[2] = "ATest.P(+|unc+)";
-			res[3] = "ATest.P(+|col+)";
-		}
-
-		return res;
-	}
 
 	virtual void write (ostream &os)
 	{

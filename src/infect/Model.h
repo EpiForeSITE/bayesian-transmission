@@ -24,6 +24,8 @@ public:
 	double abxlife;
 	double abxdelay;
 
+	virtual string header() = 0;
+
 	virtual int needEventType(EventCode e)
 	{
 		return 1;
@@ -89,7 +91,5 @@ public:
 	virtual void sampleEpisodes(SystemHistory *h, int max, Random *r) = 0;
 
 	virtual void update(SystemHistory *h, Random *r, int max) = 0;
-
-	virtual void writeHeader(ostream &os) = 0;
 };
 #endif // ALUN_INFECT_MODEL_H

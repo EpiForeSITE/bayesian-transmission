@@ -30,8 +30,8 @@ public:
 
 			if (sscanf(c,"%d%d%lf%d%d",&facility,&unit,&time,&patient,&type) != 5)
 			{
-				err << "Line " << line << ": Format problem";
-				err << "::\t" << c << "\n";
+				err << "Line " << line << ": Format problem:\n";
+				err << "\t" << c << "\n";
 				continue;
 			}
 
