@@ -2,7 +2,8 @@
 #define ALUN_LOGNORMAL_LOGNORMALMODEL_H
 
 #include "../modeling/modeling.h"
-
+#include "LogNormalAbxICP.h"
+#include "MultiUnitAbxICP.h"
 
 class LogNormalModel : public BasicModel
 {
@@ -28,7 +29,7 @@ public:
 		clintsp = new RandomTestParams(nstates);
 		ocp = new OutColParams(nstates,nmetro);
 		icp = new LogNormalAbxICP(nst,0,nmetro);
-		abxp = new AbxParams(nstates);
+		abxp = new models::AbxParams(nstates);
 	}
 
     LogNormalModel(List *l, int nst, int abxtest, int nmetro, int fw = 0, int ch = 0) : BasicModel(nst,fw,ch)
@@ -114,98 +115,61 @@ public:
         return u == 0 ? 0 : new AbxLocationState(u,nstates);
     }
 
-    static LogNormalModel *readModel(istream &is, int nmetro, int forward, int cheat)
+	virtual void read(istream &is)
 	{
-		return readModel(is,0,nmetro,forward,cheat);
-	}
-
-	static LogNormalModel *readModel(istream &is, List *l, int nmetro, int forward, int cheat)
-	{
-		const double timsig = 0.001;
-
-		int maxline = 1000;
-		char *c = new char[maxline];
-		double p, q, r;
-		int up, uq, ur;
-
-		LogNormalModel *model = new LogNormalModel(l,nstates,abxtest,nmetro,forward,cheat);
-
 		string sdump;
 
-		int nstates = 0;
-		int abxtest = 0;
-
-		is >> sdump >> nstates;
-
-		switch(nstates)
-		{
-		case 2:
-		case 3:
-			break;
-		default:
-			cerr << "Only 2 and 3 states models are allowed.\n";
-			exit(1);
-		}
-
+		is >> sdump >> abxbyonoff;
 		skipLine(is);
 
-
-		is >> sdump >> abxtest;
-		skipLine(is);
-
-		if (!abxtest)
+		if (!abxbyonoff)
 		{
 			double abxd = 0.0;
 			is >> sdump >> abxd;
-			model->setAbxDelay(abxd);
+			setAbxDelay(abxd);
 			skipLine(is);
 
 			double abxl = 0.0;
 			is >> sdump >> abxl;
-			model->setAbxLife(abxl);
+			setAbxLife(abxl);
 			skipLine(is);
 		}
 
 		skipLine(is);
 
 	// In situ parameters.
-		readInsituParams(model->getInsituParams(),is);
+	    readInsituParams(getInsituParams(),is);
 		skipLine(is);
 
 	// Surveilence test parameters.
-		TestParams *stsp = model->getSurveilenceTestParams();
+		TestParams *stsp = getSurveilenceTestParams();
 		readTestParams(stsp,is);
 		skipLine(is);
 
 	//  Clinical test parameters.
-		RandomTestParams *ctsp = (RandomTestParams *) model->getClinicalTestParams();
+		RandomTestParams *ctsp = (RandomTestParams *) getClinicalTestParams();
 		if (ctsp != 0 && ctsp != stsp)
 		{
-			readRandomTestParams(ctsp,is);
+		    readRandomTestParams(ctsp,is);
 			skipLine(is);
 		}
 
 	// Out of unit infection parameters.
-		readOutColParams(model->getOutColParams(),is);
+	    readOutColParams(getOutColParams(),is);
 		skipLine(is);
 
 	// In unit infection parameters.
-		readInColParams((LogNormalICP *) model->getInColParams(),is);
+	    readInColParams((LogNormalICP *)getInColParams(),is);
 		skipLine(is);
 
 	// Abx parameters.
 
-		AbxParams *abxp = model->getAbxParams();
+		AbxParams *abxp = getAbxParams();
 		if (abxp != 0)
 		{
-			readAbxParams(abxp,is);
+		    readAbxParams(abxp,is);
 			skipLine(is);
 		}
-
-	// Done.
-		delete [] c;
-
-		return model;
 	}
 
     virtual void handleAbxDoses(HistoryLink *shead)
@@ -566,7 +530,7 @@ public:
 		os << icp << "\t\t";
 		os << abxp << "\t\t";
 	}
-
+/*
 	virtual void writeHeader(ostream &os)
 	{
 		isp->writeHeader(os);
@@ -582,5 +546,6 @@ public:
 		abxp->writeHeader(os);
 		os << "\t";
 	}
+ */
 };
 #endif // ALUN_LOGNORMAL_LOGNORMALMODEL_H

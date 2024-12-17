@@ -11,9 +11,9 @@ public:
 	{
 	}
 
-	virtual PatientState *makePatientState(Patient *p)
+	virtual infect::PatientState *makePatientState(infect::Patient *p)
 	{
-		return p == 0 ? 0 : new AbxPatientState(p,nstates);
+		return p == 0 ? 0 : new infect::AbxPatientState(p,nstates);
 	}
 
 	virtual int needEventType(EventCode e)

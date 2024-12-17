@@ -3,13 +3,12 @@
 
 #include "../infect/infect.h"
 #include "UnitLinkedModel.h"
-using namespaces infect;
 
-class ForwardSimulator : public Object, EventCoding, InfectionCoding
+class ForwardSimulator : public Object, infect::EventCoding, infect::InfectionCoding
 {
 public:
 
-	static void forwardSimulate(UnitLinkedModel *mod, SystemHistory *hist, Random *rand)
+	static void forwardSimulate(UnitLinkedModel *mod, infect::SystemHistory *hist, Random *rand)
 	{
 		if (!mod->isForwardEnabled())
 		{
@@ -21,12 +20,12 @@ public:
 
 		for (Map *x = hist->getAdmissions(); x->hasNext(); )
 		{
-			Episode *e = (Episode *) x->next();
-			HistoryLink *a = (HistoryLink *) x->get(e);
+		    infect::Episode *e = (infect::Episode *) x->next();
+		    infect::HistoryLink *a = (infect::HistoryLink *) x->get(e);
 			map->put(a,hist->getEpisodes()->get(e));
 		}
 
-		for (HistoryLink *l = hist->getSystemHead(); l != 0; )
+		for (infect::HistoryLink *l = hist->getSystemHead(); l != 0; )
 		{
 			switch(l->getEvent()->getType())
 			{
@@ -57,13 +56,13 @@ public:
 			if (l->sNext() == 0)
 				break;
 
-			HistoryLink *phl = 0;
+			infect::HistoryLink *phl = 0;
 			double time = l->sNext()->getEvent()->getTime();
 
-			for (Map *mp = ((SetLocationState *)l->getSState())->getPatients(); mp->hasNext(); )
+			for (Map *mp = ((infect::SetLocationState *)l->getSState())->getPatients(); mp->hasNext(); )
 			{
-				Patient *p = (Patient *)mp->next();
-				HistoryLink *pl = l;
+			    infect::Patient *p = (infect::Patient *)mp->next();
+			    infect::HistoryLink *pl = l;
 				for ( ; pl != 0; pl = pl->sPrev() )
 					if (pl->getEvent()->getPatient() == p)
 						break;
@@ -71,8 +70,8 @@ public:
 				if (pl == 0)
 					cerr << "SHOULDN'T GET HERE IN SIMULATE\n";
 
-				Unit *u = (Unit *) pl->getEvent()->getUnit();
-				HistoryLink *ul = l;
+				infect::Unit *u = (infect::Unit *) pl->getEvent()->getUnit();
+				infect::HistoryLink *ul = l;
 				for ( ; ul != 0; ul = ul->sPrev() )
 					if (ul->getEvent()->getUnit() == u)
 						break;
@@ -108,7 +107,7 @@ public:
 					break;
 				}
 
-				HistoryLink *hl = mod->makeHistLink
+				infect::HistoryLink *hl = mod->makeHistLink
 				(
 					phl->getEvent()->getFacility(),
 					phl->getEvent()->getUnit(),
@@ -132,9 +131,9 @@ public:
 
 protected:
 
-	static EpisodeHistory *getEpisodeHistory(Map *map, HistoryLink *h)
+	static infect::EpisodeHistory *getEpisodeHistory(Map *map, infect::HistoryLink *h)
 	{
-		for (HistoryLink *l = h; l != 0; l = l->pPrev())
+		for (infect::HistoryLink *l = h; l != 0; l = l->pPrev())
 		{
 			switch(l->getEvent()->getType())
 			{
@@ -146,7 +145,7 @@ protected:
 			case admission0:
 			case admission1:
 			case admission2:
-				return (EpisodeHistory *) map->get(l);
+				return (infect::EpisodeHistory *) map->get(l);
 
 			default:
 				break;
@@ -155,11 +154,11 @@ protected:
 		return 0;
 	}
 
-	static void randImportState(UnitLinkedModel *mod, HistoryLink *h, EpisodeHistory *eh, Random *rand)
+	static void randImportState(UnitLinkedModel *mod, infect::HistoryLink *h, infect::EpisodeHistory *eh, Random *rand)
 	{
-		Facility *f = h->getEvent()->getFacility();
-		Unit *u = h->getEvent()->getUnit();
-		Patient *p = h->getEvent()->getPatient();
+	    infect::Facility *f = h->getEvent()->getFacility();
+	    infect::Unit *u = h->getEvent()->getUnit();
+	    infect::Patient *p = h->getEvent()->getPatient();
 		double atime = h->getEvent()->getTime();
 
 		InfectionStatus prev = nullstatus;
@@ -212,7 +211,7 @@ protected:
 		}
 	}
 
-	static void randTestResult(UnitLinkedModel *mod, HistoryLink *h, Random *rand)
+	static void randTestResult(UnitLinkedModel *mod, infect::HistoryLink *h, Random *rand)
 	{
 		TestParams *tpar = 0;
 		EventCode tres = h->getEvent()->getType();
@@ -249,7 +248,7 @@ protected:
 		h->getEvent()->setType(tres);
 	}
 
-	static double randTimeToEvent(UnitLinkedModel *mod, double atime, HistoryLink *ph, HistoryLink *uh, Random *rand)
+	static double randTimeToEvent(UnitLinkedModel *mod, double atime, infect::HistoryLink *ph, infect::HistoryLink *uh, Random *rand)
 	{
 		double time = 0;
 

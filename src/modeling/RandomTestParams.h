@@ -27,12 +27,12 @@ public:
 		rateprior = new double[n];
 		updaterate = new int[n];
 
-		setRates(1,1,1);
-		setRatePriors(1,1,1,1,1,1);
+		set(1,0,1,1,1,1);
 		if (nstates == 2)
-			setUpdateRates(1,0,1);
+			set(1,1,1,0,1,1);
 		if (nstates == 3)
-			setUpdateRates(1,1,1);
+			set(1,1,1,1,1,1);
+		set(1,2,1,1,1,1);
 
 		initCounts();
 	}
@@ -47,19 +47,44 @@ public:
 		delete [] rateprior;
 	}
 
+	virtual string header()
+	{
+		stringstream s;
+
+		if (nstates == 3)
+		{
+			s << "RTest.Punc";
+                	s << "\t" << "RTest.Plat";
+                        s << "\t" << "RTest.Pcol";
+                        s << "\t" << "RTest.rateUnc";
+                        s << "\t" << "RTest.rateLat";
+                        s << "\t" << "RTest.rateCol";
+		}
+
+		if (nstates == 2)
+		{
+			s << "RTest.Punc";
+                        s << "\t" << "RTest.Pcol";
+                        s << "\t" << "RTest.rateUnc";
+                        s << "\t" << "RTest.rateCol";
+		}
+
+		return s.str();
+	}
+
 // Implement Parameters.
 
-	inline double logProb(HistoryLink *h)
+	inline double logProb(infect::HistoryLink *h)
 	{
 		double x = TestParams::logProb(h);
 		x += log(rates[stateIndex(h->getPState()->infectionStatus())]);
 		return x;
 	}
 
-	inline virtual double logProbGap(HistoryLink *g, HistoryLink *h)
+	inline virtual double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h)
 	{
 		double time = h->getEvent()->getTime()-g->getEvent()->getTime();
-		LocationState *s = h->uPrev()->getUState();
+	    infect::LocationState *s = h->uPrev()->getUState();
 		double x = 0;
 		x += -time * s->getSusceptible() * rates[0];
 		x += -time * s->getLatent() * rates[1];
@@ -77,16 +102,16 @@ public:
 		}
 	}
 
-	inline void count(HistoryLink *h)
+	inline void count(infect::HistoryLink *h)
 	{
 		TestParams::count(h);
 		shapepar[stateIndex(h->getPState()->infectionStatus())] += 1;
 	}
 
-	inline virtual void countGap(HistoryLink *g, HistoryLink *h)
+	inline virtual void countGap(infect::HistoryLink *g, infect::HistoryLink *h)
 	{
 		double time = h->getEvent()->getTime() - g->getEvent()->getTime();
-		LocationState *s = h->uPrev()->getUState();
+	    infect::LocationState *s = h->uPrev()->getUState();
 		ratepar[0] += time * s->getSusceptible();
 		ratepar[1] += time * s->getLatent();
 		ratepar[2] += time * s->getColonized();
@@ -150,14 +175,14 @@ public:
 		rateprior[i] = n;
 	}
 
-	virtual int nParam()
+	virtual int nParam() const
 	{
 		return 2*nstates;
 	}
 
-	virtual string *paramNames()
+	virtual std::vector<std::string> paramNames()
 	{
-		string *res = new string[2*nstates];
+	    std::vector<std::string> res(2*nstates);
 
 		if (nstates == 3)
 		{

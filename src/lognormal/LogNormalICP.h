@@ -1,9 +1,9 @@
 #ifndef ALUN_LOGNORMAL_LOGNORMALCP_H
 #define ALUN_LOGNORMAL_LOGNORMALCP_H
 
-#include "../modeling/InColParams.h"
+#include "../modeling/modeling.h"
 
-class LogNormalICP : public InColParams
+class LogNormalICP : public models::InColParams
 {
 protected:
 
@@ -225,7 +225,7 @@ public:
 		sigmaprop[i][j] = sig;
 	}
 
-	virtual int nParam()
+	virtual int nParam() const
 	{
 		if (pnames[0][0] == "NOT")
 			return 1;
@@ -242,9 +242,9 @@ public:
 		return t;
 	}
 
-	virtual string *paramNames()
+	virtual std::vector<std::string> paramNames() const
 	{
-		string *res = new string[nParam()];
+	    std::vector<std::string> res(nParam());
 
 		if (pnames[0][0] == "NOT")
 		{

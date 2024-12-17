@@ -8,7 +8,6 @@
 #include "InColParams.h"
 #include "AbxParams.h"
 
-using namespaces infect;
 
 
 /*
@@ -17,7 +16,7 @@ using namespaces infect;
 	history lists, not Facility or System lists.
 */
 
-class UnitLinkedModel : public Model
+class UnitLinkedModel : public infect::Model
 {
 protected:
 
@@ -50,38 +49,16 @@ public:
 	}
 
 
-	virtual double logLikelihood(SystemHistory *hist)
+	virtual double logLikelihood(infect::SystemHistory *hist)
 	{
-/*
-int nev = 0;
-int ncol = 0;
-*/
 		double xtot = 0;
 		for (Map *h = hist->getUnitHeads(); h->hasNext(); )
 		{
 			double utot = 0;
-			for (HistoryLink *l = (HistoryLink *) h->nextValue(); l != 0; l=l->uNext())
-			{
+			for (infect::HistoryLink *l = (infect::HistoryLink *) h->nextValue(); l != 0; l=l->uNext())
 				utot += logLikelihood(l);
-
-/*
-				switch (l->getEvent()->getType())
-				{
-				case acquisition:
-				case progression:
-				case clearance:
-					ncol++;
-				default:
-					nev++;
-				}
-*/
-
-			}
 			xtot += utot;
 		}
-/*
-cerr << nev-ncol << "\t" << ncol << "\n";
-*/
 		return xtot;
 	}
 
@@ -92,7 +69,7 @@ public:
 		return forwardEnabled;
 	}
 
-	inline int getNStates()
+	inline int getNStates() const
 	{
 		return nstates;
 	}
@@ -137,11 +114,11 @@ public:
 		abxp = p;
 	}
 
-	virtual HistoryLink *makeHistLink(Facility *f, Unit *u, Patient *p, double time, EventCode type, int linked)
+	virtual infect::HistoryLink *makeHistLink(infect::Facility *f, infect::Unit *u, infect::Patient *p, double time, EventCode type, int linked)
 	{
-		return new HistoryLink
+		return new infect::HistoryLink
 		(
-			new Event(f,u,time,p,type),
+			new infect::Event(f,u,time,p,type),
 			makeSystemState(),
 			makeFacilityState(f),
 			makeUnitState(u),
@@ -150,18 +127,32 @@ public:
 		);
 	}
 
-	virtual void write (ostream &os)
+		virtual string header()
 	{
-		os << isp << "\t\t";
-		os << survtsp << "\t\t";
-		if (clintsp != survtsp)
-			os << clintsp << "\t\t";
-		os << ocp << "\t\t";
-		os << icp << "\t\t";
-		if (abxp != 0)
-			os << abxp << "\t\t";
+		stringstream os;
+		os << isp->header();
+		os << "\t" << survtsp->header();
+		if (clintsp && clintsp != survtsp)
+			os << "\t" << clintsp->header();
+		os << "\t" << ocp->header();
+		os << "\t" << icp->header();
+		if (abxp)
+			os << "\t" << abxp->header();
+		return os.str();
 	}
 
+    virtual void write (ostream &os)
+	{
+		os << isp;
+		os << "\t" << survtsp;
+		if (clintsp && clintsp != survtsp)
+			os << "\t" << clintsp;
+		os << "\t" << ocp;
+		os << "\t" << icp;
+		if (abxp != 0)
+			os << "\t" << abxp;
+	}
+    /*
 	virtual void writeHeader(ostream &os)
 	{
 		isp->writeHeader(os);
@@ -184,103 +175,76 @@ public:
 			os << "\t";
 		}
 	}
-
+    */
 //protected:
 
 	virtual int needEventType(EventCode e)
 	{
-		if (cheating)
+		switch(e)
 		{
-			switch(e)
-			{
-			case insitu:
-			case insitu0:
-			case insitu1:
-			case insitu2:
-			case admission:
-			case admission0:
-			case admission1:
-			case admission2:
-			case discharge:
-			case negsurvtest:
-			case possurvtest:
-			case negclintest:
-			case posclintest:
-			case acquisition:
-			case progression:
-			case clearance:
-			case abxdose:
-	//		case abxon:
-	//		case abxoff:
-				return 1;
-			default:
-				return 0;
-			}
-		}
-		else
-		{
-			switch(e)
-			{
-			case insitu:
-			case insitu0:
-			case insitu1:
-			case insitu2:
-			case admission:
-			case admission0:
-			case admission1:
-			case admission2:
-			case discharge:
-			case negsurvtest:
-			case possurvtest:
-			case negclintest:
-			case posclintest:
-			case abxdose:
-		//	case abxon:
-		//	case abxoff:
-				return 1;
-			default:
-				return 0;
-			}
+		case insitu:
+		case insitu0:
+		case insitu1:
+		case insitu2:
+		case admission:
+		case admission0:
+		case admission1:
+		case admission2:
+		case discharge:
+		case negsurvtest:
+		case possurvtest:
+		case negclintest:
+		case posclintest:
+		case abxdose:
+		//case abxon:
+		//case abxoff:
+			return 1;
+		case acquisition:
+		case progression:
+		case clearance:
+			return cheating;
+		default:
+			return 0;
 		}
 	}
 
-	virtual LocationState *makeSystemState()
+	virtual infect::LocationState *makeSystemState()
 	{
-		return ( forwardEnabled ? new SetLocationState(0,nstates) : 0 );
+		return ( forwardEnabled ? new infect::SetLocationState(0,nstates) : 0 );
 	}
 
-	virtual LocationState *makeFacilityState(Facility *f)
+	virtual infect::LocationState *makeFacilityState(infect::Facility *f)
 	{
 		return 0;
 	}
 
-	virtual LocationState *makeUnitState(Unit *u)
+	virtual infect::LocationState *makeUnitState(infect::Unit *u)
 	{
-		return u == 0 ? 0 : new LocationState(u,nstates);
+		return u == 0 ? 0 : new infect::CountLocationState(u,nstates);
 	}
 
-	virtual PatientState *makePatientState(Patient *p)
+	virtual infect::PatientState *makePatientState(infect::Patient *p)
 	{
-		return p == 0 ? 0 : new PatientState(p,nstates);
+		return p == 0 ? 0 : new infect::PatientState(p,nstates);
 	}
 
-	virtual EpisodeHistory *makeEpisodeHistory(HistoryLink *a, HistoryLink *d)
+	virtual infect::EpisodeHistory *makeEpisodeHistory(infect::HistoryLink *a, infect::HistoryLink *d)
 	{
 		if (forwardEnabled)
-			return new SystemEpisodeHistory(a,d);
+			return new infect::SystemEpisodeHistory(a,d);
 		else
-			return new UnitEpisodeHistory(a,d);
+			return new infect::UnitEpisodeHistory(a,d);
 	}
 
-	void countUnitStats(HistoryLink *l)
+	void countUnitStats(infect::HistoryLink *l)
 	{
-		HistoryLink *prev = l;
+	    infect::HistoryLink *prev = l;
 
-		for (HistoryLink *h = l->uNext() ; h != 0; h = h->uNext())
+		for (infect::HistoryLink *h = l->uNext() ; h != 0; h = h->uNext())
 		{
 			icp->countGap(prev,h);
 			survtsp->countGap(prev,h);
-			if (clintsp != survtsp)
+			if (clintsp && clintsp != survtsp)
 				clintsp->countGap(prev,h);
 			if (abxp != 0)
 				abxp->countGap(prev,h);
@@ -311,7 +275,8 @@ public:
 
 			case negclintest:
 			case posclintest:
-				clintsp->count(h);
+				if (clintsp)
+				    clintsp->count(h);
 				break;
 
 			case acquisition:
@@ -331,6 +296,8 @@ public:
 			case marker:
 			case start:
 			case stop:
+			case isolon:
+			case isoloff:
 				break;
 
 			default:
@@ -342,15 +309,15 @@ public:
 		}
 	}
 
-	virtual double logLikelihood(EpisodeHistory *h)
+	virtual double logLikelihood(infect::EpisodeHistory *h)
 	{
 		return logLikelihood(h,0);
 	}
 
-	virtual double logLikelihood(EpisodeHistory *h, int opt)
+	virtual double logLikelihood(infect::EpisodeHistory *h, int opt)
 	{
 		double x = 0;
-		for (HistoryLink *l = h->admissionLink(); ; l = l->uNext())
+		for (infect::HistoryLink *l = h->admissionLink(); ; l = l->uNext())
 		{
 			x += logLikelihood(l);
 			if (l == h->dischargeLink())
@@ -366,18 +333,18 @@ public:
 		return x;
 	}
 
-	virtual double logLikelihood(Patient *pat, HistoryLink *h)
+	virtual double logLikelihood(infect::Patient *pat, infect::HistoryLink *h)
 	{
 		return logLikelihood(pat,h,0);
 	}
 
-	virtual double logLikelihood(Patient *pat, HistoryLink *h, int opt)
+	virtual double logLikelihood(infect::Patient *pat, infect::HistoryLink *h, int opt)
 	{
 		double x = 0;
 
-		for (HistoryLink *l = h; l != 0; )
+		for (infect::HistoryLink *l = h; l != 0; )
 		{
-			Event *e = l->getEvent();
+		    infect::Event *e = l->getEvent();
 			if (e->getPatient() == pat && (e->isAdmission() || e->isInsitu()))
 				x += logLikelihood(l,0);
 			else
@@ -392,12 +359,12 @@ public:
 		return x;
 	}
 
-	virtual double logLikelihood(HistoryLink *h)
+	virtual double logLikelihood(infect::HistoryLink *h)
 	{
 		return logLikelihood(h,1);
 	}
 
-	virtual double logLikelihood(HistoryLink *h, int dogap)
+	virtual double logLikelihood(infect::HistoryLink *h, int dogap)
 	{
 		switch(h->getEvent()->getType())
 		{
@@ -408,14 +375,14 @@ public:
 			break;
 		}
 
-		HistoryLink *prev = h->uPrev();
+	    infect::HistoryLink *prev = h->uPrev();
 		double x = 0;
 
 		if (dogap)
 		{
 			x += icp->logProbGap(prev,h);
 			x += survtsp->logProbGap(prev,h);
-			if (clintsp != survtsp)
+			if (clintsp && clintsp != survtsp)
 				x += clintsp->logProbGap(prev,h);
 			if (abxp != 0)
 				x += abxp->logProbGap(prev,h);
@@ -453,7 +420,8 @@ public:
 
 		case negclintest:
 		case posclintest:
-			x += clintsp->logProb(h);
+			if (clintsp)
+			    x += clintsp->logProb(h);
 			break;
 
 		case abxon:
@@ -467,6 +435,8 @@ public:
 		case marker:
 		case start:
 		case stop:
+		case isolon:
+		case isoloff:
 			break;
 
 		default:
@@ -477,16 +447,16 @@ public:
 		return x;
 	}
 
-	void update(SystemHistory *hist, Random *r)
+	void update(infect::SystemHistory *hist, Random *r)
 	{
 		update(hist,r,0);
 	}
 
-	void update(SystemHistory *hist, Random *r, int max)
+	void update(infect::SystemHistory *hist, Random *r, int max)
 	{
 		isp->initCounts();
 		survtsp->initCounts();
-		if (clintsp != survtsp)
+		if (clintsp && clintsp != survtsp)
 			clintsp->initCounts();
 		icp->initCounts();
 		ocp->initCounts();
@@ -494,12 +464,12 @@ public:
 			abxp->initCounts();
 
 		for (Map *h = hist->getUnitHeads(); h->hasNext(); )
-			countUnitStats((HistoryLink *)h->nextValue());
+			countUnitStats((infect::HistoryLink *)h->nextValue());
 
 		isp->update(r,max);
 		icp->update(r,max);
 		survtsp->update(r,max);
-		if (clintsp != survtsp)
+		if (clintsp && clintsp != survtsp)
 			clintsp->update(r,max);
 		ocp->update(r,max);
 		if (abxp != 0)

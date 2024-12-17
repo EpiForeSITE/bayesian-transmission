@@ -2,6 +2,8 @@
 #define ALUN_MODELING_INSITUPARAMS_H
 
 #include "Parameters.h"
+#include <vector>
+#include <string>
 
 class InsituParams : public Parameters
 {
@@ -48,7 +50,7 @@ public:
 		initCounts();
 	}
 
-	InsituParams()
+	InsituParams():nstates(0)
 	{
 		probs = 0;
 		logprobs = 0;
@@ -56,6 +58,27 @@ public:
 		priors = 0;
 		doit = 0;
 	}
+
+    InsituParams(std::vector<double> probs, std::vector<double> priors, std::vector<bool> doit)
+    {
+        nstates = probs.size();
+
+        this->probs = new double[nstates];
+        this->logprobs = new double[nstates];
+        this->counts = new double[nstates];
+        this->priors = new double[nstates];
+        this->doit = new int[3];
+
+        for (int i = 0; i < 3; i++)
+            {
+                this->probs[i] = probs[i];
+                this->logprobs[i] = log(probs[i]);
+                this->priors[i] = priors[i];
+                this->doit[i] = doit[i];
+            }
+
+        initCounts();
+    }
 
 	~InsituParams()
 	{
@@ -69,6 +92,42 @@ public:
 			delete [] priors;
 		if (doit)
 			delete [] doit;
+	}
+
+	virtual inline int nParam()
+	{
+		return nstates;
+	}
+
+	virtual inline std::vector<std::string> paramNames()
+	{
+		std::vector<std::string> res(nstates);
+
+		if (nstates == 3)
+		{
+			res[0] = "Insit.P(unc)";
+			res[1] = "Insit.P(lat)";
+			res[2] = "Insit.P(col)";
+		}
+		if (nstates == 2)
+		{
+			res[0] = "Insit.P(unc)";
+			res[1] = "Insit.P(col)";
+		}
+
+		return res;
+	}
+
+	virtual string header()
+	{
+		auto names = paramNames();
+		stringstream s;
+		s << names[0] << "\t";
+		if (nstates == 3)
+			s << names[1] << "\t";
+		s << names[2];
+
+		return s.str();
 	}
 
 	virtual double *statusProbs()
@@ -93,7 +152,7 @@ public:
 
 // Implement Parameters.
 
-	virtual inline double logProb(HistoryLink *h)
+	virtual inline double logProb(infect::HistoryLink *h)
 	{
 		int i = stateIndex(h->getPState()->infectionStatus());
 		return ( i >= 0 ? logprobs[i] : 0);
@@ -105,7 +164,7 @@ public:
 			counts[i] = priors[i];
 	}
 
-	virtual inline void count(HistoryLink *h)
+	virtual inline void count(infect::HistoryLink *h)
 	{
 		int i = stateIndex(h->getPState()->infectionStatus());
 		if (i >= 0)
@@ -146,7 +205,7 @@ public:
 
 // Personal accessors.
 
-	inline int getNStates()
+	inline int getNStates() const
 	{
 		return nstates;
 	}
@@ -174,30 +233,6 @@ public:
 		doit[0] = u;
 		doit[1] = l;
 		doit[2] = c;
-	}
-
-	virtual inline int nParam()
-	{
-		return nstates;
-	}
-
-	virtual inline string *paramNames()
-	{
-		string *res = new string[nstates];
-
-		if (nstates == 3)
-		{
-			res[0] = "Insit.P(unc)";
-			res[1] = "Insit.P(lat)";
-			res[2] = "Insit.P(col)";
-		}
-		if (nstates == 2)
-		{
-			res[0] = "Insit.P(unc)";
-			res[1] = "Insit.P(col)";
-		}
-
-		return res;
 	}
 
 	virtual void write(ostream &os)

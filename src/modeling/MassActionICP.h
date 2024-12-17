@@ -102,7 +102,7 @@ public:
 
 // Implement InColParams.
 
-	virtual double *acquisitionRates(double time, PatientState *p, LocationState *s)
+	virtual double *acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s)
 	{
 		double *P = new double[nstates];
 
@@ -122,7 +122,7 @@ public:
 		return P;
 	}
 
-	virtual inline double eventRate(double time, EventCode c, PatientState *p, LocationState *s)
+	virtual inline double eventRate(double time, EventCode c, infect::PatientState *p, infect::LocationState *s)
 	{
 		switch(c)
 		{
@@ -137,7 +137,7 @@ public:
 		}
 	}
 
-	virtual double **rateMatrix(double time, PatientState *p, LocationState *u)
+	virtual double **rateMatrix(double time, infect::PatientState *p, infect::LocationState *u)
 	{
 		double **Q = cleanAlloc(nstates,nstates);
 
@@ -163,7 +163,7 @@ public:
 	}
 // Implement Parameters.
 
-	virtual inline double logProb(HistoryLink *h)
+	virtual inline double logProb(infect::HistoryLink *h)
 	{
 		switch(h->getEvent()->getType())
 		{
@@ -179,9 +179,9 @@ public:
 /*
 	This will fail if eventRate depends on PatientStatus.
 */
-	virtual inline double logProbGap(HistoryLink *g, HistoryLink *h)
+	virtual inline double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h)
 	{
-		LocationState *s = h->uPrev()->getUState();
+	    infect::LocationState *s = h->uPrev()->getUState();
 		return - (h->getEvent()->getTime() - g->getEvent()->getTime()) *
 		(
 			(s->getSusceptible() == 0 ? 0 : s->getSusceptible() * eventRate(g->getEvent()->getTime(),acquisition,0,s)) +
@@ -199,15 +199,15 @@ public:
 		}
 	}
 
-	virtual inline void count(HistoryLink *h)
+	virtual inline void count(infect::HistoryLink *h)
 	{
 		shapepar[eventIndex(h->getEvent()->getType())] += 1;
 	}
 
-	virtual inline void countGap(HistoryLink *g, HistoryLink *h)
+	virtual inline void countGap(infect::HistoryLink *g, infect::HistoryLink *h)
 	{
 		double time = h->getEvent()->getTime() - g->getEvent()->getTime();
-		LocationState *s = h->uPrev()->getUState();
+	    infect::LocationState *s = h->uPrev()->getUState();
 		ratepar[0] += time * s->getSusceptible() * acquisitionFactor(s->getColonized(),s->getTotal());
 		ratepar[1] += time * s->getLatent();
 		ratepar[2] += time * s->getColonized();
@@ -253,7 +253,7 @@ public:
 			cerr << "Can't set prior observation count negative\t." << prin << "\n";
 			exit(1);
 		}
-	
+
 		set(i,value);
 
 		doit[i] = update;
@@ -263,14 +263,14 @@ public:
 	}
 
 
-	virtual int nParam()
+	virtual int nParam() const
 	{
 		return nstates;
 	}
 
-	virtual string *paramNames()
+	virtual std::vector<std::string> paramNames()
 	{
-		string *res = new string[nstates];
+	    std::vector<std::string> res(nstates);
 
 		if (nstates == 3)
 		{

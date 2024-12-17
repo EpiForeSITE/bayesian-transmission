@@ -20,17 +20,17 @@ public:
 
 public:
 
-	virtual void forwardSimulate(SystemHistory *h, Random *r)
+	virtual void forwardSimulate(infect::SystemHistory *h, Random *r)
 	{
 		ForwardSimulator::forwardSimulate(this,h,r);
 	}
 
-	virtual void initEpisodeHistory(EpisodeHistory *eh, bool pos)
+	virtual void initEpisodeHistory(infect::EpisodeHistory *eh, bool pos)
 	{
 		ConstrainedSimulator::initEpisodeHistory(this,eh,pos);
 	}
 
-	virtual void sampleEpisodes(SystemHistory *h, int max, Random *rand)
+	virtual void sampleEpisodes(infect::SystemHistory *h, int max, Random *rand)
 	{
 		ConstrainedSimulator::sampleEpisodes(this,h,max,rand);
 	}

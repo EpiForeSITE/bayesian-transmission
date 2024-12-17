@@ -2,26 +2,23 @@
 #define ALUN_MODELING_PARAMETERS_H
 
 #include "../infect/infect.h"
-using namespaces infect;
 
-class Parameters : public Object, public EventCoding, public InfectionCoding
+class Parameters : public Object, public infect::EventCoding, public infect::InfectionCoding
 {
 public:
-	virtual int nParam() = 0;
-	virtual string *paramNames() = 0;
 
-	virtual double logProb(HistoryLink *h) = 0;
-	virtual double logProbGap(HistoryLink *g, HistoryLink *h) { return 0; }
+	virtual double logProb(infect::HistoryLink *h) = 0;
+	virtual double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) { return 0; }
 
 	virtual void initCounts() = 0;
-	virtual void count(HistoryLink *h) = 0;
-	virtual void countGap(HistoryLink *g, HistoryLink *h) { }
+	virtual void count(infect::HistoryLink *h) = 0;
+	virtual void countGap(infect::HistoryLink *g, infect::HistoryLink *h) { }
 
 	virtual void update(Random *r, int max) = 0;
 
 	virtual string header() = 0;
 
-	virtual int getNStates() = 0;
+	virtual int getNStates() const = 0;
 
 
 	virtual void update(Random *r)
@@ -44,7 +41,7 @@ public:
 		}
 	}
 
-	virtual inline int stateIndex(InfectionStatus s)
+	virtual inline int stateIndex(InfectionStatus s) const
 	{
 		switch(s)
 		{
@@ -59,7 +56,7 @@ public:
 		}
 	}
 
-	virtual inline int testResultIndex(EventCode e)
+	virtual inline int testResultIndex(EventCode e) const
 	{
 		switch(e)
 		{

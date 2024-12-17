@@ -20,15 +20,14 @@
 	// Model parameter classes.
 
 		#include "Parameters.h"
-		#include "InsituParams.h"
 		#include "TestParams.h"
+		#include "InsituParams.h"
 		#include "TestParamsAbx.h"
 		#include "RandomTestParams.h"
 		#include "OutColParams.h"
 		#include "InColParams.h"
 		#include "MassActionICP.h"
 		#include "AbxParams.h"
-
 	// Models.
 		#include "UnitLinkedModel.h"
 		#include "ForwardSimulator.h"
@@ -40,7 +39,6 @@
 
 	// Command line options handling.
 		#include "Options.h"
-
 	}
 
 	using namespace models;

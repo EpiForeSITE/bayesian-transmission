@@ -31,3 +31,102 @@ test_that("Can Create System class", {
     expect_equal(test$log, "")
 
 })
+test_that("RRandom", {
+
+    RR <- RRandom$new()
+
+    runif(1)
+    seed <- .GlobalEnv$.Random.seed
+
+    a <- RR$runif()
+    b <- RR$runif()
+    .GlobalEnv$.Random.seed <- seed
+    c <- RR$runif()
+    .GlobalEnv$.Random.seed <- seed
+    d <- runif(1)
+
+    expect_true( 0<=a && a<=1)
+    expect_false(a==b)
+    expect_true(a==c)
+    expect_true(a==d)
+
+    seed <- .GlobalEnv$.Random.seed
+    a <- RR$runif2(50, 100)
+    b <- RR$runif2(50, 100)
+    .GlobalEnv$.Random.seed <- seed
+    c <- RR$runif2(50, 100)
+    .GlobalEnv$.Random.seed <- seed
+    d <- runif(1, 50, 100)
+
+    expect_true( 50<=a && a<=100)
+    expect_false(a==b)
+    expect_true(a==c)
+    expect_true(a==d)
+
+
+    seed <- .GlobalEnv$.Random.seed
+    a <- RR$rexp()
+    b <- RR$rexp()
+    .GlobalEnv$.Random.seed <- seed
+    c <- RR$rexp()
+    .GlobalEnv$.Random.seed <- seed
+    d <- rexp(1)
+    expect_true(0<=a)
+    expect_false(a==b)
+    expect_true(a==c)
+    expect_true(a==d)
+
+    seed <- .GlobalEnv$.Random.seed
+    a <- RR$rexp1(100)
+    b <- RR$rexp1(100)
+    .GlobalEnv$.Random.seed <- seed
+    c <- RR$rexp1(100)
+    .GlobalEnv$.Random.seed <- seed
+    d <- rexp(1, 100)
+    expect_true(0<=a)
+    expect_false(a==b)
+    expect_true(a==c)
+    expect_true(a==d)
+
+    seed <- .GlobalEnv$.Random.seed
+    a <- RR$rgamma(1,1)
+    b <- RR$rgamma(1,1)
+    .GlobalEnv$.Random.seed <- seed
+    c <- RR$rnorm()
+    .GlobalEnv$.Random.seed <- seed
+    d <- rnorm(1)
+    expect_false(a==b)
+    expect_true(a==c)
+    expect_true(a==d)
+
+    seed <- .GlobalEnv$.Random.seed
+    a <- RR$rnorm()
+    b <- RR$rnorm()
+    .GlobalEnv$.Random.seed <- seed
+    c <- RR$rnorm()
+    .GlobalEnv$.Random.seed <- seed
+    d <- rnorm(1)
+    expect_false(a==b)
+    expect_true(a==c)
+    expect_true(a==d)
+
+
+
+})
+
+test_that("InsituParams", {
+    IP <- InsituParams$new(3)
+
+    expect_equal(IP$nParam, 3L)
+    expect_length(IP$paramNames, 3L)
+    IP$set(1,1,1)
+
+
+    IP2 <- InsituParams$new(2)
+
+    expect_equal(IP2$nParam, 2L)
+    expect_length(IP2$paramNames, 2L)
+
+
+
+})

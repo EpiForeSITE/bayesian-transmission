@@ -2,6 +2,8 @@
 #define ALUN_MODELING_MASSACTIONMODEL_H
 
 #include "BasicModel.h"
+#include "MassActionICP.h"
+#include "RandomTestParams.h"
 
 class MassActionModel : public BasicModel
 {

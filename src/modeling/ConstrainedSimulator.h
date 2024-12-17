@@ -2,10 +2,9 @@
 #define ALUN_MODELING_CONTRAINTEDSIMULATOR_H
 
 #include "../infect/infect.h"
-using namespace infect;
 #include "UnitLinkedModel.h"
 
-class ConstrainedSimulator : public Object, EventCoding, InfectionCoding
+class ConstrainedSimulator : public Object, infect::EventCoding, infect::InfectionCoding
 {
 protected:
 
@@ -61,14 +60,14 @@ protected:
 		return nullevent;
 	}
 
-	static void getProposal(UnitLinkedModel *mod, EpisodeHistory *h, int *nsim, double **times, int **states)
+	static void getProposal(UnitLinkedModel *mod, infect::EpisodeHistory *h, int *nsim, double **times, int **states)
 	{
 		vector<int> vs;
 		vector<double> vt;
 		vs.push_back(0);
 		vt.push_back(h->admissionTime());
 
-		for (HistoryLink *l = h->getProposalHead(); l != 0; l = l->hNext())
+		for (infect::HistoryLink *l = h->getProposalHead(); l != 0; l = l->hNext())
 		{
 			if (!l->isLinked())
 			{
@@ -91,11 +90,11 @@ protected:
 		}
 	}
 
-	static void putProposal(UnitLinkedModel *mod, EpisodeHistory *h, int nsim, double *times, int *states)
+	static void putProposal(UnitLinkedModel *mod, infect::EpisodeHistory *h, int nsim, double *times, int *states)
 	{
-		Facility *f = h->admissionLink()->getEvent()->getFacility();
-		Unit *u = h->admissionLink()->getEvent()->getUnit();
-		Patient *p = h->admissionLink()->getEvent()->getPatient();
+	    infect::Facility *f = h->admissionLink()->getEvent()->getFacility();
+	    infect::Unit *u = h->admissionLink()->getEvent()->getUnit();
+	    infect::Patient *p = h->admissionLink()->getEvent()->getPatient();
 
 		if (mod->getNStates() == 2)
 		{
@@ -121,11 +120,11 @@ protected:
 			h->proposeSwitch(mod->makeHistLink(f,u,p,times[i],eventOutOfState(mod->getNStates(),states[i-1]),1));
 	}
 
-	static Markov *getMarkovProcess(UnitLinkedModel *mod, HistoryLink *p, Random *rand, int *nalloc, double **mytime, bool **mydoit, double ***myS, double ****myQ)
+	static Markov *getMarkovProcess(UnitLinkedModel *mod, infect::HistoryLink *p, Random *rand, int *nalloc, double **mytime, bool **mydoit, double ***myS, double ****myQ)
 	{
-		Patient *pat = p->getEvent()->getPatient();
+	    infect::Patient *pat = p->getEvent()->getPatient();
 		int n = 0;
-		HistoryLink *l;
+		infect::HistoryLink *l;
 		bool first = true;
 
 		for (l=p, n=0; l!=0; )
@@ -229,18 +228,18 @@ protected:
 
 public:
 
-	static void sampleEpisodes(UnitLinkedModel *mod, SystemHistory *h, int max, Random *rand)
+	static void sampleEpisodes(UnitLinkedModel *mod, infect::SystemHistory *h, int max, Random *rand)
 	{
 		for (Map *p = h->getPatientHeads(); p->hasNext(); )
-			sampleHistory(mod,h,(HistoryLink *)p->nextValue(),max,rand);
+			sampleHistory(mod,h,(infect::HistoryLink *)p->nextValue(),max,rand);
 	}
 
-	static void sampleHistory(UnitLinkedModel *mod, SystemHistory *hist, HistoryLink *plink, int max, Random *rand)
+	static void sampleHistory(UnitLinkedModel *mod, infect::SystemHistory *hist, infect::HistoryLink *plink, int max, Random *rand)
 	{
 
-		Patient *pat = plink->getEvent()->getPatient();
+	    infect::Patient *pat = plink->getEvent()->getPatient();
 		int neps = 0;
-		EpisodeHistory **eh = hist->getPatientHistory(pat,&neps);
+		infect::EpisodeHistory **eh = hist->getPatientHistory(pat,&neps);
 
 		double oldloglike = 0;
 		double oldpropprob = 0;
@@ -323,7 +322,7 @@ public:
 		delete mark;
 	}
 
-	static void initEpisodeHistory(UnitLinkedModel *mod, EpisodeHistory *eh, bool haspostest)
+	static void initEpisodeHistory(UnitLinkedModel *mod, infect::EpisodeHistory *eh, bool haspostest)
 	{
 		if (mod->isCheating())
 		{
@@ -333,9 +332,9 @@ public:
 
 		if (haspostest)
 		{
-			Facility *f = eh->admissionLink()->getEvent()->getFacility();
-			Unit *u = eh->admissionLink()->getEvent()->getUnit();
-			Patient *p = eh->admissionLink()->getEvent()->getPatient();
+		    infect::Facility *f = eh->admissionLink()->getEvent()->getFacility();
+		    infect::Unit *u = eh->admissionLink()->getEvent()->getUnit();
+		    infect::Patient *p = eh->admissionLink()->getEvent()->getPatient();
 			double admit = eh->admissionTime();
 
 			switch(mod->getNStates())
@@ -352,14 +351,14 @@ public:
 		}
 	}
 
-	static void cheatInitEpisodeHistory(UnitLinkedModel *mod, EpisodeHistory *eh)
+	static void cheatInitEpisodeHistory(UnitLinkedModel *mod, infect::EpisodeHistory *eh)
 	{
 // This is ok as long as the Sampler that calls it does a clean up
 // step. But it needs work.
 
-		Facility *f = eh->admissionLink()->getEvent()->getFacility();
-		Unit *u = eh->admissionLink()->getEvent()->getUnit();
-		Patient *p = eh->admissionLink()->getEvent()->getPatient();
+		infect::Facility *f = eh->admissionLink()->getEvent()->getFacility();
+	    infect::Unit *u = eh->admissionLink()->getEvent()->getUnit();
+	    infect::Patient *p = eh->admissionLink()->getEvent()->getPatient();
 		double admit = eh->admissionTime();
 
 		if (mod->getNStates() == 2)
@@ -395,7 +394,7 @@ public:
 			}
 		}
 
-		for (HistoryLink *h = eh->admissionLink(); h != eh->dischargeLink(); h = h->pNext())
+		for (infect::HistoryLink *h = eh->admissionLink(); h != eh->dischargeLink(); h = h->pNext())
 		{
 			if (!h->getEvent()->isCollonizationEvent())
 				continue;

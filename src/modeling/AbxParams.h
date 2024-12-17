@@ -72,18 +72,23 @@ public:
 		return s.str();
 	}
 
-	virtual int getNStates()
+	virtual int getNStates() const
 	{
 		return nstates;
 	}
 
+    virtual int nParam() const
+    {
+        return nstates;
+    }
+
 // Implement Parameters.
 
-	virtual inline double logProb(HistoryLink *h)
+	virtual inline double logProb(infect::HistoryLink *h)
 	{
 		if (h->getEvent()->getType() == abxon)
 		{
-			AbxPatientState *ps = (AbxPatientState *) h->getPState();
+		    infect::AbxPatientState *ps = (infect::AbxPatientState *) h->getPState();
 			if (ps->onAbx() == 1)
 			{
 				return  log (rates[stateIndex(ps->infectionStatus())]);
@@ -92,9 +97,9 @@ public:
 		return 0;
 	}
 
-	virtual inline double logProbGap(HistoryLink *g, HistoryLink *h)
+	virtual inline double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h)
 	{
-		AbxLocationState *s = (AbxLocationState *) h->uPrev()->getUState();
+	    infect::AbxLocationState *s = (infect::AbxLocationState *) h->uPrev()->getUState();
 		return - (h->getEvent()->getTime() - g->getEvent()->getTime()) *
 			(
 				s->getNoAbxSusceptible() * rates[0] +
@@ -103,20 +108,20 @@ public:
 			);
 	}
 
-	virtual inline void count(HistoryLink *h)
+	virtual inline void count(infect::HistoryLink *h)
 	{
 		if (h->getEvent()->getType() == abxon)
 		{
-			AbxPatientState *ps = (AbxPatientState *) h->getPState();
+		    infect::AbxPatientState *ps = (infect::AbxPatientState *) h->getPState();
 			if (ps->onAbx() == 1)
 				shapepar[stateIndex(ps->infectionStatus())] += 1;
 		}
 	}
 
-	virtual inline void countGap(HistoryLink *g, HistoryLink *h)
+	virtual inline void countGap(infect::HistoryLink *g, infect::HistoryLink *h)
 	{
 		double time = h->getEvent()->getTime() - g->getEvent()->getTime();
-		AbxLocationState *s = (AbxLocationState *) h->uPrev()->getUState();
+	    infect::AbxLocationState *s = (infect::AbxLocationState *) h->uPrev()->getUState();
 		ratepar[0] += time * s->getNoAbxSusceptible();
 		ratepar[1] += time * s->getNoAbxLatent();
 		ratepar[2] += time * s->getNoAbxColonized();
@@ -171,7 +176,7 @@ public:
 			cerr << "Can't set prior observation count negative\t." << prin << "\n";
 			exit(1);
 		}
-	
+
 		rates[i] = value;
 		doit[i] = update;
 		double n = prin > 1 ? prin : 1;

@@ -84,9 +84,9 @@ protected:
 		double x = 0;
 
 		if (ncol > 0)
-			x = par[0][3] * logint(ncol) + par[0][2] * logint(tot);
+			x = par[0][3] * log((double) ncol) + par[0][2] * log((double) tot);
 		else
-			x = logint(0);
+			x = log((double) 0);
 
 		x += par[0][0] * (time - tOrigin) + par[0][1] + par[0][4] * ncol + par[0][5] * ncolabx + par[0][6] * onabx + par[0][7] * everabx;
 		return x;

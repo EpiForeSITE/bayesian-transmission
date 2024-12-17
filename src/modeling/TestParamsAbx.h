@@ -20,7 +20,7 @@ protected:
 	double ***priors;
 	int **doit;
 
-	int useabx;
+	bool useabx;
 
 	virtual inline void set(int i, int j, double value)
 	{
@@ -32,7 +32,7 @@ protected:
 
 public:
 
-	TestParamsAbx(int nst, int abx) : TestParams(nst)
+	TestParamsAbx(int nst, bool abx) : TestParams(nst)
 	{
 		useabx = abx;
 
@@ -67,9 +67,9 @@ public:
 		cleanFree(&doit,l);
 	}
 
-	virtual string *paramNames()
+	virtual std::vector<std::string> paramNames()
 	{
-		string *res = new string[2*nstates];
+	    std::vector<std::string> res(2*nstates);
 
 		if (nstates == 3)
 		{
@@ -92,17 +92,17 @@ public:
 		return res;
 	}
 
-	inline void setUseAbx(int i)
+	inline void setUseAbx(bool i)
 	{
 		useabx = i;
 	}
 
-	inline int getUseAbx()
+	inline bool getUseAbx()
 	{
 		return useabx;
 	}
 
-	virtual inline double eventProb(InfectionStatus s, int onabx, EventCode e)
+	virtual inline double eventProb(InfectionStatus s, int onabx, EventCode e) const
 	{
 		int i = stateIndex(s);
 		int j = ( useabx && onabx ? 1 : 0) ;
@@ -110,7 +110,7 @@ public:
 		return ( i < 0 || k < 0 ? 0 : probs[i][j][k] );
 	}
 
-	virtual double *resultProbs(int onabx, EventCode e)
+	virtual double *resultProbs(int onabx, EventCode e) const
 	{
 		double *P = cleanAlloc(nstates);
 
@@ -132,7 +132,7 @@ public:
 
 // Implement Parameters.
 
-	inline virtual double logProb(HistoryLink *h)
+	inline virtual double logProb(infect::HistoryLink *const h) const
 	{
 		int i = stateIndex(h->getPState()->infectionStatus());
 		int j = ( useabx && h->getPState()->onAbx() ? 1 : 0) ;
@@ -149,7 +149,7 @@ public:
 					counts[i][j][k] = priors[i][j][k];
 	}
 
-	inline virtual void count(HistoryLink *h)
+	inline virtual void count(infect::HistoryLink * const h)
 	{
 		int i = stateIndex(h->getPState()->infectionStatus());
 		int j = ( useabx && h->getPState()->onAbx() ? 1 : 0) ;
@@ -213,7 +213,7 @@ public:
 		priors[i][j][1] = prival*prin;
 	}
 
-	virtual int nParams()
+	virtual int nParam() const
 	{
 		return 2*nstates;
 	}

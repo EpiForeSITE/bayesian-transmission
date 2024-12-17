@@ -2,6 +2,8 @@
 #define ALUN_MODELING_TESTPARAMS_H
 
 #include "Parameters.h"
+#include <vector>
+#include <string>
 
 class TestParams : public Parameters
 {
@@ -56,14 +58,29 @@ public:
 		cleanFree(&doit);
 	}
 
-	virtual inline double eventProb(InfectionStatus s, int onabx, EventCode e)
+	virtual string header()
+	{
+		stringstream s;
+		s <<  "Test.Punc";
+		if (nstates == 3)
+			s << "\t" << "Test.Plat";
+		s << "\t" << "Test.Pcol";
+		return s.str();
+	}
+
+	virtual int getNStates() const
+	{
+		return nstates;
+	}
+
+	virtual inline double eventProb(InfectionStatus s, int onabx, EventCode e) const
 	{
 		int i = stateIndex(s);
 		int j = testResultIndex(e);
 		return ( i < 0 || j < 0 ? 0 : probs[i][j] );
 	}
 
-	virtual double *resultProbs(int onabx, EventCode e)
+	virtual double *resultProbs(int onabx, EventCode e) const
 	{
 		double *P = cleanAlloc(nstates);
 
@@ -85,7 +102,7 @@ public:
 
 // Implement Parameters.
 
-	inline virtual double logProb(HistoryLink *h)
+	inline virtual double logProb(infect::HistoryLink *h)
 	{
 		int i = stateIndex(h->getPState()->infectionStatus());
 		int j = testResultIndex(h->getEvent()->getType());
@@ -99,7 +116,7 @@ public:
 				counts[i][j] = priors[i][j];
 	}
 
-	inline virtual void count(HistoryLink *h)
+	inline virtual void count(infect::HistoryLink *h)
 	{
 		int i = stateIndex(h->getPState()->infectionStatus());
 		int j = testResultIndex(h->getEvent()->getType());
@@ -179,9 +196,9 @@ public:
 		return nstates;
 	}
 
-	virtual string *paramNames()
+	virtual std::vector<std::string> paramNames()
 	{
-		string *res = new string[nstates];
+		std::vector<std::string> res(nstates);
 
 		if (nstates == 3)
 		{

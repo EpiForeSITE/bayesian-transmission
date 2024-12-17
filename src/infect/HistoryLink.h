@@ -3,6 +3,7 @@
 #define ALUN_INFECT_HISTORYLINK_H
 
 #include "LocationState.h"
+#include "PatientState.h"
 
 class HistoryLink : public Object
 {
@@ -24,7 +25,7 @@ private:
 	HistoryLink *sprev;
 	HistoryLink *snext;
 
-	// The system's, facitlity's, unit's and patient's state after the event.
+	// The system's, facility's, unit's and patient's state after the event.
 	LocationState *sstate;
 	LocationState *fstate;
 	LocationState *ustate;
@@ -34,7 +35,7 @@ private:
 	HistoryLink *hprev;
 	HistoryLink *hnext;
 
-	// The event occuring at this point.
+	// The event occurring at this point.
 	Event *e;
 
 	// Indicator for adding event to SystemHistory links.

@@ -24,7 +24,7 @@ public:
 		return units;
 	}
 
-	virtual inline int getNStates()
+	virtual inline int getNStates() const
 	{
 		return nstates;
 	}
@@ -35,13 +35,13 @@ public:
 		units->put(u,0);
 
 		return new HistoryLink
-		(	
+		(
 			new Event(f,u,time,p,type),
-			makeSystemState(),	
-			makeFacilityState(f),	
-			makeUnitState(u),	
+			makeSystemState(),
+			makeFacilityState(f),
+			makeUnitState(u),
 			makePatientState(p),
-			linked	
+			linked
 		);
 	}
 */
@@ -96,7 +96,7 @@ public:
 	virtual void forwardSimulate(SystemHistory *h, Random *r)
 	{
 	}
-		
+
 	virtual void initEpisodeHistory(EpisodeHistory *h, bool b)
 	{
 	}
