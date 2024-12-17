@@ -36,26 +36,26 @@ public:
 	double logdnorm(double x, double m, double s);
 	double logdmillerone(double x, double p, double q, double r, double s);
 	double logdexp(double x, double lambda);
+	double logdint(int x, int n, double *pi);
 /**
 	Random number generators.
 */
-	double runif();
-	double runif(double a, double b);
-	double rexp();
-	double rexp(double l);
-	double rgamma(double a, double b);
-	double mcmillerone(int n, double a, double sigma, double p, double q, double r, double s);
-	void rmiller(double *ab, double p, double q, double r, double s);
-	double rbeta(double a, double b);
-	void rdirichlet(int n, double *p, double *x);
-	double rchisq(double n);
-	double rnorm();
-	double rnorm(double m, double s);
-	double rscaledinvchisq(double nu, double tau2);
-	void rnorminvchisq(double *m, double *s2, double mu, double kappa, double nu, double tau2);
-	double rpoisson(double l);
-	double logdint(int x, int n, double *pi);
-	int rint(int n, double *pi);
+	virtual double runif();
+	virtual double runif(double a, double b);
+	virtual double rexp();
+	virtual double rexp(double l);
+	virtual double rgamma(double a, double b);
+	virtual double mcmillerone(int n, double a, double sigma, double p, double q, double r, double s);
+	virtual void rmiller(double *ab, double p, double q, double r, double s);
+	virtual double rbeta(double a, double b);
+	virtual void rdirichlet(int n, double *p, double *x);
+	virtual double rchisq(double n);
+	virtual double rnorm();
+	virtual double rnorm(double m, double s);
+	virtual double rscaledinvchisq(double nu, double tau2);
+	virtual void rnorminvchisq(double *m, double *s2, double mu, double kappa, double nu, double tau2);
+	virtual double rpoisson(double l);
+	virtual int rint(int n, double *pi);
 
 };
 #endif // ALUN_UTIL_RANDOM_H

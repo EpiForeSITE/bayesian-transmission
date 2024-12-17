@@ -1,7 +1,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 
 namespace util{
-#include "Markov.h"
+#include "util/Markov.h"
 /* Matrix exponential function from Eigen */
 
 void Markov::expQt(int n, double **Q, double t, double **etQ)

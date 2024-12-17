@@ -18,7 +18,7 @@ Depends:
     R (>= 4.2.0)
 LazyData: true
 LinkingTo: 
-    Rcpp
+    Rcpp, RcppEigen
 Suggests: 
     testthat (>= 3.0.0),
     knitr,

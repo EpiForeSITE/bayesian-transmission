@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include "util.h"
+#include "util/util.h"
 
 namespace util{
 
