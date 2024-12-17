@@ -58,12 +58,9 @@ RCPP_MODULE(Infect){
     class_<TestParamsAbx>("TestParamsAbx")
         .constructor<int, bool>()
         .property("paramNames", &TestParamsAbx::paramNames)
-        // .constructor<std::vector<double>, std::vector<double>, std::vector<bool>>()
         .property("UseAbx", &TestParamsAbx::getUseAbx, &TestParamsAbx::setUseAbx)
         .property("nParam", &TestParamsAbx::nParam)
         .method<void, int, int, double, int, double, double>("set", &TestParamsAbx::set)
-        // .method("setPriors", &TestParamsAbx::setPriors)
-        // .method("setUpdate", &TestParamsAbx::setUpdate)
         // .method("update", &TestParamsAbx::update)
     ;
 }

@@ -2,6 +2,9 @@
 #define ALUN_MODELING_UNITTRACKINGMODEL_H
 
 #include "Model.h"
+#include "SetLocationState.h"
+#include "PatientState.h"
+#include "UnitEpisodeHistory.h"
 
 class UnitTrackingModel : public Model
 {

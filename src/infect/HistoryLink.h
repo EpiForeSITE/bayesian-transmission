@@ -279,7 +279,7 @@ public:
 		linked = i;
 	}
 
-	inline int isLinked()
+	inline int isLinked() const
 	{
 		return linked;
 	}
@@ -289,7 +289,7 @@ public:
 		hidden = i;
 	}
 
-	inline int isHidden()
+	inline int isHidden() const
 	{
 		return hidden;
 	}
@@ -364,22 +364,22 @@ public:
 		return snext;
 	}
 
-	inline PatientState *getPState()
+	inline PatientState *getPState() const
 	{
 		return pstate;
 	}
 
-	inline LocationState *getUState()
+	inline LocationState *getUState() const
 	{
 		return ustate;
 	}
 
-	inline LocationState *getFState()
+	inline LocationState *getFState() const
 	{
 		return fstate;
 	}
 
-	inline LocationState *getSState()
+	inline LocationState *getSState() const
 	{
 		return sstate;
 	}
