@@ -117,7 +117,7 @@ public:
 		ratepar[2] += time * s->getColonized();
 	}
 
-	virtual inline void update(Random *r, int max)
+	virtual inline void update(Random *r, bool max)
 	{
 		TestParams::update(r,max);
 
@@ -180,7 +180,7 @@ public:
 		return 2*nstates;
 	}
 
-	virtual std::vector<std::string> paramNames()
+	virtual std::vector<std::string> paramNames() const
 	{
 	    std::vector<std::string> res(2*nstates);
 

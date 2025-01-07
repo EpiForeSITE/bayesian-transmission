@@ -71,6 +71,15 @@ public:
 		s << "\t" << "Abx.rateCol";
 		return s.str();
 	}
+    virtual std::vector<std::string> paramNames() const
+    {
+        std::vector<std::string> nms;
+        nms.push_back("Abx.rateUnc");
+        if (nstates == 3)
+            nms.push_back("Abx.rateLat");
+        nms.push_back("Abx.rateCol");
+        return nms;
+    }
 
 	virtual int getNStates() const
 	{
@@ -136,7 +145,7 @@ public:
 		}
 	}
 
-	virtual inline void update(Random *r, int max)
+	virtual inline void update(Random *r, bool max)
 	{
 		double *newrates = new double[n];
 
@@ -183,7 +192,15 @@ public:
 		priorshape[i] = prival * n;
 		priorrate[i] = n;
 	}
-
+    virtual std::vector<double> getValues() const
+    {
+        std::vector<double> vals;
+        vals.push_back(rates[0]);
+        if(nstates == 3)
+            vals.push_back(rates[1]);
+        vals.push_back(rates[2]);
+        return vals;
+    }
 	virtual void write(ostream &os)
 	{
 		char *buffer = new char[100];

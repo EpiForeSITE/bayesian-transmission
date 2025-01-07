@@ -14,7 +14,7 @@ private:
 	double *logprobs;
 	double *counts;
 	double *priors;
-	int *doit;
+	bool *doit;
 
 	virtual inline double prob(InfectionStatus s)
 	{
@@ -32,7 +32,7 @@ public:
 		logprobs = new double[3];
 		counts = new double[3];
 		priors = new double[3];
-		doit = new int[3];
+		doit = new bool[3];
 
 		switch(nstates)
 		{
@@ -67,7 +67,7 @@ public:
         this->logprobs = new double[nstates];
         this->counts = new double[nstates];
         this->priors = new double[nstates];
-        this->doit = new int[3];
+        this->doit = new bool[3];
 
         for (int i = 0; i < 3; i++)
             {
@@ -94,12 +94,12 @@ public:
 			delete [] doit;
 	}
 
-	virtual inline int nParam()
+	virtual inline int nParam() const
 	{
 		return nstates;
 	}
 
-	virtual inline std::vector<std::string> paramNames()
+	virtual inline std::vector<std::string> paramNames() const
 	{
 		std::vector<std::string> res(nstates);
 
@@ -117,6 +117,15 @@ public:
 
 		return res;
 	}
+    virtual std::vector<double> getValues() const
+    {
+        std::vector<double> vals;
+        vals.push_back(probs[0]);
+        if(nstates == 3)
+            vals.push_back(probs[1]);
+        vals.push_back(probs[2]);
+        return vals;
+    }
 
 	virtual string header()
 	{
@@ -171,7 +180,7 @@ public:
 			counts[i] += 1;
 	}
 
-	virtual inline void update(Random *r, int max)
+	virtual inline void update(Random *r, bool max)
 	{
 		double t = 0;
 		double *cc = new double[3];
@@ -220,7 +229,11 @@ public:
 			logprobs[i] = log(probs[i]);
 	}
 
-	inline void setPriors(double pu, double pl, double pc)
+    /// Set the prior probabilities for the states.
+	inline void setPriors(
+	        double pu, /// Prior probability of uncolonized
+	        double pl, /// Prior probability of latent
+	        double pc) /// Prior probability of colonized
 	{
 		// Relative values of probs, sum is equivalent number of obs.
 		priors[0] = pu;
@@ -228,7 +241,7 @@ public:
 		priors[2] = pc;
 	}
 
-	inline void setUpdate(int u, int l, int c)
+	inline void setUpdate(bool u, bool l, bool c)
 	{
 		doit[0] = u;
 		doit[1] = l;
@@ -252,5 +265,48 @@ public:
 
 		delete [] buffer;
 	}
+
+    virtual void init(double p, bool up,
+                      double q, bool uq,
+                      double r, bool ur)
+    {
+        double tot = p+q+r;
+        r = r/tot;
+        q = q/tot;
+        p = 1-q-r;
+        //up = ur;
+
+        set(p,q,r);
+        setPriors(up?p:0, uq?q:0, ur?r:0);
+        setUpdate((up>0),(uq>0),(ur>0));
+    }
+    static void skipLine(istream &is)
+    {
+        char c;
+        do
+        {
+            c = is.get();
+        }
+        while (c != '\n' && c != EOF);
+    }
+    virtual inline void read(istream &is)
+    {
+        string sdump;
+        double p,q=0,r;
+        double up, uq=0, ur;
+        is >> sdump >> p >> up;
+        skipLine(is);
+
+        if (nstates == 3)
+        {
+            is >> sdump >> q >> uq;
+            skipLine(is);
+        }
+        is >> sdump >> r >> ur;
+        skipLine(is);
+
+        init(p, up, q, uq, r, ur);
+    }
+
 };
 #endif // ALUN_MODELING_INSITUPARAMS_H

@@ -3,7 +3,7 @@ using namespace Rcpp;
 
 #include "util/util.h"
 
-class RRandom: util::Random {
+class RRandom: public util::Random {
 public:
   RRandom() : util::Random() {}
 
@@ -30,4 +30,3 @@ public:
     int rint(int n, double *pi);
 */
  };
-

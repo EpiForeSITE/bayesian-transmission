@@ -5,6 +5,8 @@
 #include "../util/util.h"
 #include "EventCoding.h"
 #include "HistoryLink.h"
+#include "Model.h"
+#include "System.h"
 
 class SystemHistory: public Object, public EventCoding
 {
@@ -118,7 +120,7 @@ public:
 		delete mylinks;
 	}
 
-	SystemHistory(System *s, Model *m = 0, int verbose = 0)
+	SystemHistory(System *s, Model *m = 0, bool verbose = 0)
 	{
 		mylinks = new List();
 
@@ -269,7 +271,7 @@ public:
 
 			ftail->insertBeforeS(stail);
 			fhead->insertBeforeS(shead->sNext());
-	
+
 			for (IntMap *i = f->getUnits(); i->hasNext(); )
 			{
 				Unit *u = (Unit *) i->nextValue();
@@ -283,7 +285,7 @@ public:
 				utail->insertBeforeS(ftail);
 				uhead->insertBeforeS(fhead->sNext());
 			}
-	
+
 		}
 
 	// Filter events model then propagate events.
@@ -328,10 +330,10 @@ public:
 			}
 		}
 
-	// Clean up. 
+	// Clean up.
 
 		delete [] hx;
-		delete tails; 
+		delete tails;
 	}
 
 	inline Map *getPatientHeads()
@@ -445,7 +447,7 @@ public:
 				count->put(uheads->next(), new Integer(0));
 				cerr << count << "\n";
 			}
-			
+
 			for (HistoryLink *l = shead; l != 0; l = l->sNext())
 			{
 				l->getEvent()->write(os);

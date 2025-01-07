@@ -34,7 +34,7 @@ RCPP_MODULE(Infect){
     class_<RRandom>("RRandom")
         .constructor<>()
         .method("runif", (double(RRandom::*)()) &RRandom::runif)
-        .method("runif2", (double(RRandom::*)()) &RRandom::runif)
+        .method<double, double, double>("runif2", (double(RRandom::*)(double, double)) &RRandom::runif)
         .method("rexp", (double(RRandom::*)()) &RRandom::rexp)
         .method("rexp1", (double(RRandom::*)(double)) &RRandom::rexp)
         .method("rgamma", &RRandom::rgamma)
@@ -52,7 +52,7 @@ RCPP_MODULE(Infect){
         .method("set", &InsituParams::set)
         .method("setPriors", &InsituParams::setPriors)
         .method("setUpdate", &InsituParams::setUpdate)
-        // .method("update", &InsituParams::update)
+        //.method("update", &InsituParams::update)
     ;
 
     class_<TestParamsAbx>("TestParamsAbx")
@@ -62,5 +62,11 @@ RCPP_MODULE(Infect){
         .property("nParam", &TestParamsAbx::nParam)
         .method<void, int, int, double, int, double, double>("set", &TestParamsAbx::set)
         // .method("update", &TestParamsAbx::update)
+    ;
+
+    class_<LogNormalModel>("LogNormalModel")
+        .property<double>("AbxLife", &infect::Model::getAbxLife, &infect::Model::setAbxLife)
+        .property<double>("AbxDelay", &infect::Model::getAbxDelay, &infect::Model::setAbxDelay)
+        .property<bool>("isCheating", &infect::Model::isCheating)
     ;
 }

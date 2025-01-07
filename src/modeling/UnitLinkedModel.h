@@ -64,7 +64,7 @@ public:
 
 public:
 
-	inline int isForwardEnabled()
+	inline int isForwardEnabled() const
 	{
 		return forwardEnabled;
 	}
@@ -74,27 +74,27 @@ public:
 		return nstates;
 	}
 
-	inline InsituParams *getInsituParams()
+	inline InsituParams *getInsituParams() const
 	{
 		return isp;
 	}
 
-	inline OutColParams *getOutColParams()
+	inline OutColParams *getOutColParams() const
 	{
 		return ocp;
 	}
 
-	inline TestParams *getSurveilenceTestParams()
+	inline TestParams *getSurveilenceTestParams() const
 	{
 		return survtsp;
 	}
 
-	inline TestParams *getClinicalTestParams()
+	inline TestParams *getClinicalTestParams() const
 	{
 		return clintsp;
 	}
 
-	inline InColParams *getInColParams()
+	inline InColParams *getInColParams() const
 	{
 		return icp;
 	}
@@ -104,7 +104,7 @@ public:
 		icp = p;
 	}
 
-	inline AbxParams *getAbxParams()
+	inline AbxParams *getAbxParams() const
 	{
 		return abxp;
 	}
@@ -127,7 +127,7 @@ public:
 		);
 	}
 
-		virtual string header()
+	virtual string header()
 	{
 		stringstream os;
 		os << isp->header();

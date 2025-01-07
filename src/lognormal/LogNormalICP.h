@@ -112,7 +112,7 @@ public:
 		delete m;
 	}
 
-	virtual inline int nParam(int i)
+	virtual inline int nParam2(int i) const
 	{
 		if (i >= 0 && i <=2)
 			return n[i];
@@ -290,6 +290,22 @@ public:
 
 		delete[] buffer;
 	}
+	virtual std::vector<double> getValues() const
+	{
+	    std::vector<double> vals;
+
+		for (int i=0; i<ns; i++)
+		{
+			if (i == 1 && nstates != 3)
+				continue;
+
+			for (int j=0; j<n[i]; j++)
+			{
+			    vals.push_back(epar[i][j]);
+			}
+		}
+		return vals;
+	}
 
 // Implement InColParams.
 
@@ -399,7 +415,7 @@ public:
 		return x;
 	}
 
-	virtual inline void update(Random *r, int max)
+	virtual inline void update(Random *r, bool max)
 	{
 		double oldlogpost = logpost(r,max);
 

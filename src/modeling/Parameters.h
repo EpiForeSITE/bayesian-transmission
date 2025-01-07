@@ -2,6 +2,8 @@
 #define ALUN_MODELING_PARAMETERS_H
 
 #include "../infect/infect.h"
+#include <string>
+#include <vector>
 
 class Parameters : public Object, public infect::EventCoding, public infect::InfectionCoding
 {
@@ -14,9 +16,10 @@ public:
 	virtual void count(infect::HistoryLink *h) = 0;
 	virtual void countGap(infect::HistoryLink *g, infect::HistoryLink *h) { }
 
-	virtual void update(Random *r, int max) = 0;
+	virtual void update(Random *r, bool max) = 0;
 
 	virtual string header() = 0;
+	virtual std::vector<std::string> paramNames() const = 0;
 
 	virtual int getNStates() const = 0;
 
@@ -25,6 +28,8 @@ public:
 	{
 		update(r,0);
 	}
+
+	virtual std::vector<double> getValues() const = 0;
 
 	virtual inline int eventIndex(EventCode e)
 	{

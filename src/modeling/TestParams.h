@@ -126,7 +126,7 @@ public:
 		counts[i][j] += 1;
 	}
 
-	inline virtual void update(Random *r, int max)
+	inline virtual void update(Random *r, bool max)
 	{
 		double *newpos = new double[n];
 
@@ -191,12 +191,12 @@ public:
 		priors[i][1] = prival * prin;
 	}
 
-	virtual inline int nParam()
+	virtual inline int nParam() const
 	{
 		return nstates;
 	}
 
-	virtual std::vector<std::string> paramNames()
+	virtual std::vector<std::string> paramNames() const
 	{
 		std::vector<std::string> res(nstates);
 
@@ -215,7 +215,16 @@ public:
 
 		return res;
 	}
+    virtual std::vector<double> getValues() const
+    {
+        std::vector<double> res;
+        res.push_back(probs[0][1]);
+        if(nstates == 3)
+            res.push_back(probs[1][1]);
+        res.push_back(probs[2][1]);
+        return res;
 
+    }
 	virtual void write (ostream &os)
 	{
 		char *buffer = new char[100];

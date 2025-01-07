@@ -213,7 +213,7 @@ public:
 		ratepar[2] += time * s->getColonized();
 	}
 
-	virtual inline void update(Random *r, int max)
+	virtual inline void update(Random *r, bool max)
 	{
 		double *newrates = new double[n];
 
@@ -268,7 +268,7 @@ public:
 		return nstates;
 	}
 
-	virtual std::vector<std::string> paramNames()
+	virtual std::vector<std::string> paramNames() const
 	{
 	    std::vector<std::string> res(nstates);
 
@@ -287,6 +287,15 @@ public:
 
 		return res;
 	}
+    virtual std::vector<double> getValues() const
+    {
+        std::vector<double> vals;
+        vals.push_back(rates[0]);
+        if(nstates == 3)
+            vals.push_back(rates[1]);
+        vals.push_back(rates[2]);
+        return vals;
+    }
 
 	virtual void write (ostream &os)
 	{

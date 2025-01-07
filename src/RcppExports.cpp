@@ -12,22 +12,18 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // runMCMC
-DataFrame runMCMC(std::string modoptions, Rcpp::DataFrame data, int nsims, int nburn, int nmetro, bool forward, bool cheat, bool outputfinal, bool outputparam, bool verbose);
-RcppExport SEXP _bayestransmission_runMCMC(SEXP modoptionsSEXP, SEXP dataSEXP, SEXP nsimsSEXP, SEXP nburnSEXP, SEXP nmetroSEXP, SEXP forwardSEXP, SEXP cheatSEXP, SEXP outputfinalSEXP, SEXP outputparamSEXP, SEXP verboseSEXP) {
+DataFrame runMCMC(std::string modname, Rcpp::DataFrame data, Rcpp::List MCMCParameters, Rcpp::List modelParameters, int nstates, bool verbose);
+RcppExport SEXP _bayestransmission_runMCMC(SEXP modnameSEXP, SEXP dataSEXP, SEXP MCMCParametersSEXP, SEXP modelParametersSEXP, SEXP nstatesSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type modoptions(modoptionsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type modname(modnameSEXP);
     Rcpp::traits::input_parameter< Rcpp::DataFrame >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< int >::type nsims(nsimsSEXP);
-    Rcpp::traits::input_parameter< int >::type nburn(nburnSEXP);
-    Rcpp::traits::input_parameter< int >::type nmetro(nmetroSEXP);
-    Rcpp::traits::input_parameter< bool >::type forward(forwardSEXP);
-    Rcpp::traits::input_parameter< bool >::type cheat(cheatSEXP);
-    Rcpp::traits::input_parameter< bool >::type outputfinal(outputfinalSEXP);
-    Rcpp::traits::input_parameter< bool >::type outputparam(outputparamSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type MCMCParameters(MCMCParametersSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type modelParameters(modelParametersSEXP);
+    Rcpp::traits::input_parameter< int >::type nstates(nstatesSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(runMCMC(modoptions, data, nsims, nburn, nmetro, forward, cheat, outputfinal, outputparam, verbose));
+    rcpp_result_gen = Rcpp::wrap(runMCMC(modname, data, MCMCParameters, modelParameters, nstates, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -44,7 +40,7 @@ END_RCPP
 RcppExport SEXP _rcpp_module_boot_Infect();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bayestransmission_runMCMC", (DL_FUNC) &_bayestransmission_runMCMC, 10},
+    {"_bayestransmission_runMCMC", (DL_FUNC) &_bayestransmission_runMCMC, 6},
     {"_bayestransmission_hello_world", (DL_FUNC) &_bayestransmission_hello_world, 0},
     {"_rcpp_module_boot_Infect", (DL_FUNC) &_rcpp_module_boot_Infect, 0},
     {NULL, NULL, 0}

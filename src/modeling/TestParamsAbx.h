@@ -67,7 +67,7 @@ public:
 		cleanFree(&doit,l);
 	}
 
-	virtual std::vector<std::string> paramNames()
+	virtual std::vector<std::string> paramNames() const
 	{
 	    std::vector<std::string> res(2*nstates);
 
@@ -159,7 +159,7 @@ public:
 			counts[i][j][k] += 1;
 	}
 
-	inline virtual void update(Random *r, int max)
+	inline virtual void update(Random *r, bool max)
 	{
 		double **newpos = cleanAlloc(l,m);
 

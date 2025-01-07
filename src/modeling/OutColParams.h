@@ -371,7 +371,7 @@ public:
 				admits->add(h);
 	}
 
-	virtual inline void update(Random *r, int max)
+	virtual inline void update(Random *r, bool max)
 	{
 		update(r,nmetro,max);
 	}
@@ -433,12 +433,12 @@ public:
 	}
 
 
-	virtual inline int nParam()
+	virtual inline int nParam() const
 	{
 		return nstates;
 	}
 
-	virtual std::vector<std::string> paramNames()
+	virtual std::vector<std::string> paramNames() const
 	{
 	    std::vector<std::string> res(nstates);
 
@@ -457,6 +457,16 @@ public:
 
 		return res;
 	}
+
+    virtual std::vector<double> getValues() const
+    {
+        std::vector<double> res(nstates);
+
+        for (int i=0; i<nstates; i++)
+            res[i] = rates[i];
+
+        return res;
+    }
 
 	void write(ostream &os)
 	{

@@ -9,7 +9,7 @@ class LogNormalModel : public BasicModel
 {
 protected:
 
-    int abxbyonoff;
+    bool abxbyonoff;
 
     LogNormalModel(int nst, int fw, int ch) : BasicModel(nst,fw,ch)
     {
@@ -113,6 +113,15 @@ public:
     virtual LocationState *makeUnitState(Unit *u)
     {
         return u == 0 ? 0 : new AbxLocationState(u,nstates);
+    }
+
+    virtual void setAbx(bool onoff, double delay, double life){
+        abxbyonoff = onoff;
+        if (!abxbyonoff)
+        {
+            setAbxDelay(delay);
+            setAbxLife(life);
+        }
     }
 
 	virtual void read(istream &is)
@@ -305,7 +314,7 @@ protected:
 		{
 			if (i != 1)
 			{
-				for (int j=0; j<icp->nParam(i); j++)
+				for (int j=0; j<icp->nParam2(i); j++)
 				{
 					is >> sdump >> p >> up;
 					skipLine(is);
@@ -316,13 +325,13 @@ protected:
 			{
 				if (icp->getNStates() == 2)
 				{
-					for (int j=0; j<icp->nParam(i); j++)
+					for (int j=0; j<icp->nParam2(i); j++)
 						icp->set(i,j,0,0,0,0);
 				}
 
 				if (icp->getNStates() == 3)
 				{
-					for (int j=0; j<icp->nParam(i); j++)
+					for (int j=0; j<icp->nParam2(i); j++)
 					{
 						is >> sdump >> p >> up;
 						skipLine(is);

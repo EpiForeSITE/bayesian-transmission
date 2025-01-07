@@ -271,5 +271,27 @@ public:
 
                 return P;
 	}
+    // virtual std::vector<std::string> paramNames() const {
+    //     std::vector<std::string> names;
+    //     names[0] = "LNAX.time";
+    //     names[1] = "LNAX.base";
+    //     names[2] = "LNAX.ltot";
+    //     names[3] = "LNAX.lcol";
+    //     names[4] = "LNAX.col";
+    //     names[5] = "LNAX.colabx";
+    //     names[6] = "LNAX.susabx";
+    //     names[7] = "LNAX.susever";
+    //
+    //     names[8] = "LNAX.pro";
+    //     names[9] = "LNAX.proAbx";
+    //     names[10] = "LNAX.proEver";
+    //
+    //     names[11] = "LNAX.clr";
+    //     names[12] = "LNAX.clrAbx";
+    //     names[13] = "LNAX.clrEver";
+    //     return names;
+    // }
+
+
 };
 #endif // ALUN_LOGNORMAL_LOGNORMALABXICP_H
