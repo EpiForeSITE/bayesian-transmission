@@ -75,6 +75,16 @@ check_paramwrate <- function(x, name = deparse(substitute(x))) {
   return(x)
 }
 
+#' Title
+#'
+#' @param probs
+#' @param priors
+#' @param doit
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 InsituParams <- function(probs = c(0.5, 0.5, 0), priors = probs * doit, doit = probs != 0) {
   stopifnot(2 <= length(probs) && length(probs) <= 3)
   if (length(probs) == 2) probs <- c(probs, 0)
@@ -170,50 +180,6 @@ SurveillanceTestParams <- function(
   )
 }
 
-
-
-#' In-Unit Acquisition Parameters
-#'
-#' @param base The base rate of acquisition
-#' @param time The time effect on acquisition
-#' @param mass The mass mixing probability
-#' @param dens The density mixing probability
-#' @param col The colonization effect
-#' @param suss The susceptibility effect
-#' @param suss_ever The susceptibility ever effect
-#' @param clearance The clearance rate
-#' @param clearance_abx The clearance rate effect of antibiotics
-#' @param clearance_ever_abx The clearance rate effect of ever having taken antibiotics
-#'
-#' @returns A list of parameters for in-unit acquisition.
-#' @export
-#' @examples
-#' LogNormalICP()
-LogNormalICP <- function(
-    base = 0,
-    time = 0,
-    mass = 1,
-    dens = 1,
-    col = 1,
-    suss = 1,
-    suss_ever = 1,
-    clearance = 0,
-    clearance_abx = 1,
-    clearance_ever_abx = 1) {
-  list(
-    base = base,
-    time = time,
-    mass = mass,
-    dens = dens,
-    col = col,
-    suss = suss,
-    suss_ever = suss_ever,
-    clearance = clearance,
-    clearance_abx = clearance_abx,
-    clearance_ever_abx = clearance_ever_abx
-  )
-}
-
 #' Antibiotic Parameters
 #'
 #' @param onoff If Anti-biotic are used or not.
@@ -256,45 +222,93 @@ AbxRateParams <- function(
   )
 }
 
-#' In unit model parameters
+#' Title
 #'
-#' @param acquisition_base TODO
-#' @param acquisition_time_effect TODO
-#' @param acquisition_mass_mixing_prob TODO
-#' @param acquisition_dens_mixing_prob  TODO
-#' @param acquisition_col_patient_abx_effect TODO
-#' @param acquisition_suss_abx_effect  TODO
-#' @param acquisition_suss_ever_abx_effect  TODO
-#' @param clearance_rate  TODO
-#' @param clearance_abx_effect TODO
-#' @param clearance_ever_abx_effect TODO
+#' @param base
+#' @param time
+#' @param mass
+#' @param freq
+#' @param col_abx
+#' @param suss_abx
+#' @param suss_ever
 #'
 #' @returns
 #' @export
 #'
 #' @examples
-InUnitParameters <- function(
-    acquisition_base = Param(0, TRUE),
-    acquisition_time_effect = Param(1, FALSE),
-    acquisition_mass_mixing_prob = Param(1, FALSE),
-    acquisition_dens_mixing_prob = Param(1, FALSE),
-    acquisition_col_patient_abx_effect = Param(1, FALSE),
-    acquisition_suss_abx_effect = Param(1, FALSE),
-    acquisition_suss_ever_abx_effect = Param(1, FALSE),
-    clearance_rate = Param(0, TRUE),
-    clearance_abx_effect = Param(1, FALSE),
-    clearance_ever_abx_effect = Param(1, FALSE)) {
+LinearAbxAcquisitionParams <- function(
+    base = Param(0.01),
+    time = Param(1, 0),
+    mass = Param(1),
+    freq = Param(1),
+    col_abx = Param(1, 0),
+    suss_abx = Param(1, 0),
+    suss_ever = Param(1, 0)
+    ) {
   list(
-    acquisition_base = acquisition_base,
-    acquisition_time_effect = acquisition_time_effect,
-    acquisition_mass_mixing_prob = acquisition_mass_mixing_prob,
-    acquisition_dens_mixing_prob = acquisition_dens_mixing_prob,
-    acquisition_col_patient_abx_effect = acquisition_col_patient_abx_effect,
-    acquisition_suss_abx_effect = acquisition_suss_abx_effect,
-    acquisition_suss_ever_abx_effect = acquisition_suss_ever_abx_effect,
-    clearance_rate = clearance_rate,
-    clearance_abx_effect = clearance_abx_effect,
-    clearance_ever_abx_effect = clearance_ever_abx_effect
+    base = base,
+    time = time,
+    mass = mass,
+    freq = freq,
+    col_abx = col_abx,
+    suss_abx = suss_abx,
+    suss_ever = suss_ever
+  )
+}
+
+#' Progression Parameters
+#'
+#' @param rate
+#' @param abx
+#' @param ever_abx
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+ProgressionParams <- function(
+    rate = Param(0.01),
+    abx = Param(1, 0),
+    ever_abx = Param(1, 0)
+    ) {
+  list(
+    rate = rate,
+    abx = abx,
+    ever_abx = ever_abx
+  )
+}
+
+#' Clearance Parameters
+#'
+#' @param rate base rate of clearance
+#' @param abx effect of antibiotics on clearance
+#' @param ever_abx effect of ever having taken antibiotics on clearance
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+ClearanceParams <- function(
+    rate = Param(0.01),
+    abx = Param(1, 0),
+    ever_abx = Param(1, 0)
+    ) {
+  list(
+    rate = rate,
+    abx = abx,
+    ever_abx = ever_abx
+  )
+}
+
+LogNormalABXInUnitParameters <- function(
+    aquisition = LinearAbxAcquisitionParams(),
+    progression = ProgressionParams(),
+    clearance = ClearanceParams()
+    ) {
+  list(
+    aquisition = aquisition,
+    progression = progression,
+    clearance = clearance
   )
 }
 
@@ -318,14 +332,14 @@ InUnitParameters <- function(
 #' @export
 #'
 #' @examples
-LogNormalModelParameters <-
+LogNormalModelParams <-
   function(modname,
            nstates = 2,
            nmetro = 1000,
            forward = TRUE,
            cheat = FALSE,
            Insitu = InsituParams(),
-           SurveilenceTest = TestParams(),
+           SurveilenceTest = SurveillanceTestParams(),
            ClinicalTest = ClinicalTestParams(),
            OutOfUnitInfection = OutOfUnitInfectionParams(),
            InUnitAcquisition = InUnitAcquisitionParams(),
