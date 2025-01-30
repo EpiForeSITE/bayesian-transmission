@@ -142,7 +142,7 @@ public:
 		TestParams::set(i,value,update,prival,prin);
 	}
 
-	virtual inline void set(int israte, int i, double value, int update, double prival, double prin)
+	virtual inline void set(bool israte, int i, double value, int update, double prival, double prin)
 	{
 		if (!israte)
 		{
@@ -152,18 +152,21 @@ public:
 
 		if (value < 0)
 		{
-			cerr << "Can't set rate parameter negative.\t" << value << "\n";
-			exit(1);
+		    throw runtime_error("Can't set rate parameter negative.");
+			// cerr << "Can't set rate parameter negative.\t" << value << "\n";
+			// exit(1);
 		}
 		if (prival < 0)
 		{
-			cerr << "Can't set rate prior value negative.\t" << prival << "\n";
-			exit(1);
+		    throw runtime_error("Can't set rate prior value negative.");
+			// cerr << "Can't set rate prior value negative.\t" << prival << "\n";
+			// exit(1);
 		}
 		if (prin < 0)
 		{
-			cerr << "Can't set rate prior observations count negative.\t" << prin << "\n";
-			exit(1);
+		    throw runtime_error("Can't set rate prior observations count negative.");
+			// cerr << "Can't set rate prior observations count negative.\t" << prin << "\n";
+			// exit(1);
 		}
 
 		rates[i] = value;

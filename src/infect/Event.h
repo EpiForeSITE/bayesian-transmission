@@ -27,7 +27,7 @@ public:
 		type = tp;
 	}
 
-	inline double getTime()
+	inline double getTime() const
 	{
 		return time;
 	}
@@ -37,22 +37,22 @@ public:
 		time = t;
 	}
 
-	inline Facility *getFacility()
+	inline Facility *getFacility() const
 	{
 		return fac;
 	}
 
-	inline Unit *getUnit()
+	inline Unit *getUnit() const
 	{
 		return unit;
 	}
 
-	inline Patient *getPatient()
+	inline Patient *getPatient() const
 	{
 		return pat;
 	}
 
-	inline EventCode getType()
+	inline EventCode getType() const
 	{
 		return type;
 	}
@@ -62,7 +62,7 @@ public:
 		type = c;
 	}
 
-	inline bool isTest()
+	inline bool isTest() const
 	{
 		switch(type)
 		{
@@ -78,7 +78,7 @@ public:
 		}
 	}
 
-	inline bool isPositiveTest()
+	inline bool isPositiveTest() const
 	{
 		switch(type)
 		{
@@ -91,7 +91,7 @@ public:
 		}
 	}
 
-	inline bool isClinicalTest()
+	inline bool isClinicalTest() const
 	{
 		switch(type)
 		{
@@ -103,7 +103,7 @@ public:
 		}
 	}
 
-	inline bool isAdmission()
+	inline bool isAdmission() const
 	{
 		switch(type)
 		{
@@ -117,7 +117,7 @@ public:
 		}
 	}
 
-	inline bool isInsitu()
+	inline bool isInsitu() const
 	{
 		switch(type)
 		{
@@ -131,7 +131,7 @@ public:
 		}
 	}
 
-	inline bool isObservable()
+	inline bool isObservable() const
 	{
 		switch(type)
 		{
@@ -157,7 +157,7 @@ public:
 		}
 	}
 
-	inline bool isCollonizationEvent()
+	inline bool isCollonizationEvent() const
 	{
 		switch(type)
 		{

@@ -15,6 +15,12 @@ LinearAbxModel(int nst, int nmetro, int fw, int ch) : LogNormalModel(nst,nmetro,
     icp = new LinearAbxICP(nst,nmetro);
     setInColParams(icp);
 }
+inline LinearAbxICP *getInColParams() const
+{
+    return (LinearAbxICP *)icp;
+}
+
+
 };
 
 

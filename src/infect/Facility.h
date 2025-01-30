@@ -47,7 +47,7 @@ public:
 		return unit;
 	}
 
-	inline int getId()
+	inline int getId() const
 	{
 		return number;
 	}

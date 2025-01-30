@@ -23,7 +23,7 @@ public:
 	{
 	}
 
-	inline int getId()
+	inline int getId() const
 	{
 		return name;
 	}

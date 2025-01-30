@@ -69,6 +69,11 @@ public:
         delete dumpers;
     }
 
+    LogNormalAbxICP * getInColParams() const
+    {
+        return (LogNormalAbxICP *)icp;
+    }
+
     virtual int needEventType(EventCode e)
     {
         switch(e)
@@ -122,6 +127,10 @@ public:
             setAbxDelay(delay);
             setAbxLife(life);
         }
+    }
+    inline RandomTestParams *getClinicalTestParams() const
+    {
+        return (RandomTestParams *)clintsp;
     }
 
 	virtual void read(istream &is)

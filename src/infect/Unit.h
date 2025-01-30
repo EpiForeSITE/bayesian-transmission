@@ -18,7 +18,7 @@ public:
 		f = fac;
 	}
 
-	inline int getId()
+	inline int getId() const
 	{
 		return number;
 	}

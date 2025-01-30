@@ -13,13 +13,14 @@ class LocationState;
 class PatientState;
 class HistoryLink;
 class EpisodeHistory;
+
 class SystemHistory;
 
 class Model : public Object, public EventCoding, public InfectionCoding
 {
 public:
 
-	int cheating;
+    bool cheating;
 
 	double abxlife;
 	double abxdelay;
