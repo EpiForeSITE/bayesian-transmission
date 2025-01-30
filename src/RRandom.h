@@ -1,3 +1,6 @@
+#ifndef RRandom_h
+#define RRandom_h
+
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -30,3 +33,5 @@ public:
     int rint(int n, double *pi);
 */
  };
+
+#endif // RRandom_h
