@@ -3,7 +3,8 @@
 
 #include "../modeling/modeling.h"
 #include "LogNormalAbxICP.h"
-#include "MultiUnitAbxICP.h"
+// #include "MultiUnitAbxICP.h"
+
 
 class LogNormalModel : public BasicModel
 {
@@ -37,7 +38,9 @@ public:
         abxbyonoff = 0;
         dumpers = new List();
 
-        icp = ( l == 0 ? new LogNormalAbxICP(nst,0,nmetro) :  new MultiUnitAbxICP(l,nst,0,nmetro) );
+        //icp = ( l == 0 ? new LogNormalAbxICP(nst,0,nmetro) :  new MultiUnitAbxICP(l,nst,0,nmetro) );
+        icp = new LogNormalAbxICP(nst,0,nmetro);
+
 
         isp = new InsituParams(nstates);
         ocp = new OutColParams(nstates,nmetro);

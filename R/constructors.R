@@ -24,7 +24,7 @@ is_valid_param <- function(x) {
   assertthat::see_if(
     is.list(x),
     length(x) == 4,
-    assert_that::has_names(x, c("init", "weight", "update", "prior")),
+    all(c("init", "weight", "update", "prior") %in% names(x)),
     is.numeric(x$init),
     is.numeric(x$weight),
     is.logical(x$update),
@@ -36,7 +36,7 @@ check_param <- function(param, name = deparse(substitute(param))) {
   if (rlang::is_scalar_double(param)) {
     param <- Param(param)
   } else {
-    stop(glue::glue("Parameter '{name}' is not valid. Use `Param()`"))
+    assertthat::assert_that(is_valid_param(param))
   }
   return(param)
 }
@@ -153,12 +153,13 @@ ClinicalTestParams <- RandomTestParams
 #'
 #' @examples
 OutOfUnitInfectionParams <- function(
-    acquisition = 0,
-    clearance = 0,
-    thirdoption) {
+    acquisition = Param(0),
+    clearance = Param(0),
+    thirdoption = Param(0)) {
   list(
     acquisition = acquisition,
-    clearance = clearance
+    clearance = clearance,
+    thirdoption = thirdoption
   )
 }
 
@@ -211,7 +212,7 @@ AbxParams <- function(
 AbxRateParams <- function(
     uncolonized = Param(1, 0),
     colonized = Param(1, 0),
-    recovered = param(0)) {
+    recovered = Param(0)) {
   uncolonized <- check_param(uncolonized)
   colonized <- check_param(colonized)
   recovered <- check_param(recovered)
@@ -243,8 +244,7 @@ LinearAbxAcquisitionParams <- function(
     freq = Param(1),
     col_abx = Param(1, 0),
     suss_abx = Param(1, 0),
-    suss_ever = Param(1, 0)
-    ) {
+    suss_ever = Param(1, 0)) {
   list(
     base = base,
     time = time,
@@ -269,8 +269,7 @@ LinearAbxAcquisitionParams <- function(
 ProgressionParams <- function(
     rate = Param(0.01),
     abx = Param(1, 0),
-    ever_abx = Param(1, 0)
-    ) {
+    ever_abx = Param(1, 0)) {
   list(
     rate = rate,
     abx = abx,
@@ -291,8 +290,7 @@ ProgressionParams <- function(
 ClearanceParams <- function(
     rate = Param(0.01),
     abx = Param(1, 0),
-    ever_abx = Param(1, 0)
-    ) {
+    ever_abx = Param(1, 0)) {
   list(
     rate = rate,
     abx = abx,
@@ -300,13 +298,23 @@ ClearanceParams <- function(
   )
 }
 
-LogNormalABXInUnitParameters <- function(
-    aquisition = LinearAbxAcquisitionParams(),
+
+LogNormalInUnitAcquisition <- function(
+    acquisition = AcquisitionParams(),
     progression = ProgressionParams(),
-    clearance = ClearanceParams()
-    ) {
+    clearance = ClearanceParams()) {
   list(
-    aquisition = aquisition,
+    acquisition = acquisition,
+    progression = progression,
+    clearance = clearance
+  )
+}
+LogNormalABXInUnitParameters <- function(
+    acquisition = LinearAbxAcquisitionParams(),
+    progression = ProgressionParams(),
+    clearance = ClearanceParams()) {
+  list(
+    acquisition = acquisition,
     progression = progression,
     clearance = clearance
   )
@@ -324,7 +332,8 @@ LogNormalABXInUnitParameters <- function(
 #' @param SurveilenceTest Surveillance Testing Parameters
 #' @param ClinicalTest Clinical Testing Parameters
 #' @param OutOfUnitInfection Out of Unit Infection Parameters
-#' @param InUnitAcquisition In Unit Acquisition Parameters
+#' @param InUnit In Unit Parameters, should be a list of lists with parameters
+#'               for the acquisition, progression and clearance of the disease.
 #' @param Abx Antibiotic Parameters
 #' @param AbxRate Antibiotic Rate Parameters
 #'
@@ -342,26 +351,37 @@ LogNormalModelParams <-
            SurveilenceTest = SurveillanceTestParams(),
            ClinicalTest = ClinicalTestParams(),
            OutOfUnitInfection = OutOfUnitInfectionParams(),
-           InUnitAcquisition = InUnitAcquisitionParams(),
+           InUnit = LogNormalInUnitAcquisition(),
            Abx = AbxParams(),
-           AbxRate = AbxParams()) {
+           AbxRate = AbxRateParams()) {
+    assertthat::assert_that(
+      assertthat::is.string(modname),
+      assertthat::is.count(nstates),
+      assertthat::is.count(nmetro),
+      assertthat::is.flag(forward),
+      assertthat::is.flag(cheat)
+    )
+
     list(
       modname = modname,
-      nstates = nstates,
-      nmetro = nmetro,
-      forward = forward,
+      nstates = as.integer(nstates),
+      nmetro = as.integer(nmetro),
+      forward = as.logical(forward),
       cheat = cheat,
       Insitu = Insitu,
       SurveilenceTest = SurveilenceTest,
       ClinicalTest = ClinicalTest,
       OutCol = OutOfUnitInfection,
-      InCol = InUnitAcquisition,
+      InCol = InUnit,
       Abx = Abx,
       AbxRate = AbxRate
     )
   }
 
 
-LinearAbxModel <- function(...) {
-  LogNormalModelParameters("LinearAbxModel", ...)
+#' @describeIn LogNormalModelParams Linear Antibiotic Model Alias
+LinearAbxModel <- function(
+    ...,
+    InUnit = LogNormalABXInUnitParameters()) {
+  LogNormalModelParams("LinearAbxModel", ..., InUnit = InUnit)
 }

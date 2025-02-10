@@ -27,5 +27,6 @@
 		#include "LogNormalModel.h"
 		#include "MixedModel.h"
 
+#include "LinearAbxModel.h"
 	}
 #endif

@@ -9,18 +9,21 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Imports: 
+Imports:
+    checkmate,
+    dplyr,
     methods,
     Rcpp (>= 1.0.12),
     RcppEigen
 Config/testthat/edition: 3
-Depends: 
+Depends:
     R (>= 4.2.0)
 LazyData: true
-LinkingTo: 
+LinkingTo:
     Rcpp, RcppEigen
-Suggests: 
+Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown
 RcppModules: Infect
+URL: https://epiforesite.github.io/bayesian-transmission/

@@ -230,8 +230,9 @@ public:
 
 	static void sampleEpisodes(UnitLinkedModel *mod, infect::SystemHistory *h, int max, Random *rand)
 	{
-		for (Map *p = h->getPatientHeads(); p->hasNext(); )
+		for (Map *p = h->getPatientHeads(); p->hasNext(); ){
 			sampleHistory(mod,h,(infect::HistoryLink *)p->nextValue(),max,rand);
+	    }
 	}
 
 	static void sampleHistory(UnitLinkedModel *mod, infect::SystemHistory *hist, infect::HistoryLink *plink, int max, Random *rand)

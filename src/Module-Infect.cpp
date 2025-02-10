@@ -69,4 +69,13 @@ RCPP_MODULE(Infect){
         .property<double>("AbxDelay", &infect::Model::getAbxDelay, &infect::Model::setAbxDelay)
         .property<bool>("isCheating", &infect::Model::isCheating)
     ;
+
+    class_<TestParams>("CppTestParams")
+        .constructor<int>()
+        .property("paramNames", &TestParams::paramNames)
+        .property("nParam", &TestParams::nParam)
+        .property("values", &TestParams::getValues)
+        // .method("set", &TestParams::set)
+        // .method("update", &TestParams::update)
+    ;
 }

@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 .pre-commit-config.yaml
 ^\.pre-commit-config\.yaml$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

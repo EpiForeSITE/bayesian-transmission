@@ -132,3 +132,18 @@ test_that("InsituParams", {
   expect_equal(IP2$nParam, 2L)
   expect_length(IP2$paramNames, 2L)
 })
+test_that("CppTestParams", {
+  TP <- CppTestParams$new(3)
+  TP$values
+  TP$paramNames
+  expect_equal(TP$nParam, 3L)
+  expect_length(TP$values, 3L)
+  expect_length(TP$paramNames, 3L)
+  expect_silent(IP$set(1, 1, 1))
+
+
+  TP2 <- CppTestParams$new(2)
+
+  expect_length(TP2$values, 2L)
+  expect_length(TP2$paramNames, 2L)
+})

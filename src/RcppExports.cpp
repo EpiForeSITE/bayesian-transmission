@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // runMCMC
-DataFrame runMCMC(std::string modname, Rcpp::DataFrame data, Rcpp::List MCMCParameters, Rcpp::List modelParameters, int nstates, bool verbose);
+SEXP runMCMC(std::string modname, Rcpp::DataFrame data, Rcpp::List MCMCParameters, Rcpp::List modelParameters, int nstates, bool verbose);
 RcppExport SEXP _bayestransmission_runMCMC(SEXP modnameSEXP, SEXP dataSEXP, SEXP MCMCParametersSEXP, SEXP modelParametersSEXP, SEXP nstatesSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

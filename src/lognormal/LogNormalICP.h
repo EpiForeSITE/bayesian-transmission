@@ -14,14 +14,14 @@ protected:
 
 	static const int ns = 3;
 	int *n;
-	double **par;
-	double **epar;
-	double **primean;
-	double **pristdev;
-	double **sigmaprop;
-	int **doit;
-	double tOrigin;
-	int nmetro;
+	double **par;  //< Log parameters.
+	double **epar; //< Exponential parameters.
+	double **primean;  //< Prior mean.
+	double **pristdev; //< Prior standard deviation.
+	double **sigmaprop; //< Proposal standard deviation.
+	int **doit; //< Update flag.
+	double tOrigin; //< Time origin.
+	int nmetro; //< Number of Metropolis-Hastings iterations.
 	Map *m;
 
 	string **pnames;
