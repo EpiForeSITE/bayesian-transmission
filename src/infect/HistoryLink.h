@@ -216,41 +216,38 @@ public:
 			pnext->pprev = this;
 	}
 
-	inline void remove()
-	{
-		snext->sprev = sprev;
-		sprev->snext = snext;
-		fnext->fprev = fprev;
-		fprev->fnext = fnext;
-		unext->uprev = uprev;
-		uprev->unext = unext;
-		pnext->pprev = pprev;
-		pprev->pnext = pnext;
-	}
-
-	inline void removeS()
+	inline void removeSystem()
 	{
 		snext->sprev = sprev;
 		sprev->snext = snext;
 	}
 
-	inline void removeF()
+	inline void removeFacility()
 	{
 		fnext->fprev = fprev;
 		fprev->fnext = fnext;
 	}
 
-	inline void removeU()
+	inline void removeUnit()
 	{
 		unext->uprev = uprev;
 		uprev->unext = unext;
 	}
 
-	inline void removeP()
+	inline void removePatient()
 	{
 		pnext->pprev = pprev;
 		pprev->pnext = pnext;
 	}
+
+    inline void remove()
+    {
+        removeSystem();
+        removeFacility();
+        removeUnit();
+        removePatient();
+    }
+
 
 	void write(ostream &os, int opt)
 	{

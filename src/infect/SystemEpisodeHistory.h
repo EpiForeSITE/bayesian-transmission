@@ -131,10 +131,10 @@ protected:
 
 	virtual void removeAndUnapply(HistoryLink *l)
 	{
-		l->removeP();
-		l->removeU();
-		l->removeF();
-		l->removeS();
+		l->removePatient();
+		l->removeUnit();
+		l->removeFacility();
+		l->removeSystem();
 
 		for (HistoryLink *ll = l->sNext(); ; ll = ll->sNext())
 		{

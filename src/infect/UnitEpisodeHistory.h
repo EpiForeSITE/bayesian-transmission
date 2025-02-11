@@ -95,8 +95,8 @@ protected:
 
 	virtual void removeAndUnapply(HistoryLink *l)
 	{
-		l->removeP();
-		l->removeU();
+		l->removePatient();
+		l->removeUnit();
 
 		for (HistoryLink *ll = l->uNext(); ; ll = ll->uNext())
 		{
