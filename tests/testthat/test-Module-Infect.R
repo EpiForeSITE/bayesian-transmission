@@ -16,14 +16,14 @@ test_that("Can create RawEventList with data.frame", {
 test_that("Can Create System class", {
   data(simulated.data, package = "bayestransmission")
 
-  test <- TransmissionSystem$new(
+  test <- CppTransmissionSystem$new(
     simulated.data$facility,
     simulated.data$unit,
     simulated.data$time,
     simulated.data$patient,
     simulated.data$type
   )
-  expect_s4_class(test, "Rcpp_TransmissionSystem")
+  expect_s4_class(test, "Rcpp_CppTransmissionSystem")
   expect_equal(test$start, 0)
   expect_equal(test$end, 1734)
 
@@ -120,14 +120,14 @@ test_that("RRandom", {
 })
 
 test_that("InsituParams", {
-  IP <- InsituParams$new(3)
+  IP <- CppInsituParams$new(3)
 
   expect_equal(IP$nParam, 3L)
   expect_length(IP$paramNames, 3L)
   expect_silent(IP$set(1, 1, 1))
 
 
-  IP2 <- InsituParams$new(2)
+  IP2 <- CppInsituParams$new(2)
 
   expect_equal(IP2$nParam, 2L)
   expect_length(IP2$paramNames, 2L)

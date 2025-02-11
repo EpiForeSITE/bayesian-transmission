@@ -24,7 +24,7 @@ RCPP_MODULE(Infect){
     .method("LastTime", &RawEventList::lastTime)
     ;
 
-    class_<System>("TransmissionSystem")
+    class_<System>("CppTransmissionSystem")
         .constructor<std::vector<int>, std::vector<int>, std::vector<double>, std::vector<int>, std::vector<int>>()
         .property("log", &System::get_log)
         .property("start", &System::startTime)
@@ -44,7 +44,7 @@ RCPP_MODULE(Infect){
         //.method("", &RRandom::)
     ;
 
-    class_<InsituParams>("InsituParams")
+    class_<InsituParams>("CppInsituParams")
         .constructor<int>()
         .constructor<std::vector<double>, std::vector<double>, std::vector<bool>>()
         .property("nParam", &InsituParams::nParam)
@@ -55,7 +55,7 @@ RCPP_MODULE(Infect){
         //.method("update", &InsituParams::update)
     ;
 
-    class_<TestParamsAbx>("TestParamsAbx")
+    class_<TestParamsAbx>("CppTestParamsAbx")
         .constructor<int, bool>()
         .property("paramNames", &TestParamsAbx::paramNames)
         .property("UseAbx", &TestParamsAbx::getUseAbx, &TestParamsAbx::setUseAbx)
@@ -64,7 +64,7 @@ RCPP_MODULE(Infect){
         // .method("update", &TestParamsAbx::update)
     ;
 
-    class_<LogNormalModel>("LogNormalModel")
+    class_<LogNormalModel>("CppLogNormalModel")
         .property<double>("AbxLife", &infect::Model::getAbxLife, &infect::Model::setAbxLife)
         .property<double>("AbxDelay", &infect::Model::getAbxDelay, &infect::Model::setAbxDelay)
         .property<bool>("isCheating", &infect::Model::isCheating)
