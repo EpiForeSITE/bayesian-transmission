@@ -17,7 +17,6 @@
 		#include "Object.h"
 		#include "Random.h"
 		#include "Integer.h"
-		#include "Array.h"
 		#include "Vector.h"
 		#include "Map.h"
 		#include "IntMap.h"
