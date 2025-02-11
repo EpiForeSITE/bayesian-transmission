@@ -183,30 +183,54 @@ public:
 		return 2*nstates;
 	}
 
-	virtual std::vector<std::string> paramNames() const
-	{
-	    std::vector<std::string> res(2*nstates);
+    virtual std::vector<std::string> paramNames() const
+    {
+        std::vector<std::string> res(2*nstates);
 
-		if (nstates == 3)
-		{
-			res[0] = "RTest.P(+|unc)";
-			res[1] = "RTest.P(+|lat)";
-			res[2] = "RTest.P(+|col)";
-			res[3] = "RTest.rateUnc";
-			res[4] = "RTest.rateLat";
-			res[5] = "RTest.rateCol";
-		}
+        if (nstates == 3)
+        {
+            res[0] = "RTest.P(+|unc)";
+            res[1] = "RTest.P(+|lat)";
+            res[2] = "RTest.P(+|col)";
+            res[3] = "RTest.rateUnc";
+            res[4] = "RTest.rateLat";
+            res[5] = "RTest.rateCol";
+        }
 
-		if (nstates == 2)
-		{
-			res[0] = "RTest.P(+|unc)";
-			res[1] = "RTest.P(+|col)";
-			res[2] = "RTest.rateUnc";
-			res[3] = "RTest.rateCol";
-		}
+        if (nstates == 2)
+        {
+            res[0] = "RTest.P(+|unc)";
+            res[1] = "RTest.P(+|col)";
+            res[2] = "RTest.rateUnc";
+            res[3] = "RTest.rateCol";
+        }
 
-		return res;
-	}
+        return res;
+    }
+    virtual std::vector<double> getValues() const
+    {
+        std::vector<double> res(2*nstates);
+
+        if (nstates == 3)
+        {
+            res[0] = probs[0][1];//"RTest.P(+|unc)";
+            res[1] = probs[1][1];//"RTest.P(+|lat)";
+            res[2] = probs[2][1];//"RTest.P(+|col)";
+            res[3] = rates[0];//"RTest.rateUnc";
+            res[4] = rates[1];//"RTest.rateLat";
+            res[5] = rates[2];//"RTest.rateCol";
+        }
+
+        if (nstates == 2)
+        {
+            res[0] = probs[0][1]; //"RTest.P(+|unc)";
+            res[1] = probs[2][1]; //"RTest.P(+|col)";
+            res[2] = rates[0]; //"RTest.rateUnc";
+            res[3] = rates[2]; //"RTest.rateCol";
+        }
+
+        return res;
+    }
 
 	virtual void write (ostream &os)
 	{

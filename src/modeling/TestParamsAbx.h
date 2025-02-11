@@ -248,5 +248,31 @@ public:
 
 		delete [] buffer;
 	}
+
+    virtual std::vector<double> getValues() const
+    {
+        std::vector<double> res(2*nstates);
+
+        if (nstates == 3)
+        {
+            res[0] = probs[0][0][0];//"ATest.P(+|unc-)";
+            res[1] = probs[0][0][1];//"ATest.P(+|lat-)";
+            res[2] = probs[1][0][0];//"ATest.P(+|col-)";
+            res[3] = probs[1][1][1];//"ATest.P(+|unc+)";
+            res[4] = probs[2][1][0];//"ATest.P(+|lat+)";
+            res[5] = probs[2][1][1];//"ATest.P(+|col+)";
+        }
+
+        if (nstates == 2)
+        {
+            res[0] = probs[0][0][0];//"ATest.P(+|unc-)";
+            res[1] = probs[0][0][1];//"ATest.P(+|lat-)";
+            res[2] = probs[1][0][0];//"ATest.P(+|col-)";
+            res[3] = probs[1][1][1];//"ATest.P(+|unc+)";
+        }
+
+        return res;
+
+    }
 };
 #endif //ALUN_MODELING_TESTPARAMSABX_H
