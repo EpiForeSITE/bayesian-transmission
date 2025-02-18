@@ -9,22 +9,22 @@ public:
 		value = x;
 	}
 
-	int intValue()
+	int intValue() const
 	{
 		return value;
 	}
 
-	void set(int n) 
+	void set(int n)
 	{
 		value = n;
 	}
 
-	string className()
+	string className() const
 	{
 		return "Integer";
 	}
 
-	void write(ostream &os)
+	void write(ostream &os) const
 	{
 		os << value;
 	}
