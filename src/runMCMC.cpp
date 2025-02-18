@@ -234,14 +234,14 @@ SEXP runMCMC(
 */
 
     Rcpp::List ret = Rcpp::List::create(
-        // _["Parameters"] = paramchain,
-        // _["LogLikelihood"] = llchain,
-        // _["MCMCParameters"] = MCMCParameters,
-        // _["ModelParameters"] = modelParameters,
-        // _["ModelName"] = modname,
-        // _["nstates"] = nstates,
-        // _["waic1"] = waic1,
-        // _["waic2"] = waic2
+        _["Parameters"] = paramchain,
+        _["LogLikelihood"] = llchain,
+        _["MCMCParameters"] = MCMCParameters,
+        _["ModelParameters"] = modelParameters,
+        _["ModelName"] = modname,
+        _["nstates"] = nstates,
+        _["waic1"] = waic1,
+        _["waic2"] = waic2
     );
 
     bool outputfinal = MCMCParameters["outputfinal"];
