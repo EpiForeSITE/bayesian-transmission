@@ -82,6 +82,26 @@ lognormal::LogNormalModel* newModel(
 }
 
 
+//' Run Bayesian Transmission MCMC
+//'
+//' @param modname Name of the model to run.
+//' @param data Data frame with columns, in order: facility, unit, time, patient, and event type.
+//' @param MCMCParameters List of MCMC parameters.
+//' @param modelParameters List of model parameters, see <LogNormalModelParams>.
+//' @param nstates Number of states in the model.
+//' @param verbose Print progress messages.
+//'
+//' @return A list with the following elements:
+//'   * `Parameters` the MCMC chain of model parameters
+//'   * `LogLikelihood` the log likelihood of the model at each iteration
+//'   * `MCMCParameters` the MCMC parameters used
+//'   * `ModelParameters` the model parameters used
+//'   * `ModelName` the name of the model
+//'   * `nstates` the number of states in the model
+//'   * `waic1` the WAIC1 estimate
+//'   * `waic2` the WAIC2 estimate
+//'   * and optionally (if `MCMCParameters$outputfinal` is true) `FinalModel` the final model state.
+//' @export
 // [[Rcpp::export]]
 SEXP runMCMC(
     std::string modname,
@@ -105,11 +125,11 @@ SEXP runMCMC(
     if(verbose) Rcpp::Rcout << "Setting up System...";
 
     System *sys = new System(
-        as<std::vector<int>>(data[0]),//faclity
+        as<std::vector<int>>(data[0]),//facility
         as<std::vector<int>>(data[1]),//unit
-        as<std::vector<double>>(data[2]),//"times"
-        as<std::vector<int>>(data[3]),//"patients"
-        as<std::vector<int>>(data[4])//"type"
+        as<std::vector<double>>(data[2]),//"time"
+        as<std::vector<int>>(data[3]),//"patient"
+        as<std::vector<int>>(data[4])//"event type"
     );
     if(verbose)
         Rcpp::Rcout << "Done" << std::endl;

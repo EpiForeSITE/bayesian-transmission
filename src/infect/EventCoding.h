@@ -96,6 +96,38 @@ public:
 		}
 		return "CAN'T REACH THIS";
 	}
+
+	static EventCode toEventCode(const string& s)
+	{
+		if(s == "nullevent") return nullevent;
+		if(s == "start") return start;
+		if(s == "admission") return admission;
+		if(s == "admission0") return admission0;
+		if(s == "admission1") return admission1;
+		if(s == "admission2") return admission2;
+		if(s == "negtest") return negtest;
+		if(s == "postest") return postest;
+		if(s == "negsurvtest") return negsurvtest;
+		if(s == "possurvtest") return possurvtest;
+		if(s == "negclintest") return negclintest;
+		if(s == "posclintest") return posclintest;
+		if(s == "discharge") return discharge;
+		if(s == "acquisition") return acquisition;
+		if(s == "clearance") return clearance;
+		if(s == "progression") return progression;
+		if(s == "insitu") return insitu;
+		if(s == "insitu0") return insitu0;
+		if(s == "insitu1") return insitu1;
+		if(s == "insitu2") return insitu2;
+		if(s == "marker") return marker;
+		if(s == "stop") return stop;
+		if(s == "abxdose") return abxdose;
+		if(s == "abxon") return abxon;
+		if(s == "abxoff") return abxoff;
+		if(s == "isolon") return isolon;
+		if(s == "isoloff") return isoloff;
+		return error;
+	}
 };
 
 #endif // ALUN_INFECT_EVENTCODING_H

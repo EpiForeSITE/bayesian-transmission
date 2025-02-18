@@ -325,7 +325,7 @@ LogNormalABXInUnitParameters <- function(
 #'
 #' @param modname The name of the model used. Usually specified by specification functions.
 #' @param nstates The number of states in the model.
-#' @param nmetro TODO
+#' @param nmetro The number of Metropolis-Hastings steps to take between outputs.
 #' @param forward TODO
 #' @param cheat TODO
 #' @param Insitu In Situ Parameters
@@ -344,7 +344,7 @@ LogNormalABXInUnitParameters <- function(
 LogNormalModelParams <-
   function(modname,
            nstates = 2,
-           nmetro = 1000,
+           nmetro = 1,
            forward = TRUE,
            cheat = FALSE,
            Insitu = InsituParams(),

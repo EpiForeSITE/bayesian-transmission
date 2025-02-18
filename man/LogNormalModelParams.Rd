@@ -8,7 +8,7 @@
 LogNormalModelParams(
   modname,
   nstates = 2,
-  nmetro = 1000,
+  nmetro = 1,
   forward = TRUE,
   cheat = FALSE,
   Insitu = InsituParams(),
@@ -27,7 +27,7 @@ LinearAbxModel(..., InUnit = LogNormalABXInUnitParameters())
 
 \item{nstates}{The number of states in the model.}
 
-\item{nmetro}{TODO}
+\item{nmetro}{The number of Metropolis-Hastings steps to take between outputs.}
 
 \item{forward}{TODO}
 
