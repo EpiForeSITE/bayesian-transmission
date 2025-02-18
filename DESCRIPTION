@@ -27,3 +27,4 @@ Suggests:
     rmarkdown
 RcppModules: Infect
 URL: https://epiforesite.github.io/bayesian-transmission/
+VignetteBuilder: knitr

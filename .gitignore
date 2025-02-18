@@ -4,3 +4,4 @@
 *.Rproj
 .Rhistory
 docs
+inst/doc
