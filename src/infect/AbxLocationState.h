@@ -68,93 +68,93 @@ public:
 		everlat = as->everlat;
 	}
 
-	virtual inline int onAbx(Patient *p)
+	virtual inline int onAbx(Patient *p) const
 	{
 		return abx->got(p);
 	}
 
-	virtual inline int everAbx(Patient *p)
+	virtual inline int everAbx(Patient *p) const
 	{
 		return ever->got(p);
 	}
 
-	virtual inline int getAbxTotal()
+	virtual inline int getAbxTotal() const
 	{
 		return abx->size();
 	}
 
-	virtual inline int getEverAbxTotal()
+	virtual inline int getEverAbxTotal() const
 	{
 		return ever->size();
 	}
 
-	virtual inline int getAbxColonized()
+	virtual inline int getAbxColonized() const
 	{
 		return abxinf;
 	}
 
-	virtual inline int getEverAbxColonized()
+	virtual inline int getEverAbxColonized() const
 	{
 		return everinf;
 	}
 
-	virtual inline int getAbxLatent()
+	virtual inline int getAbxLatent() const
 	{
 		return abxlat;
 	}
 
-	virtual inline int getEverAbxLatent()
+	virtual inline int getEverAbxLatent() const
 	{
 		return everlat;
 	}
 
-	virtual inline int getAbxSusceptible()
+	virtual inline int getAbxSusceptible() const
 	{
 		return abx->size() - abxinf - abxlat;
 	}
 
-	virtual inline int getEverAbxSusceptible()
+	virtual inline int getEverAbxSusceptible() const
 	{
 		return ever->size() - everinf - everlat;
 	}
 
 
-	virtual inline int getNoAbxTotal()
+	virtual inline int getNoAbxTotal() const
 	{
 		return getTotal() - abx->size();
 	}
 
-	virtual inline int getNeverAbxTotal()
+	virtual inline int getNeverAbxTotal() const
 	{
 		return getTotal() - ever->size();
 	}
 
-	virtual inline int getNoAbxColonized()
+	virtual inline int getNoAbxColonized() const
 	{
 		return getColonized() - abxinf;
 	}
 
-	virtual inline int getNeverAbxColonized()
+	virtual inline int getNeverAbxColonized() const
 	{
 		return getColonized() - everinf;
 	}
 
-	virtual inline int getNoAbxLatent()
+	virtual inline int getNoAbxLatent() const
 	{
 		return getLatent() - abxlat;
 	}
 
-	virtual inline int getNeverAbxLatent()
+	virtual inline int getNeverAbxLatent() const
 	{
 		return getLatent() - everlat;
 	}
 
-	virtual inline int getNoAbxSusceptible()
+	virtual inline int getNoAbxSusceptible() const
 	{
 		return getSusceptible() - getAbxSusceptible();
 	}
 
-	virtual inline int getNeverAbxSusceptible()
+	virtual inline int getNeverAbxSusceptible() const
 	{
 		return getSusceptible() - getEverAbxSusceptible();
 	}
@@ -390,4 +390,3 @@ public:
 	}
 };
 #endif // ALUN_INFECT_ABXLOCATIONSTATE_H
-

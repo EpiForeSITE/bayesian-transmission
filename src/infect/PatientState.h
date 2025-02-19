@@ -39,7 +39,7 @@ public:
 		return s;
 	}
 
-	inline virtual int onAbx()
+	inline virtual int onAbx() const
 	{
 		return 0;
 	}

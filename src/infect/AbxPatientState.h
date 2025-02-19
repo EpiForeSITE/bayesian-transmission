@@ -3,6 +3,7 @@
 #define ALUN_INFECT_ABXPATIENTSTATE_H
 
 #include "PatientState.h"
+#include "AbxCoding.h"
 
 class AbxPatientState : public PatientState, public AbxCoding
 {
@@ -19,12 +20,12 @@ public:
 		ever = 0;
 	}
 
-	virtual inline int onAbx()
+	virtual inline int onAbx() const
 	{
 		return abc;
 	}
 
-	virtual inline int everAbx()
+	virtual inline int everAbx() const
 	{
 		return ever;
 	}
