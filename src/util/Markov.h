@@ -86,7 +86,7 @@ private:
 
 	void expQt(int n, double **Q, double t, double **etQ);
 
-	inline double logpexp(double x, double l)
+	inline double logpexp(double x, double l) const
 	{
 		return -l*x;
 	}
@@ -157,7 +157,7 @@ public:
 		delete [] x;
 	}
 
-	vector<timepoint> simulateProcess(double **Q, checkpoint *y, checkpoint *z)
+	vector<timepoint> simulateProcess(double **Q, checkpoint *y, checkpoint *z) const
 	{
 		vector<timepoint> v;
 
@@ -229,7 +229,7 @@ public:
 		return logProb(vv);
 	}
 
-	double logProcessProb(int segs, int *ec, double **et, int **es)
+	double logProcessProb(int segs, int *ec, double **et, int **es) const
 	{
 		vector<timepoint> v;
 
@@ -252,7 +252,7 @@ public:
 		return l;
 	}
 
-	double logProb(vector<timepoint> v)
+	double logProb(vector<timepoint> v) const
 	{
 		double l = -logtot;
 

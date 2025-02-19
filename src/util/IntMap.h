@@ -96,7 +96,7 @@ private:
 			l->tnext->tprev = l->tprev;
 	}
 
-	inline IntMapLink *tabgot(int o)
+	inline IntMapLink *tabgot(int o) const
 	{
 		for (IntMapLink *l = tab[where(o)]; l != 0; l = l->tnext)
 			if (l->key == o)
@@ -189,7 +189,7 @@ public:
 		put(k,0);
 	}
 
-	inline bool got(int k)
+	inline bool got(int k) const
 	{
 		return tabgot(k) != 0;
 	}
@@ -216,7 +216,7 @@ public:
 		return res;
 	}
 
-	inline int size()
+	inline int size() const
 	{
 		return use;
 	}
@@ -226,7 +226,7 @@ public:
 		current = head;
 	}
 
-	inline bool hasNext()
+	inline bool hasNext() const
 	{
 		return current != 0;
 	}
@@ -249,22 +249,22 @@ public:
 		return res;
 	}
 
-	inline int getFirstKey()
+	inline int getFirstKey() const
 	{
 		return head == 0 ? 0 : head->key;
 	}
 
-	inline Object *getFirstValue()
+	inline Object *getFirstValue() const
 	{
 		return head == 0 ? 0 : head->value;
 	}
 
-	inline int getLastKey()
+	inline int getLastKey() const
 	{
 		return tail == 0 ? 0 : tail->key;
 	}
 
-	inline Object *getLastValue()
+	inline Object *getLastValue() const
 	{
 		return tail == 0 ? 0 : tail->value;
 	}

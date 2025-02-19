@@ -91,7 +91,7 @@ public:
 		return l;
 	}
 
-	Object * random(Random *r)
+	Object * random(Random *r) const
 	{
 		int x = size();
 		if (x == 0)
@@ -222,12 +222,12 @@ public:
 		return res;
 	}
 
-	inline bool isEmpty()
+	inline bool isEmpty() const
 	{
 		return head == 0;
 	}
 
-	inline int size()
+	inline int size() const
 	{
 		int count = 0;
 		for (ListLink *l = head; l != 0; l = l->next)

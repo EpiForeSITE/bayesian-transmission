@@ -74,7 +74,7 @@ private:
 			tabadd(l);
 	}
 
-	inline int occupancy(MapLink *x)
+	inline int occupancy(MapLink *x) const
 	{
 		int occ = 0;
 		for (MapLink *l = x; l != 0; l = l->tnext)
@@ -119,7 +119,7 @@ private:
 		}
 	}
 
-	inline MapLink *tabrand(Random *r)
+	inline MapLink *tabrand(Random *r) const
 	{
 		if (use == 0)
 			return 0;
@@ -144,7 +144,7 @@ private:
 		return 0;
 	}
 
-	inline MapLink *tabgot(Object *o)
+	inline MapLink *tabgot(Object *o) const
 	{
 		for (MapLink *l = tab[where(o)]; l != 0; l = l->tnext)
 			if (l->key == o)
@@ -176,7 +176,7 @@ private:
 			l->next->prev = l->prev;
 	}
 
-	inline int where(Object *o)
+	inline int where(Object *o) const
 	{
 		if (o == 0)
 			return 0;
@@ -267,7 +267,7 @@ public:
 		l->value = v;
 	}
 
-	inline Object *get(Object *k)
+	inline Object *get(Object *k) const
 	{
 		MapLink *l = tabgot(k);
 		return l == 0 ? 0 : l->value;
@@ -278,7 +278,7 @@ public:
 		put(k,0);
 	}
 
-	inline bool got(Object *k)
+	inline bool got(Object *k) const
 	{
 		return tabgot(k) != 0;
 	}
@@ -317,7 +317,7 @@ public:
 		current = head;
 	}
 
-	inline bool hasNext()
+	inline bool hasNext() const
 	{
 		return current != 0;
 	}
@@ -340,32 +340,32 @@ public:
 		return res;
 	}
 
-	inline Object *getFirstKey()
+	inline Object *getFirstKey() const
 	{
 		return head == 0 ? 0 : head->key;
 	}
 
-	inline Object *getFirstValue()
+	inline Object *getFirstValue() const
 	{
 		return head == 0 ? 0 : head->value;
 	}
 
-	inline Object *getLastKey()
+	inline Object *getLastKey() const
 	{
 		return tail == 0 ? 0 : tail->key;
 	}
 
-	inline Object *getLastValue()
+	inline Object *getLastValue() const
 	{
 		return tail == 0 ? 0 : tail->value;
 	}
 
-	inline Object *randomKey(Random *r)
+	inline Object *randomKey(Random *r) const
 	{
 		return tabrand(r)->key;
 	}
 
-	inline Object *randomValue(Random *r)
+	inline Object *randomValue(Random *r) const
 	{
 		return tabrand(r)->value;
 	}

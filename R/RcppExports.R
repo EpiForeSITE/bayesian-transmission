@@ -2,7 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 CodeToEvent <- function(x) {
-  .Call(`_bayestransmission_CodeToEvent`, x)
+    .Call(`_bayestransmission_CodeToEvent`, x)
 }
 
 #' Convert string events to coded events
@@ -12,7 +12,7 @@ CodeToEvent <- function(x) {
 #'
 #' @export
 EventToCode <- function(x) {
-  .Call(`_bayestransmission_EventToCode`, x)
+    .Call(`_bayestransmission_EventToCode`, x)
 }
 
 #' Run Bayesian Transmission MCMC
@@ -36,9 +36,10 @@ EventToCode <- function(x) {
 #'   * and optionally (if `MCMCParameters$outputfinal` is true) `FinalModel` the final model state.
 #' @export
 runMCMC <- function(modname, data, MCMCParameters, modelParameters, nstates = 2L, verbose = FALSE) {
-  .Call(`_bayestransmission_runMCMC`, modname, data, MCMCParameters, modelParameters, nstates, verbose)
+    .Call(`_bayestransmission_runMCMC`, modname, data, MCMCParameters, modelParameters, nstates, verbose)
 }
 
 hello_world <- function() {
-  invisible(.Call(`_bayestransmission_hello_world`))
+    invisible(.Call(`_bayestransmission_hello_world`))
 }
+
