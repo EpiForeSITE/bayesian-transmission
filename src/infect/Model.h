@@ -32,7 +32,7 @@ public:
 		return 1;
 	}
 
-	virtual bool isCheating()
+	virtual bool isCheating() const
 	{
 		return cheating;
 	}
@@ -62,7 +62,7 @@ public:
 		abxlife = l;
 	}
 
-	virtual double getAbxLife()
+	virtual double getAbxLife() const
 	{
 		return abxlife;
 	}
@@ -72,7 +72,7 @@ public:
 		abxdelay = l;
 	}
 
-	virtual double getAbxDelay()
+	virtual double getAbxDelay() const
 	{
 		return abxdelay;
 	}

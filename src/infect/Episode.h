@@ -40,7 +40,7 @@ public:
 		s->prepend(e);
 	}
 
-	inline Event *getAdmission()
+	inline Event *getAdmission() const
 	{
 		return a;
 	}
@@ -51,7 +51,7 @@ public:
 		s->append(e);
 	}
 
-	inline Event *getDischarge()
+	inline Event *getDischarge() const
 	{
 		return d;
 	}

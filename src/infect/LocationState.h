@@ -18,7 +18,7 @@ public:
 		n = nstates;
 	}
 
-	virtual inline int nStates()
+	virtual inline int nStates() const
 	{
 		return n;
 	}
@@ -33,7 +33,7 @@ public:
 	virtual void unapply(Event *e) = 0;
 
 
-	virtual void write(ostream &os)
+	virtual void write(ostream &os) const
 	{
 		os << getOwner() ;
 		os << " (" << getSusceptible() << "+" << getLatent() << "+" << getColonized() << "=" << getTotal() << ")";

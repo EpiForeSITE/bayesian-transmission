@@ -27,9 +27,9 @@ public:
 	// RawEvents are sorted first by patient then by time
 	// then by unit. This ordering is used by EventData
 	// to create the checked lists of Events and Episodes.
-	int compare (Object *e)
+	int compare (Object const * const e) const
 	{
-		RawEvent *x = dynamic_cast<RawEvent *>(e);
+		RawEvent const * const x = dynamic_cast<RawEvent const * const>(e);
 
 		if (x->pat < pat)
 			return 1;
@@ -54,7 +54,7 @@ public:
 		return 0;
 	}
 
-	void write(ostream &os)
+	void write(ostream &os) const
 	{
 		os << facility << "\t";
 		os << unit << "\t";
@@ -63,27 +63,27 @@ public:
 		os << type;
 	}
 
-	inline double getTime()
+	inline double getTime() const
 	{
 		return time;
 	}
 
-	inline int getFacilityId()
+	inline int getFacilityId() const
 	{
 		return facility;
 	}
 
-	inline int getUnitId()
+	inline int getUnitId() const
 	{
 		return unit;
 	}
 
-	inline int getPatientId()
+	inline int getPatientId() const
 	{
 		return pat;
 	}
 
-	inline int getTypeId()
+	inline int getTypeId() const
 	{
 		return type;
 	}

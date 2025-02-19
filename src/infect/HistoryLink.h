@@ -291,12 +291,12 @@ public:
 		return hidden;
 	}
 
-	inline HistoryLink *hPrev()
+	inline HistoryLink *hPrev() const
 	{
 		return hprev;
 	}
 
-	inline HistoryLink *hNext()
+	inline HistoryLink *hNext() const
 	{
 		return hnext;
 	}
@@ -321,42 +321,42 @@ public:
 		e = 0;
 	}
 
-	inline HistoryLink *pPrev()
+	inline HistoryLink *pPrev() const
 	{
 		return pprev;
 	}
 
-	inline HistoryLink *pNext()
+	inline HistoryLink *pNext() const
 	{
 		return pnext;
 	}
 
-	inline HistoryLink *uPrev()
+	inline HistoryLink *uPrev() const
 	{
 		return uprev;
 	}
 
-	inline HistoryLink *uNext()
+	inline HistoryLink *uNext() const
 	{
 		return unext;
 	}
 
-	inline HistoryLink *fPrev()
+	inline HistoryLink *fPrev() const
 	{
 		return fprev;
 	}
 
-	inline HistoryLink *fNext()
+	inline HistoryLink *fNext() const
 	{
 		return fnext;
 	}
 
-	inline HistoryLink *sPrev()
+	inline HistoryLink *sPrev() const
 	{
 		return sprev;
 	}
 
-	inline HistoryLink *sNext()
+	inline HistoryLink *sNext() const
 	{
 		return snext;
 	}

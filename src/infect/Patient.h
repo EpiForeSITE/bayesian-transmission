@@ -33,12 +33,12 @@ public:
 		group = i-thou;
 	}
 
-	inline int getGroup()
+	inline int getGroup() const
 	{
 		return group;
 	}
 
-	void write(ostream &os)
+	void write(ostream &os) const
 	{
         	os << name << "\t" << group;
 	}

@@ -29,12 +29,12 @@ public:
 		n = nstates;
 	}
 
-	inline Unit *getUnit()
+	inline Unit *getUnit() const
 	{
 		return u;
 	}
 
-	inline InfectionStatus infectionStatus()
+	inline InfectionStatus infectionStatus() const
 	{
 		return s;
 	}
@@ -152,7 +152,7 @@ public:
 		}
 	}
 
-	virtual void write(ostream &os)
+	virtual void write(ostream &os) const
 	{
 		State::write(os);
 		os << "\tUnit: ";

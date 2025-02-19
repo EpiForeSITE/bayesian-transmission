@@ -70,7 +70,7 @@ public:
 		}
 	}
 
-	EventCode eventPreAdmission()
+	EventCode eventPreAdmission() const
 	{
 		EventCode c = nullevent;
 
@@ -98,12 +98,12 @@ public:
 		}
 	}
 
-	HistoryLink *getProposalHead()
+	HistoryLink *getProposalHead() const
 	{
 		return ph;
 	}
 
-	int countProposedSwitches()
+	int countProposedSwitches() const
 	{
 		int x = 0;
 		for (HistoryLink *l = ph; l != 0; l = l->hNext())
@@ -111,7 +111,7 @@ public:
 		return x;
 	}
 
-	int countSwitches()
+	int countSwitches() const
 	{
 		int x = 0;
 		for (HistoryLink *l = h; l != 0; l = l->hNext())
@@ -119,7 +119,7 @@ public:
 		return x;
 	}
 
-	int proposalDifferent()
+	int proposalDifferent() const
 	{
 		HistoryLink *l = h;
 		HistoryLink *pl = ph;
@@ -199,27 +199,27 @@ public:
 		}
 	}
 
-	inline HistoryLink *admissionLink()
+	inline HistoryLink *admissionLink() const
 	{
 		return a;
 	}
 
-	inline HistoryLink *dischargeLink()
+	inline HistoryLink *dischargeLink() const
 	{
 		return d;
 	}
 
-	inline double admissionTime()
+	inline double admissionTime() const
 	{
 		return ta;
 	}
 
-	inline double dischargeTime()
+	inline double dischargeTime() const
 	{
 		return td;
 	}
 
-	void write(ostream &os)
+	void write(ostream &os) const
 	{
 		for (HistoryLink *l = h; l != 0; l = l->hNext())
 		{

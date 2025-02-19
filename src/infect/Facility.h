@@ -36,7 +36,7 @@ public:
 		unit->put(u->getId(),u);
 	}
 
-	inline Unit *getUnit(int i)
+	inline Unit *getUnit(int i) const
 	{
 		return (Unit *) unit->get(i);
 	}

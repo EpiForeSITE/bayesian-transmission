@@ -175,7 +175,7 @@ public:
 		write(os,0);
 	}
 
-	void write(ostream &os, int opt)
+	void write(ostream &os, int opt) const
 	{
 		int f = fac == 0 ? 0 : fac->getId();
 		int u = unit == 0 ? 0 : unit->getId();
