@@ -1,3 +1,6 @@
+#ifndef ALUN_UTIL_INTEGER_H
+#define ALUN_UTIL_INTEGER_H
+#include "Object.h"
 
 class Integer : public Object
 {
@@ -19,13 +22,14 @@ public:
 		value = n;
 	}
 
-	string className() const
+	std::string className() const
 	{
 		return "Integer";
 	}
 
-	void write(ostream &os) const
+	void write(std::ostream &os) const
 	{
 		os << value;
 	}
 };
+#endif // ALUN_UTIL_INTEGER_H

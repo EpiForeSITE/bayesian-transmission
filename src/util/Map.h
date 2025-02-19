@@ -26,12 +26,12 @@ private:
 		tprev = 0;
 	}
 
-	std::string className()
+	std::string className() const
 	{
 		return "MapLink";
 	}
 
-	void write(std::ostream &os)
+	void write(std::ostream &os) const
 	{
 		Object::write(os);
 		os << "(" << key << "->" << value << ")";
@@ -307,7 +307,7 @@ public:
 			remove(k);
 	}
 
-	inline int size()
+	inline int size() const
 	{
 		return use;
 	}
@@ -370,7 +370,7 @@ public:
 		return tabrand(r)->value;
 	}
 
-	std::string className()
+	std::string className() const
 	{
 		return "Map";
 	}

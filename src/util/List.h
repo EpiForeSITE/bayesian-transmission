@@ -28,12 +28,12 @@ public:
 		return key;
 	}
 
-	std::string className()
+	std::string className() const
 	{
 		return "ListLink";
 	}
 
-	void write(std::ostream &os)
+	void write(std::ostream &os) const
 	{
 		Object::write(os);
 		os << "(" << key << ")";
@@ -255,12 +255,12 @@ public:
 		return res;
 	}
 
-	std::string className()
+	std::string className() const
 	{
 		return "List";
 	}
 
-	void write(std::ostream &os)
+	void write(std::ostream &os) const
 	{
 		Object::write(os);
 		for (ListLink *l = head; l != 0; l = l->next)

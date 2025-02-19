@@ -81,7 +81,7 @@ public:
 		}
 	}
 
-	std::string className()
+	std::string className() const
 	{
 		return "SortedList";
 	}

@@ -343,7 +343,7 @@ public:
 			x[i]->state = rand->rint(ns,x[i-1]->RR[x[i-1]->state]);
 	}
 
-	void write(ostream &os)
+	void write(ostream &os) const
 	{
 		for (int i=0; i<n; i++)
 		{

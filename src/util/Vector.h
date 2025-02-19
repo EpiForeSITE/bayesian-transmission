@@ -75,12 +75,12 @@ public:
 		return  res;
 	}
 
-	inline int size()
+	inline int size() const
 	{
 		return n;
 	}
 
-	inline Object *get(int i)
+	inline Object *get(int i) const
 	{
 		return x[i];
 	}
@@ -91,12 +91,12 @@ public:
 		x[i] = o;
 	}
 
-	string className()
+	string className() const
 	{
 		return "Vector";
 	}
 
-	void write(ostream &os)
+	void write(ostream &os) const
 	{
 		Object::write(os);
 		os << "(" << n << "/" << cap << ")";

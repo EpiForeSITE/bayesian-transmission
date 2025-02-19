@@ -38,15 +38,19 @@ public:
 		return 0;
 	}
 
-	virtual std::string className()
+	virtual std::string className() const
 	{
 		return "Object";
 	}
 
-	virtual void write(std::ostream &os)
-	{
-		os << className() << "[" << index << "]";
-	}
+    virtual void write(std::ostream &os) const
+    {
+        os << className() << "[" << index << "]";
+    }
+    virtual void write(std::ostream &os)
+    {
+        os << className() << "[" << index << "]";
+    }
 
 	//friend std::ostream& operator <<(std::ostream&, Object*);
 };

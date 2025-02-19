@@ -28,12 +28,12 @@ private:
 		tprev = 0;
 	}
 
-	std::string className()
+	std::string className() const
 	{
 		return "IntMapLink";
 	}
 
-	void write(std::ostream &os)
+	void write(std::ostream &os) const
 	{
 		Object::write(os);
 		os << "(" << key << "->" << value << ")";
@@ -128,7 +128,8 @@ private:
 			l->next->prev = l->prev;
 	}
 
-	inline int where(int k)
+
+	inline int where(int k) const
 	{
 		long res = k % cap;
 		while (res < 0)
@@ -268,7 +269,7 @@ public:
 		return tail == 0 ? 0 : tail->value;
 	}
 
-	std::string className()
+	std::string className() const
 	{
 		return "IntMap";
 	}

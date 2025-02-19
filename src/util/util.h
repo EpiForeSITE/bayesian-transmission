@@ -22,7 +22,7 @@
 		#include "IntMap.h"
 		#include "List.h"
 		#include "SortedList.h"
-		#include "GaussianProcess.h"
+		// #include "GaussianProcess.h"
 		#include "Markov.h"
 
 	    template <typename real> real digamma(real x){
