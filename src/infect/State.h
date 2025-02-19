@@ -43,12 +43,12 @@ public:
 	{
 	}
 
-	void write(ostream &os)
+	void write(ostream &os) const
 	{
         	os << owner;
 	}
 
-	inline Object *getOwner()
+	inline Object *getOwner() const
 	{
 		return owner;
 	}

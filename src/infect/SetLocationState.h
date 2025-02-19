@@ -54,7 +54,7 @@ protected:
 		return s;
 	}
 
-	int subsetSize(Map *a, int g)
+	int subsetSize(Map *a, int g) const
 	{
 		int s = 0;
 		for (a->init(); a->hasNext(); )
@@ -98,42 +98,42 @@ public:
 		return pat;
 	}
 
-	virtual int getTotal()
+	virtual int getTotal() const
 	{
 		return pat->size();
 	}
 
-	virtual int getTotal(int g)
+	virtual int getTotal(int g) const
 	{
 		return subsetSize(pat,g);
 	}
 
-	virtual int getSusceptible()
+	virtual int getSusceptible() const
 	{
 		return sus->size();
 	}
 
-	virtual int getSusceptible(int g)
+	virtual int getSusceptible(int g) const
 	{
 		return subsetSize(sus,g);
 	}
 
-	virtual int getLatent()
+	virtual int getLatent() const
 	{
 		return lat->size();
 	}
 
-	virtual int getLatent(int g)
+	virtual int getLatent(int g) const
 	{
 		return subsetSize(lat,g);
 	}
 
-	virtual int getColonized()
+	virtual int getColonized() const
 	{
 		return col->size();
 	}
 
-	virtual int getColonized(int g)
+	virtual int getColonized(int g) const
 	{
 		return subsetSize(col,g);
 	}
@@ -189,8 +189,8 @@ public:
 			col->remove(p);
 			sus->add(p);
 			break;
-			
-		
+
+
 		case insitu:
 		case insitu0:
 		case admission0:
@@ -198,7 +198,7 @@ public:
 			pat->add(p);
 			sus->add(p);
 			break;
-			
+
 		case insitu1:
 		case admission1:
 			pat->add(p);

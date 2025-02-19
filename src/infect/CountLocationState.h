@@ -21,31 +21,31 @@ public:
 		lat = 0;
 	}
 
-	virtual inline void clear() 
-	{ 
-		tot = 0; 
-		inf = 0; 
+	virtual inline void clear()
+	{
+		tot = 0;
+		inf = 0;
 		lat = 0;
-	} 
-
-	virtual inline int getTotal() 
-	{ 
-		return tot; 
 	}
 
-	virtual inline int getColonized() 
-	{ 
-		return inf; 
+	virtual inline int getTotal() const
+	{
+		return tot;
 	}
 
-	virtual inline int getLatent() 
-	{ 
-		return lat; 
+	virtual inline int getColonized() const
+	{
+		return inf;
 	}
 
-	virtual inline int getSusceptible() 
-	{ 
-		return tot - inf - lat; 
+	virtual inline int getLatent() const
+	{
+		return lat;
+	}
+
+	virtual inline int getSusceptible() const
+	{
+		return tot - inf - lat;
 	}
 
 	virtual void copy(State *s)
@@ -82,7 +82,7 @@ public:
 		default:
 			break;
 		}
-		
+
 		if (nStates() == 2)
 		{
 			switch(e->getType())
@@ -90,11 +90,11 @@ public:
 			case acquisition:
 				inf++;
 				break;
-	
+
 			case clearance:
 				inf--;
 				break;
-	
+
 			default:
 				break;
 			}
@@ -107,16 +107,16 @@ public:
 			case acquisition:
 				lat++;
 				break;
-	
+
 			case progression:
 				lat--;
 				inf++;
 				break;
-	
+
 			case clearance:
 				inf--;
 				break;
-	
+
 			default:
 				break;
 			}
@@ -135,11 +135,11 @@ public:
 			case acquisition:
 				inf--;
 				break;
-	
+
 			case clearance:
 				inf++;
 				break;
-	
+
 			default:
 				break;
 			}
@@ -152,16 +152,16 @@ public:
 			case acquisition:
 				lat--;
 				break;
-	
+
 			case progression:
 				lat++;
 				inf--;
 				break;
-	
+
 			case clearance:
 				inf++;
 				break;
-	
+
 			default:
 				break;
 			}

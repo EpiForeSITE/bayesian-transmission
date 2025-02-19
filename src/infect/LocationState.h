@@ -24,10 +24,10 @@ public:
 	}
 
 	virtual void clear() = 0;
-	virtual int getTotal() = 0;
-	virtual int getColonized() = 0;
-	virtual int getLatent() = 0;
-	virtual int getSusceptible() = 0;
+	virtual int getTotal() const = 0;
+	virtual int getColonized() const = 0;
+	virtual int getLatent() const = 0;
+	virtual int getSusceptible() const = 0;
 	virtual void copy(State *s) = 0;
 	virtual void apply(Event *e) = 0;
 	virtual void unapply(Event *e) = 0;
