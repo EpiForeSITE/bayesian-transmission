@@ -17,3 +17,87 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(bayestransmission)
 ```
+# Introduction
+This package provides a Bayesian framework for transmission modeling on an
+individual patient level. Modeling is conducted through Markov Chain Monte
+Carlo (MCMC) methods.This document will explain the basic usage of the package,
+specification of parameters, and the output of the model.
+
+# Data Structure
+The algorithms expect a longitudinal data set with the following columns:
+* `facility`: The facility where the event occurred.
+* `unit`: The unit within the facility where the event occurred.
+* `time`: The time at which the event occurred.
+* `patient`: The patient involved in the event.
+* `type`: The type of event.
+
+There are 12 different types of events that can be specified in the `type` column.
+These are, expected numerical codes shown in parentheses:
+
+* Admission (0) and Discharge (3)
+* Surveillance Testing Results
+    + Negative Test (1)
+    + Positive Test (2)
+* Clinical Testing Results
+    + Negative Test (4)
+    + Positive Test (5)
+* Generic Testing
+    + Negative Test (7)
+    + Positive Test (8)
+* Antibiotic Use
+    + single dose (9)
+    + Start (10)
+    + Stop (11)
+* Isolation Procedures
+    + Start (6)
+    + Stop (7)
+
+Not all events need to be used in every data set, but the model selected should
+reflect the data that is available. Care should be taken to correctly code the
+data. For this task there is a
+
+
+
+# Model Specifiction
+
+## Model Choice
+Since the model is implemented in C++ for speed and efficiency, only the
+specified models can be used.  The currently implemented models are:
+
+* `"LinearAbxModel"`, A Linear model with antibiotic use as a covariate.
+* `"MixedModel"`, and
+* `"LogNormalModel"`
+
+Model specification and all parameters are controlled through constructor functions of the same name, or generically through the `LogNormalModelParams()` function.
+
+For all models there is the choice of either a 2 state (susceptible and colonized) or 3 state (susceptible, colonized, and recovered or latent) model.  Number of states is set through the `nstates` parameter, and the number of states in the model overrides what may be specified in any individual component.
+
+## Parameters
+
+The remainder of the parameters are grouped into the following categories:
+
+* `Abx`, Antibiotic use,
+* `AbxRate`, Antibiotic rates,
+* `ClinicalTest`, Clinical testing,
+* `Insitu`, In situ parameters,
+* `OutCol`, Out of unit infection rates,
+* `InCol`, In unit infection rates,
+* `SurveilenceTest`, Surveillance testing.
+
+Unless otherwise specified the parameters are all distributed gamma  with
+specified shape and rate parameters.  Each parameter can also be left as fixed
+or be sampled at each iteration of the MCMC.
+
+## `Abx` Antibiotic use
+
+Antibiotic use is specified by the `Abx` parameter.  This parameter is a list constructed with the `AbxParams()` function with the following components:
+
+* `onoff`, If antibiotics are being used or not.  The two following parameters are only used if `onoff` is `TRUE`.
+* `delay`, the delay for the antibiotic to take effect.
+* `life`, the duration where the antibiotic to be effective.
+
+Currently, all antibiotics are assumed to be equally effective and have the same duration of effectiveness.
+
+## `AbxRate` Antibiotic rates
+
+The `AbxRate` parameter control the antibiotic administration rates.  The
