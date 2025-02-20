@@ -2,6 +2,7 @@
 #define ALUN_MODELING_OUTCOLPARAMS_H
 
 #include "Parameters.h"
+#include <stdexcept>
 
 class OutColParams : public Parameters
 {
@@ -387,18 +388,21 @@ public:
 	{
 		if (value < 0)
 		{
-			cerr << "Can't set rate value negative\t." << value << "\n";
-			exit(1);
+		    std::out_of_range("Can't set rate value negative.");
+			// cerr << "Can't set rate value negative\t." << value << "\n";
+			// exit(1);
 		}
 		if (prival < 0)
 		{
-			cerr << "Can't set rate prior value negative\t." << prival << "\n";
-			exit(1);
+		    std::out_of_range("Can't set rate prior value negative.");
+			// cerr << "Can't set rate prior value negative\t." << prival << "\n";
+			// exit(1);
 		}
 		if (prin < 0)
 		{
-			cerr << "Can't set prior observation count negative\t." << prin << "\n";
-			exit(1);
+		    std::out_of_range("Can't set prior observation count negative.");
+			// cerr << "Can't set prior observation count negative\t." << prin << "\n";
+			// exit(1);
 		}
 
 		int j = 0;
@@ -468,7 +472,7 @@ public:
         return res;
     }
 
-	void write(ostream &os)
+	void write(ostream &os) const
 	{
 		char *buffer = new char[100];
 		for (int i=0; i<nstates; i++)

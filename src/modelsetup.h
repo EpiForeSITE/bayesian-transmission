@@ -139,7 +139,7 @@ inline void setupOutOfUnitParams(OutColParams * ocol, Rcpp::List outColParameter
 {
     setParam(ocol, 0, outColParameters["acquisition"]);
     setParam(ocol, 1, outColParameters["clearance"]);
-    setParam(ocol, 1, outColParameters[2]);
+    setParam(ocol, 2, outColParameters[2]);
 }
 
 inline void setupLogNormalICPAcquisition(

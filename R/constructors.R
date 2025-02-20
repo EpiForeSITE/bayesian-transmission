@@ -187,7 +187,7 @@ SurveillanceTestParams <- function(
 #' @param delay The delay in using antibiotics.
 #' @param life The life of antibiotics.
 AbxParams <- function(
-    onoff = 0,
+    onoff = FALSE,
     delay = 0.0,
     life = 1.0) {
   list(

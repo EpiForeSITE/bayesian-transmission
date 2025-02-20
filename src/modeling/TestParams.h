@@ -4,6 +4,7 @@
 #include "Parameters.h"
 #include <vector>
 #include <string>
+#include <stdexcept>
 
 class TestParams : public Parameters
 {
@@ -168,18 +169,21 @@ public:
 	{
 		if (value < 0 || value > 1)
 		{
-			cerr << "Error: can't set probablilty value outside of (0,1)\t" << value << "\n";
-			exit(1);
+		    throw std::runtime_error("Error: can't set probablilty value outside of (0,1)\t" + std::to_string(value));
+			// cerr << "Error: can't set probablilty value outside of (0,1)\t" << value << "\n";
+			// exit(1);
 		}
 		if (prival < 0 || prival > 1)
 		{
-			cerr << "Error: can't set probablilty value outside of (0,1)\t" << prival << "\n";
-			exit(1);
+		    throw std::runtime_error("Error: can't set probablilty value outside of (0,1)\t" + std::to_string(prival));
+			// cerr << "Error: can't set probablilty value outside of (0,1)\t" << prival << "\n";
+			// exit(1);
 		}
 		if (prin < 0)
 		{
-			cerr << "Error: can't set prior observations less than 0\t" << prin << "\n";
-			exit(1);
+		    throw std::runtime_error("Error: can't set prior observations less than 0\t" + std::to_string(prin));
+			// cerr << "Error: can't set prior observations less than 0\t" << prin << "\n";
+			// exit(1);
 		}
 
 		set(i,value);
@@ -225,7 +229,7 @@ public:
         return res;
 
     }
-	virtual void write (ostream &os)
+	virtual void write (ostream &os) const
 	{
 		char *buffer = new char[100];
 		sprintf(buffer,"%12.10f\t",probs[0][1]);

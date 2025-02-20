@@ -309,7 +309,11 @@ public:
 
 // Implement InColParams.
 
-        virtual inline double eventRate(double time, EventCode c, PatientState *p, LocationState *s)
+    /// Compute Rate for the given event
+    ///
+    ///
+    ///
+    virtual inline double eventRate(double time, EventCode c, PatientState *p, LocationState *s)
 	{
                 switch(c)
                 {
@@ -324,6 +328,13 @@ public:
                 }
 	}
 
+	/// Matrix of Rates
+	///
+	/// For a given time and patient and location states, return the rate matrix
+	/// of transition rates
+	///
+	///
+	///
 	virtual double **rateMatrix(double time, PatientState *p, LocationState *u)
 	{
 		double **Q = cleanAlloc(nstates,nstates);
@@ -351,35 +362,36 @@ public:
 
 // Implement Parameters.
 
-        virtual inline double logProb(HistoryLink *h)
+    /// Log probability of an event given in the HistoryLink
+    virtual inline double logProb(HistoryLink *h)
+    {
+        switch(h->getEvent()->getType())
         {
-                switch(h->getEvent()->getType())
-                {
-                case progression:
-                        return logProgressionRate(h->getEvent()->getTime(),h->pPrev()->getPState(),h->uPrev()->getUState());
-                case clearance:
-                        return logClearanceRate(h->getEvent()->getTime(),h->pPrev()->getPState(),h->uPrev()->getUState());
-                case acquisition:
-                        return logAcquisitionRate(h->getEvent()->getTime(),h->pPrev()->getPState(),h->uPrev()->getUState());
-                default:
-                        return 0;
-                }
+        case progression:
+            return logProgressionRate(h->getEvent()->getTime(),h->pPrev()->getPState(),h->uPrev()->getUState());
+        case clearance:
+            return logClearanceRate(h->getEvent()->getTime(),h->pPrev()->getPState(),h->uPrev()->getUState());
+        case acquisition:
+            return logAcquisitionRate(h->getEvent()->getTime(),h->pPrev()->getPState(),h->uPrev()->getUState());
+        default:
+            return 0;
         }
+    }
 
-        virtual inline double logProbGap(HistoryLink *g, HistoryLink *h)
-        {
-                LocationState *s = h->uPrev()->getUState();
-		double t0 = g->getEvent()->getTime();
-		double t1 = h->getEvent()->getTime();
+    virtual inline double logProbGap(HistoryLink *g, HistoryLink *h)
+    {
+        LocationState *s = h->uPrev()->getUState();
+    	double t0 = g->getEvent()->getTime();
+    	double t1 = h->getEvent()->getTime();
 
-		double x = 0;
+    	double x = 0;
 
-		x += logProgressionGap(t0,t1,s);
-		x += logClearanceGap(t0,t1,s);
-		x += logAcquisitionGap(t0,t1,s);
+    	x += logProgressionGap(t0,t1,s);
+    	x += logClearanceGap(t0,t1,s);
+    	x += logAcquisitionGap(t0,t1,s);
 
-		return x;
-        }
+    	return x;
+    }
 
 	virtual inline void initCounts()
 	{

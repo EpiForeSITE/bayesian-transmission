@@ -44,6 +44,16 @@ private:
 		pnames[2][2] = "LNAX.clrEver";
 	}
 
+    inline const double * const logbeta_acq(){return par[0];}
+    inline double logbeta_acq_time(){return par[0][0];}
+    inline double logbeta_acq_constant(){return par[0][0];}
+    inline double logbeta_acq_tot_inpat(){return par[0][2];}
+    inline double logbeta_acq_log_col(){return par[0][3];}
+    inline double logbeta_acq_col(){return par[0][4];}
+    inline double logbeta_acq_abx_col(){return par[0][5];}
+    inline double logbeta_acq_onabx(){return par[0][6];}
+    inline double logbeta_acq_everabx(){return par[0][7];}
+
 public:
 	virtual string header()
 	{
@@ -79,16 +89,29 @@ protected:
 		return par[0][0];
 	}
 
+    /// Log Acquisition Rate
+    /// \param time Time of acquisition.
+    /// \param onabx If patient is on antibiotics at the time.
+    /// \param everabx If patient has ever been on antibiotics.
+    /// \param ncolabx Number of colonized patients on antibiotics.
+    /// \param ncol Number of colonized patients.
+    /// \param tot Total number of patients.
 	virtual double logAcqRate(int onabx, int everabx, int ncolabx, int ncol, int tot, double time)
 	{
 		double x = 0;
 
 		if (ncol > 0)
-			x = par[0][3] * log((double) ncol) + par[0][2] * log((double) tot);
+			x = logbeta_acq_log_col() * log((double) ncol) + logbeta_acq_tot_inpat() * log((double) tot);
 		else
 			x = log((double) 0);
 
-		x += par[0][0] * (time - tOrigin) + par[0][1] + par[0][4] * ncol + par[0][5] * ncolabx + par[0][6] * onabx + par[0][7] * everabx;
+		x +=
+		    logbeta_acq_constant() +
+		    logbeta_acq_time() * (time - tOrigin) +
+		    logbeta_acq_col() * ncol +
+		    logbeta_acq_abx_col() * ncolabx +
+		    logbeta_acq_onabx() * onabx +
+		    logbeta_acq_everabx() * everabx;
 		return x;
 	}
 

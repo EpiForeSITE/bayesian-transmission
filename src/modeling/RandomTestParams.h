@@ -232,7 +232,7 @@ public:
         return res;
     }
 
-	virtual void write (ostream &os)
+	virtual void write (ostream &os) const
 	{
 		TestParams::write(os);
 		os << "\t";

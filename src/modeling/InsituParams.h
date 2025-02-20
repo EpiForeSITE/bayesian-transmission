@@ -16,7 +16,7 @@ private:
 	double *priors;
 	bool *doit;
 
-	virtual inline double prob(InfectionStatus s)
+	virtual inline double prob(InfectionStatus s) const
 	{
 		int i = stateIndex(s);
 		return ( i >=0 ? probs[i] : 0 );
@@ -139,7 +139,7 @@ public:
 		return s.str();
 	}
 
-	virtual double *statusProbs()
+	virtual double *statusProbs() const
 	{
 		double *P = new double[nstates];
 
