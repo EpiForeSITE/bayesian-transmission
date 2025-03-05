@@ -87,11 +87,11 @@ inline void setupSurveilenceTestParams(
         TestParams * stp,
         Rcpp::List stpUncolonizedParam,
         Rcpp::List stpColonizedParam,
-        Rcpp::List stpRecoveredParam
+        Rcpp::List stpLatentParam
 ){
     setParam(stp, 0, stpUncolonizedParam);
     setParam(stp, 1, stpColonizedParam);
-    setParam(stp, 2, stpRecoveredParam);
+    setParam(stp, 2, stpLatentParam);
 }
 
 inline void setupSurveilenceTestParams(TestParams * stp, Rcpp::List surveilenceTestParameters)
@@ -99,7 +99,7 @@ inline void setupSurveilenceTestParams(TestParams * stp, Rcpp::List surveilenceT
     setupSurveilenceTestParams(stp,
                                Rcpp::as<Rcpp::List>(surveilenceTestParameters["uncolonized"]),
                                Rcpp::as<Rcpp::List>(surveilenceTestParameters["colonized"]),
-                               Rcpp::as<Rcpp::List>(surveilenceTestParameters["recovered"]));
+                               Rcpp::as<Rcpp::List>(surveilenceTestParameters["latent"]));
 }
 
 
@@ -118,11 +118,11 @@ inline void setupClinicalTestParams(
         RandomTestParams * ctp,
         Rcpp::List ctpUncolonizedParamWRate,
         Rcpp::List ctpColonizedParamWRate,
-        Rcpp::List ctpRecoveredParamWRate
+        Rcpp::List ctpLatentParamWRate
 ){
     setParamWRate(ctp, 0, ctpUncolonizedParamWRate);
-    setParamWRate(ctp, 1, ctpUncolonizedParamWRate);
-    setParamWRate(ctp, 2, ctpUncolonizedParamWRate);
+    setParamWRate(ctp, 1, ctpColonizedParamWRate);
+    setParamWRate(ctp, 2, ctpLatentParamWRate);
 }
 
 inline void setupClinicalTestParams(RandomTestParams * ctp, Rcpp::List clinicalTestParameters)
@@ -130,7 +130,7 @@ inline void setupClinicalTestParams(RandomTestParams * ctp, Rcpp::List clinicalT
     setupClinicalTestParams(ctp,
                             Rcpp::as<Rcpp::List>(clinicalTestParameters["uncolonized"]),
                             Rcpp::as<Rcpp::List>(clinicalTestParameters["colonized"]),
-                            Rcpp::as<Rcpp::List>(clinicalTestParameters["recovered"]));
+                            Rcpp::as<Rcpp::List>(clinicalTestParameters["latent"]));
 }
 
 
@@ -206,7 +206,7 @@ inline void setupAbxRateParams(
 ){
     setParam(abxp, 0, AbxRateParams["uncolonized"]);
     setParam(abxp, 1, AbxRateParams["colonized"]);
-    setParam(abxp, 2, AbxRateParams["recovered"]);
+    setParam(abxp, 2, AbxRateParams["latent"]);
 }
 
 template <typename ModelType>

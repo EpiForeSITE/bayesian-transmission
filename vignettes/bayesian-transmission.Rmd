@@ -31,6 +31,11 @@ The algorithms expect a longitudinal data set with the following columns:
 * `patient`: The patient involved in the event.
 * `type`: The type of event.
 
+The package includes a simulated dataset, `simulated.data`. 
+```{r}
+pillar::glimpse(simulated.data)
+```
+
 There are 12 different types of events that can be specified in the `type` column.
 These are, expected numerical codes shown in parentheses:
 
@@ -54,7 +59,13 @@ These are, expected numerical codes shown in parentheses:
 
 Not all events need to be used in every data set, but the model selected should
 reflect the data that is available. Care should be taken to correctly code the
-data. For this task there is a
+data. The `EventToCode` and `CodeToEvent` functions can be used to convert 
+between.
+
+
+```{r}
+table(CodeToEvent(simulated.data$type))
+```
 
 
 
@@ -78,15 +89,31 @@ The remainder of the parameters are grouped into the following categories:
 
 * `Abx`, Antibiotic use,
 * `AbxRate`, Antibiotic rates,
-* `ClinicalTest`, Clinical testing,
+* `InUnit`, In unit infection rates,
+* `OutOfUnitInfection`, Out of unit infection rates,
 * `Insitu`, In situ parameters,
-* `OutCol`, Out of unit infection rates,
-* `InCol`, In unit infection rates,
-* `SurveilenceTest`, Surveillance testing.
+* Testing:
+    + `SurveilenceTest`, Surveillance testing,
+    + `ClinicalTest`, Clinical testing.
 
 Unless otherwise specified the parameters are all distributed gamma  with
 specified shape and rate parameters.  Each parameter can also be left as fixed
 or be sampled at each iteration of the MCMC.
+
+### Specifying parameters
+
+Parameters for the model may be specified by the `Param()` function. 
+This function takes up to four arguments:
+    
+    1. `init`, is the initial value of the parameter.
+    2. `weight`, is the weight of the prior distribution in updates.
+    3. `update`, a flag of if the parameter should be sampled in the MCMC algorithm. 
+        `FALSE` indicates that the parameter should be fixed, and is by default `TRUE` when `weight` is greater than zero.
+    4. `prior`, the mean of the prior distribution.  Taken with the weight will fully parameterize the distribution.
+    
+
+
+
 
 ## `Abx` Antibiotic use
 
@@ -96,8 +123,138 @@ Antibiotic use is specified by the `Abx` parameter.  This parameter is a list co
 * `delay`, the delay for the antibiotic to take effect.
 * `life`, the duration where the antibiotic to be effective.
 
+```{r}
+abx <- AbxParams(onoff = TRUE, delay = 0.3, life = 1)
+```
+
+
 Currently, all antibiotics are assumed to be equally effective and have the same duration of effectiveness.
 
 ## `AbxRate` Antibiotic rates
 
-The `AbxRate` parameter control the antibiotic administration rates.  The
+The `AbxRate` parameter control the antibiotic administration rates.
+
+```{r}
+abxrate <- AbxRateParams(uncolonized = 0.05, colonized = 0.7)
+```
+
+Here since both parameters are non-zero both will be updated. A rate of zero for 
+either would indicate that group would never be on antibiotics.
+
+## `InCol` In unit infection rate
+
+Transmission within unit is the main defining characteristic that differentiates
+models.  For example the linear antibiotic model, `LinearAbxModel()`, is differentiated from the log 
+normal model, `LogNormalModelParams()` by the use of a `LogNormalABXInUnitParameters()` for the 
+`InUnit` argument rather than the `LogNormalInUnitAcquisition()` which does not 
+take into account antibiotic use.  All in unit transmission is defined in terms
+of acquisition, progression, and clearance. 
+
+### Aqcuisition Model
+In the base log normal antibiotic model, `LogNormalABXInUnitParameters()` log acquisition probability is a linear function.
+
+$$
+\log(P(\mathrm{Acq(t)})) = \beta_0 + \beta_t(t-t_0) + 
+    \beta_c N_og(\mathrm{Colonized(t)})a_{ca}N_{ca}(t) + \beta_A A_i(t) + \beta_E E_i(t)
+$$
+Where $\beta_\star$ represents the coefficient corresponding to the amounts, $N_c(t)$ represent the total number of colonized patients at time $t$, $N_{ca}(t)$ the number of colonized on antibiotics, and $A_i(t)$ and $E_i(t)$ represents if patient $i$ is currently or ever on antibiotics.
+
+The linear antibiotic (`LinearAbxAcquisitionParams`) takes a more complicated form for the acquisition model.
+$$
+P(\mathrm{Acq(t)}) =
+  \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
+  \left\{e^{\beta_0}
+         \left[
+            \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})\right)
+            e^{\beta_\mathrm{mass}}\left(
+                (N_c(t) - N_{ca}(t)) + e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
+            \right)
+          + 1 - e^{\beta_\mathrm{mass}}
+        \right]
+  \right\}\\
+  \left[
+    N_S(t) - N_E(t) + e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right) +A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
+  \right]
+$$
+
+```{r}
+progression <- LinearAbxAcquisitionParams(
+    base = Param(0, 1, TRUE),
+    time = 1,
+    mass = 
+    
+)
+```
+
+### Progression Model
+
+In the 3 state model there is a latent state and the progression model controls 
+how patient transition out of the latent state.  The progression model is simple
+for the log normal antibiotic case.
+
+$$
+\log(P(\mathrm{progression})) = \delta_0+\delta_AA_i(t) + \delta_EE_i(t)
+$$
+The linear antibiotic model is:
+$$
+P(\mathrm{progression}) = e^{\delta_0}\left[1-E_i(t)+e^{\delta_2}\left(E_i(t)-A_i(t)+e^{\delta_1}A_i(t)\right)\right]
+$$
+
+Where here we use $\delta$ for the coefficients, but the notation is the same.
+
+### Clearance Model
+
+The clearance model is the same as the progression model in both
+the log normal and the linear cases, the coefficients however are independent.
+
+
+## Out of Unit Importation
+
+The out of unit parameters control the rate admission come in colonized, or in 
+each stage, un a multistage model.
+
+
+## In Situ
+
+**TODO**
+
+I'm not sure what these parameters do. It's a set of gamma distributed 
+parameters one for each state.  The updates and probabilities are not time 
+dependent.
+
+When updating the rates for each state are sampled from a $gamma(N_i, 1)$ distribution.  Then all three are normalized to sum to 1.
+
+## Testing
+There are two types of testing, surveillance, which is conducted routinely at 
+regular intervals such as on admission then every 3 days after, and clinical, 
+where the testing is precipitated by staff, and thus the timing is informative.
+
+
+### Surveillance Testing
+
+The timing of surveillance testing is assumed to not be informative.  Therefore,
+surveillance testing is only parameterized in terms of probability of a positive test given the underlying status.
+Surveillance test parameters are updated with a sample from a $Beta(N_{s,1}, N_{s,0})$ distribution where $N_{s,1}$ and $N_{s,0}$ are the number of positive and negative tests respectively for state $s$.
+
+### Clinical Testing
+
+Since clinical testing time is informative, clinical testing is assumed to be at 
+random within infection stage.  The rate of testing within each stage is sampled
+from a gamma distribution. Sensitivity/Specificity are handled the same as 
+surveillance testing and the likelihood is multiplicative between rate and 
+effectiveness.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

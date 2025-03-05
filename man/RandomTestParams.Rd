@@ -8,13 +8,13 @@
 RandomTestParams(
   uncolonized = ParamWRate(Param(0.5, 0), Param(1, 0)),
   colonized = ParamWRate(Param(0.5, 0), Param(1, 0)),
-  recovered = ParamWRate(Param(0), Param(0))
+  latent = ParamWRate(Param(0), Param(0))
 )
 
 ClinicalTestParams(
   uncolonized = ParamWRate(Param(0.5, 0), Param(1, 0)),
   colonized = ParamWRate(Param(0.5, 0), Param(1, 0)),
-  recovered = ParamWRate(Param(0), Param(0))
+  latent = ParamWRate(Param(0), Param(0))
 )
 }
 \arguments{
@@ -22,7 +22,7 @@ ClinicalTestParams(
 
 \item{colonized}{Testing when the individual is colonized.}
 
-\item{recovered}{Testing when the individual is recovered.}
+\item{latent}{Testing when the individual is latent.}
 }
 \value{
 list of parameters for random testing.

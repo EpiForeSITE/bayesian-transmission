@@ -4,7 +4,7 @@
 \alias{AbxParams}
 \title{Antibiotic Parameters}
 \usage{
-AbxParams(onoff = 0, delay = 0, life = 1)
+AbxParams(onoff = FALSE, delay = 0, life = 1)
 }
 \arguments{
 \item{onoff}{If Anti-biotic are used or not.}

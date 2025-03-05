@@ -16,3 +16,6 @@ ProgressionParams(
 \description{
 Progression Parameters
 }
+\examples{
+ProgressionParams()
+}

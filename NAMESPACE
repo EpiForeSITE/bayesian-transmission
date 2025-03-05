@@ -2,6 +2,7 @@
 
 export(AbxRateParams)
 export(ClearanceParams)
+export(CodeToEvent)
 export(EventToCode)
 export(InsituParams)
 export(LinearAbxAcquisitionParams)

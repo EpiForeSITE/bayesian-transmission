@@ -7,7 +7,7 @@
 AbxRateParams(
   uncolonized = Param(1, 0),
   colonized = Param(1, 0),
-  recovered = Param(0)
+  latent = Param(0)
 )
 }
 \arguments{
@@ -15,7 +15,7 @@ AbxRateParams(
 
 \item{colonized}{Rate of antibiotic administration when the individual is colonized.}
 
-\item{recovered}{Rate of antibiotic administration when the individual is recovered.}
+\item{latent}{Rate of antibiotic administration when the individual is latent.}
 }
 \value{
 list of parameters for antibiotic administration.

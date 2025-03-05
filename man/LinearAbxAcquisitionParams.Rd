@@ -2,7 +2,7 @@
 % Please edit documentation in R/constructors.R
 \name{LinearAbxAcquisitionParams}
 \alias{LinearAbxAcquisitionParams}
-\title{Title}
+\title{Linear Antibiotic Acquisition Parameters}
 \usage{
 LinearAbxAcquisitionParams(
   base = Param(0.01),
@@ -15,8 +15,44 @@ LinearAbxAcquisitionParams(
 )
 }
 \arguments{
-\item{suss_ever}{}
+\item{base}{The base rate of acquisition.}
+
+\item{time}{The time effect on acquisition.}
+
+\item{mass}{The mass action effect on acquisition.}
+
+\item{freq}{The frequency effect on acquisition.}
+
+\item{col_abx}{The effect for colonized on antibiotics.}
+
+\item{suss_abx}{The effect on susceptible being currently on antibiotics.}
+
+\item{suss_ever}{The effect on susceptible ever being on antibiotics.}
+}
+\value{
+A list of parameters for acquisition.
 }
 \description{
-Title
+The model for this acquisition model is given by
+}
+\details{
+\deqn{
+P(\mathrm{Acq(t)}) =
+    \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
+\left\{e^{\beta_0}
+    \left[
+        \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})\right)
+        e^{\beta_\mathrm{mass}}\left(
+            (N_c(t) - N_{ca}(t)) + e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
+            \right)
+        + 1 - e^{\beta_\mathrm{mass}}
+        \right]
+    \right\}\\
+\left[
+    N_S(t) - N_E(t) + e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right) +A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
+    \right]
+}{TODO: Add equation to the documentation}
+}
+\examples{
+LinearAbxAcquisitionParams()
 }

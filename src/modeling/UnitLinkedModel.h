@@ -301,7 +301,8 @@ public:
 				break;
 
 			default:
-				cerr << "Event not handled " << h->getEvent() << "\n";
+			    throw std::runtime_error("Event not handled.");
+				// cerr << "Event not handled " << h->getEvent() << "\n";
 				break;
 			}
 

@@ -6,6 +6,14 @@ using namespace Rcpp;
 #include <string>
 #include <cctype>
 
+//' Convert coded events to string events
+//'
+//' @param x A vector of integers
+//'
+//' @return A vector of strings
+//' @export
+//' @examples
+//' CodeToEvent(c(-1:19, 21:23, 31:33, -999))
 // [[Rcpp::export]]
 CharacterVector CodeToEvent(IntegerVector x) {
   CharacterVector out(x.size());

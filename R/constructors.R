@@ -117,7 +117,7 @@ TestParams <- function(n, probs = c(0.5, 0.5, 0), priors = probs, doit = probs !
 #'
 #' @param uncolonized Testing when the individual is uncolonized.
 #' @param colonized Testing when the individual is colonized.
-#' @param recovered Testing when the individual is recovered.
+#' @param latent Testing when the individual is latent.
 #'
 #' @returns list of parameters for random testing.
 #' @export
@@ -127,15 +127,15 @@ TestParams <- function(n, probs = c(0.5, 0.5, 0), priors = probs, doit = probs !
 RandomTestParams <- function(
     uncolonized = ParamWRate(Param(0.5, 0), Param(1, 0)),
     colonized = ParamWRate(Param(0.5, 0), Param(1, 0)),
-    recovered = ParamWRate(Param(0), Param(0))) {
+    latent = ParamWRate(Param(0), Param(0))) {
   uncolonized <- check_paramwrate(uncolonized)
   colonized <- check_paramwrate(colonized)
-  recovered <- check_paramwrate(recovered)
+  latent <- check_paramwrate(latent)
 
   list(
     uncolonized = uncolonized,
     colonized = colonized,
-    recovered = recovered
+    latent = latent
   )
 }
 #' @describeIn RandomTestParams Clinical Test Parameters Alias
@@ -169,15 +169,15 @@ OutOfUnitInfectionParams <- function(
 #'
 #' @param colonized Also known as the true positive rate for a two state model.
 #' @param uncolonized Also known as the false positive rate for a two state model.
-#' @param recovered The rate of positive tests when the individual is in the (optional) recovered state.
+#' @param latent The rate of positive tests when the individual is in the (optional) latent state.
 SurveillanceTestParams <- function(
     colonized = Param(0, 0),
     uncolonized = Param(0.8, 1),
-    recovered = Param(0, 0)) {
+    latent = Param(0, 0)) {
   list(
     colonized = colonized,
     uncolonized = uncolonized,
-    recovered = recovered
+    latent = latent
   )
 }
 
@@ -202,7 +202,7 @@ AbxParams <- function(
 #'
 #' @param uncolonized Rate of antibiotic administration when the individual is uncolonized.
 #' @param colonized Rate of antibiotic administration when the individual is colonized.
-#' @param recovered Rate of antibiotic administration when the individual is recovered.
+#' @param latent Rate of antibiotic administration when the individual is latent.
 #'
 #' @returns list of parameters for antibiotic administration.
 #' @export
@@ -212,31 +212,51 @@ AbxParams <- function(
 AbxRateParams <- function(
     uncolonized = Param(1, 0),
     colonized = Param(1, 0),
-    recovered = Param(0)) {
+    latent = Param(0)) {
   uncolonized <- check_param(uncolonized)
   colonized <- check_param(colonized)
-  recovered <- check_param(recovered)
+  latent <- check_param(latent)
   list(
     uncolonized = uncolonized,
     colonized = colonized,
-    recovered = recovered
+    latent = latent
   )
 }
 
-#' Title
+#' Linear Antibiotic Acquisition Parameters
 #'
-#' @param base
-#' @param time
-#' @param mass
-#' @param freq
-#' @param col_abx
-#' @param suss_abx
-#' @param suss_ever
+#' The model for this acquisition model is given by
 #'
-#' @returns
+#' \deqn{
+#' P(\mathrm{Acq(t)}) =
+#'     \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
+#' \left\{e^{\beta_0}
+#'     \left[
+#'         \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})\right)
+#'         e^{\beta_\mathrm{mass}}\left(
+#'             (N_c(t) - N_{ca}(t)) + e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
+#'             \right)
+#'         + 1 - e^{\beta_\mathrm{mass}}
+#'         \right]
+#'     \right\}\\
+#' \left[
+#'     N_S(t) - N_E(t) + e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right) +A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
+#'     \right]
+#' }{TODO: Add equation to the documentation}
+#'
+#' @param base The base rate of acquisition.
+#' @param time The time effect on acquisition.
+#' @param mass The mass action effect on acquisition.
+#' @param freq The frequency effect on acquisition.
+#' @param col_abx The effect for colonized on antibiotics.
+#' @param suss_abx The effect on susceptible being currently on antibiotics.
+#' @param suss_ever The effect on susceptible ever being on antibiotics.
+#'
+#' @returns A list of parameters for acquisition.
 #' @export
 #'
 #' @examples
+#' LinearAbxAcquisitionParams()
 LinearAbxAcquisitionParams <- function(
     base = Param(0.01),
     time = Param(1, 0),
@@ -266,6 +286,7 @@ LinearAbxAcquisitionParams <- function(
 #' @export
 #'
 #' @examples
+#' ProgressionParams()
 ProgressionParams <- function(
     rate = Param(0.01),
     abx = Param(1, 0),

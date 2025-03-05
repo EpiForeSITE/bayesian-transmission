@@ -7,7 +7,7 @@
 SurveillanceTestParams(
   colonized = Param(0, 0),
   uncolonized = Param(0.8, 1),
-  recovered = Param(0, 0)
+  latent = Param(0, 0)
 )
 }
 \arguments{
@@ -15,7 +15,7 @@ SurveillanceTestParams(
 
 \item{uncolonized}{Also known as the false positive rate for a two state model.}
 
-\item{recovered}{The rate of positive tests when the individual is in the (optional) recovered state.}
+\item{latent}{The rate of positive tests when the individual is in the (optional) latent state.}
 }
 \description{
 Specify the rates of positive tests for each state of the model.
