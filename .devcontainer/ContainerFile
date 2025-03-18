@@ -1,0 +1,5 @@
+FROM ghcr.io/rocker-org/devcontainer/geospatial:4.4
+
+RUN install2.r RcppEigen checkmate testthat
+
+CMD ["bash"]
