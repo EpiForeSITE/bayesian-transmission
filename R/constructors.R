@@ -170,6 +170,7 @@ OutOfUnitInfectionParams <- function(
 #' @param colonized Also known as the true positive rate for a two state model.
 #' @param uncolonized Also known as the false positive rate for a two state model.
 #' @param latent The rate of positive tests when the individual is in the (optional) latent state.
+#' @export
 SurveillanceTestParams <- function(
     colonized = Param(0, 0),
     uncolonized = Param(0.8, 1),
@@ -186,6 +187,7 @@ SurveillanceTestParams <- function(
 #' @param onoff If Anti-biotic are used or not.
 #' @param delay The delay in using antibiotics.
 #' @param life The life of antibiotics.
+#' @export
 AbxParams <- function(
     onoff = FALSE,
     delay = 0.0,
