@@ -111,16 +111,16 @@ public:
 		return x;
 	}
 
-	void write(ostream &os)
-	{
-		int i = 0;
-		for (init(); hasNext(); )
-		{
-			if (i++ != 0)
-				os << "\n";
-			os << next();
-		}
-	}
+	// virtual void write(ostream &os) override
+	// {
+	// 	int i = 0;
+	// 	for (init(); hasNext(); )
+	// 	{
+	// 		if (i++ != 0)
+	// 			os << "\n";
+	// 		os << next();
+	// 	}
+	// }
 };
 
 #endif // ALUN_INFECT_RAWEVENTLIST_H

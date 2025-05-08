@@ -217,33 +217,35 @@ double Random::rpoisson(double l)
 double Random::logdint(int x, int n, double *pi)
 {
     double tot = 0;
-    for (int i=0; i<n; i++)
-        if (pi[i] > 0)
+    for (int i=0; i<n; i++){
+        if (pi[i] > 0){
             tot += pi[i];
+        }
+    }
+    double p = pi[x] > 0 ? pi[x] : 0;
 
-        double p = pi[x] > 0 ? pi[x] : 0;
-
-        return log(p/tot);
+    return log(p/tot);
 }
 
 int Random::rint(int n, double *pi)
 {
     double tot = 0;
     for (int i=0; i<n; i++)
+    {
         if (pi[i] > 0)
             tot += pi[i];
+    }
+    double U = runif() * tot;
+    tot = 0;
+    for (int i=0; i<n; i++)
+    {
+        if (pi[i] > 0)
+            tot += pi[i];
+        if (U <= tot)
+            return i;
+    }
 
-        double U = runif() * tot;
-        tot = 0;
-        for (int i=0; i<n; i++)
-        {
-            if (pi[i] > 0)
-                tot += pi[i];
-            if (U <= tot)
-                return i;
-        }
-
-        return -1;
+    return -1;
 }
 
 

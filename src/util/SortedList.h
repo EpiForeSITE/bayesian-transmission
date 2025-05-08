@@ -4,6 +4,7 @@
 
 #include "List.h"
 
+namespace util{
 class SortedList : public List
 {
 public:
@@ -86,4 +87,5 @@ public:
 		return "SortedList";
 	}
 };
+} // namespace util
 #endif // ALUN_UTIL_SORTEDLIST_H

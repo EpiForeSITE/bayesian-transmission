@@ -13,15 +13,9 @@ private:
 	const static int thou = 1000;
 
 public:
-	Patient(int id)
-	{
-		name = id;
-		group = 0;
-	}
+	Patient(int id);
 
-	~Patient()
-	{
-	}
+	~Patient(){}
 
 	inline int getId() const
 	{
@@ -38,10 +32,7 @@ public:
 		return group;
 	}
 
-	void write(ostream &os) const
-	{
-        	os << name << "\t" << group;
-	}
+	void write(ostream &os) const override;
 };
 
 #endif // ALUN_INFECT_PATIENT_H

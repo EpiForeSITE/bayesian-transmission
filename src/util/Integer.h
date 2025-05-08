@@ -2,34 +2,18 @@
 #define ALUN_UTIL_INTEGER_H
 #include "Object.h"
 
+namespace util{
+
 class Integer : public Object
 {
 public:
 	int value;
 
-	Integer(int x) : Object()
-	{
-		value = x;
-	}
-
-	int intValue() const
-	{
-		return value;
-	}
-
-	void set(int n)
-	{
-		value = n;
-	}
-
-	std::string className() const
-	{
-		return "Integer";
-	}
-
-	void write(std::ostream &os) const
-	{
-		os << value;
-	}
+	Integer(int x);
+	int intValue() const;
+	void set(int n);
+	std::string className() const override;
+	void write(std::ostream &os) const override;
 };
+} // namespace util
 #endif // ALUN_UTIL_INTEGER_H

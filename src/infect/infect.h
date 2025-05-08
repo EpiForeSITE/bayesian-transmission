@@ -14,11 +14,11 @@
 
     #include "../util/util.h"
 
-	namespace infect
-	{
 	// Enumeration defining event types.
 
-		#include "EventCoding.h"
+	namespace infect
+	{
+	    #include "EventCoding.h"
 		#include "InfectionCoding.h"
 		#include "AbxCoding.h"
 

@@ -16,3 +16,6 @@ AbxParams(onoff = FALSE, delay = 0, life = 1)
 \description{
 Antibiotic Parameters
 }
+\examples{
+AbxParams()
+}

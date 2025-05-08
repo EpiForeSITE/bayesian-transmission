@@ -20,3 +20,6 @@ SurveillanceTestParams(
 \description{
 Specify the rates of positive tests for each state of the model.
 }
+\examples{
+SurveillanceTestParams()
+}

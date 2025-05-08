@@ -5,6 +5,8 @@
 #include "ForwardSimulator.h"
 #include "ConstrainedSimulator.h"
 
+namespace models {
+
 class BasicModel : public UnitLinkedModel
 {
 public:
@@ -36,4 +38,6 @@ public:
 	}
 
 };
+
+} // namespace models
 #endif // ALUN_MODELING_BASICMODEL_H

@@ -43,7 +43,7 @@ std::string tolower(const std::string& s) {
 std::vector<int> EventToCode(const std::vector<std::string> x) {
     std::vector<int> out(x.size());
 
-  for(auto i = 0L; i != x.size(); ++i) {
+  for(std::size_t i = 0; i < x.size(); ++i) {
       string y = x[i];
     out[i] = infect::EventCoding::toEventCode(tolower(y));
   }

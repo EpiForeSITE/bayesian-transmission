@@ -5,6 +5,7 @@
 #include "Object.h"
 #include <stdlib.h>
 
+namespace util{
 class Random : public Object
 {
 private:
@@ -58,4 +59,5 @@ public:
 	virtual int rint(int n, double *pi);
 
 };
+} // namespace util
 #endif // ALUN_UTIL_RANDOM_H

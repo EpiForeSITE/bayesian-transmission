@@ -11,20 +11,19 @@
 	#include <vector>
 	using namespace std;
 
+	#include "Allocator.h"
+	#include "Object.h"
+	#include "Random.h"
+	#include "Integer.h"
+	#include "Vector.h"
+	#include "Map.h"
+	#include "IntMap.h"
+	#include "List.h"
+	#include "SortedList.h"
+	#include "Markov.h"
+
 	namespace util
 	{
-		#include "Allocator.h"
-		#include "Object.h"
-		#include "Random.h"
-		#include "Integer.h"
-		#include "Vector.h"
-		#include "Map.h"
-		#include "IntMap.h"
-		#include "List.h"
-		#include "SortedList.h"
-		// #include "GaussianProcess.h"
-		#include "Markov.h"
-
 	    template <typename real> real digamma(real x){
 		    if (x < 6)
 		        return digamma(x+1) - 1/x;

@@ -7,15 +7,22 @@
 OutOfUnitInfectionParams(
   acquisition = Param(0),
   clearance = Param(0),
-  thirdoption = Param(0)
+  progression = Param(0)
 )
 }
 \arguments{
-\item{thirdoption}{What should this be?}
+\item{acquisition}{Rate of acquisition of the disease moving into latent state.}
+
+\item{clearance}{Rate of clearance of the disease moving into uncolonized state.}
+
+\item{progression}{Rate of progression of the disease moving into colonized state.}
 }
 \value{
 A list of parameters for out of unit infection.
 }
 \description{
 Out of Unit Infection Parameters
+}
+\examples{
+OutOfUnitInfectionParams()
 }

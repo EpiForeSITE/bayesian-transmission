@@ -10,33 +10,33 @@ class HistoryLink : public Object
 private:
 
 	// Pointers to patient's adjacent links.
-	HistoryLink *pprev;
-	HistoryLink *pnext;
+	HistoryLink* pprev;
+	HistoryLink* pnext;
 
 	// Pointers to unit's adjacent links.
-	HistoryLink *uprev;
-	HistoryLink *unext;
+	HistoryLink* uprev;
+	HistoryLink* unext;
 
 	// Pointers to facility's adjacent links.
-	HistoryLink *fprev;
-	HistoryLink *fnext;
+	HistoryLink* fprev;
+	HistoryLink* fnext;
 
 	// Pointers to whole system's adjacent links.
-	HistoryLink *sprev;
-	HistoryLink *snext;
+	HistoryLink* sprev;
+	HistoryLink* snext;
 
 	// The system's, facility's, unit's and patient's state after the event.
-	LocationState *sstate;
-	LocationState *fstate;
-	LocationState *ustate;
-	PatientState *pstate;
+	LocationState* sstate;
+	LocationState* fstate;
+	LocationState* ustate;
+	PatientState* pstate;
 
 	// Pointers to alternative proposed history links.
-	HistoryLink *hprev;
-	HistoryLink *hnext;
+	HistoryLink* hprev;
+	HistoryLink* hnext;
 
 	// The event occurring at this point.
-	Event *e;
+	Event* e;
 
 	// Indicator for adding event to SystemHistory links.
 	int linked;
@@ -46,104 +46,16 @@ private:
 
 public:
 
-	HistoryLink(Event *event, int l = 1)
+	HistoryLink(Event* event, int l = 1);
+	HistoryLink(Event* event, LocationState* s, LocationState* f, LocationState* u, PatientState* p, int l = 1);
+	~HistoryLink();
+
+	void setStates(LocationState* s, LocationState* f, LocationState* u, PatientState* p);
+	void setCopyApply();
+
+	inline void insertAsap(HistoryLink* y)
 	{
-		e = event;
-
-		setStates(0,0,0,0);
-
-		pprev = 0;
-		pnext = 0;
-		uprev = 0;
-		unext = 0;
-		fprev = 0;
-		fnext = 0;
-		sprev = 0;
-		snext = 0;
-		hprev = 0;
-		hnext = 0;
-
-		linked = l;
-		hidden = 0;
-	}
-
-	HistoryLink(Event *event, LocationState *s, LocationState *f, LocationState *u, PatientState *p, int l = 1)
-	{
-		e = event;
-
-		setStates(s,f,u,p);
-
-		pprev = 0;
-		pnext = 0;
-		uprev = 0;
-		unext = 0;
-		fprev = 0;
-		fnext = 0;
-		sprev = 0;
-		snext = 0;
-		hprev = 0;
-		hnext = 0;
-
-		linked = l;
-		hidden = 0;
-	}
-
-	~HistoryLink()
-	{
-		if (sstate != 0)
-			delete sstate;
-		if (fstate != 0)
-			delete fstate;
-		if (ustate != 0)
-			delete ustate;
-		if (pstate != 0)
-			delete pstate;
-	}
-
-	void setStates(LocationState *s, LocationState *f, LocationState *u, PatientState *p)
-	{
-		sstate = s;
-		fstate = f;
-		ustate = u;
-		pstate = p;
-	}
-
-	void setCopyApply()
-	{
-		if (pstate != 0)
-		{
-			if (pprev != 0)
-				pstate->copy(pprev->pstate);
-			pstate->apply(e);
-		}
-
-		if (ustate != 0)
-		{
-			if (uprev != 0)
-			{
-				ustate->copy(uprev->ustate);
-			}
-			ustate->apply(e);
-		}
-
-		if (fstate != 0)
-		{
-			if (fprev != 0)
-				fstate->copy(fprev->fstate);
-			fstate->apply(e);
-		}
-
-		if (sstate != 0)
-		{
-			if (sprev != 0)
-				sstate->copy(sprev->sstate);
-			sstate->apply(e);
-		}
-	}
-
-	inline void insertAsap(HistoryLink *y)
-	{
-		HistoryLink *snxt = y;
+		HistoryLink* snxt = y;
 
 		for ( ; snxt != 0 && snxt->getEvent()->getTime() < getEvent()->getTime(); snxt = snxt->snext);
 		for ( ; snxt != 0 && snxt->sprev != 0 && snxt->sprev->getEvent()->getTime() >= getEvent()->getTime(); snxt = snxt->sprev);
@@ -153,7 +65,7 @@ public:
 
 		insertBeforeS(snxt);
 
-		HistoryLink *xx = 0;
+		HistoryLink* xx = 0;
 
 		for (xx = snxt ; xx != 0 && xx->getEvent()->getFacility() != getEvent()->getFacility(); xx = xx->snext);
 		if (xx == 0)
@@ -171,7 +83,7 @@ public:
 		insertBeforeP(xx);
 	}
 
-	inline void insertBeforeS(HistoryLink *x)
+	inline void insertBeforeS(HistoryLink* x)
 	{
 		snext = x;
 		sprev = x->sprev;
@@ -180,7 +92,7 @@ public:
 			sprev->snext = this;
 	}
 
-	inline void insertBeforeF(HistoryLink *x)
+	inline void insertBeforeF(HistoryLink* x)
 	{
 		fnext = x;
 		fprev = x->fprev;
@@ -189,7 +101,7 @@ public:
 			fprev->fnext = this;
 	}
 
-	inline void insertBeforeU(HistoryLink *x)
+	inline void insertBeforeU(HistoryLink* x)
 	{
 		unext = x;
 		uprev = x->uprev;
@@ -198,7 +110,7 @@ public:
 			uprev->unext = this;
 	}
 
-	inline void insertBeforeP(HistoryLink *x)
+	inline void insertBeforeP(HistoryLink* x)
 	{
 		pnext = x;
 		pprev = x->pprev;
@@ -207,7 +119,7 @@ public:
 			pprev->pnext = this;
 	}
 
-	inline void insertAfterP(HistoryLink *x)
+	inline void insertAfterP(HistoryLink* x)
 	{
 		pprev = x;
 		pnext = x->pnext;
@@ -249,25 +161,8 @@ public:
     }
 
 
-	void write(ostream &os, int opt)
-	{
-		//os << e;
-		e->write(os,opt);
-		os << "\t::\t";
-	//	os << sstate;
-	//	os << "\t::\t";
-	//	os << fstate;
-	//	os << "\t::\t";
-		os << ustate;
-		os << "\t::\t";
-		os << pstate;
-
-	}
-
-	void write(ostream &os)
-	{
-		write(os,0);
-	}
+	void write2(ostream &os, int opt) const;
+	void write(ostream &os) const;
 
 // Trivial accessors.
 
@@ -291,27 +186,27 @@ public:
 		return hidden;
 	}
 
-	inline HistoryLink *hPrev() const
+	inline HistoryLink* hPrev() const
 	{
 		return hprev;
 	}
 
-	inline HistoryLink *hNext() const
+	inline HistoryLink* hNext() const
 	{
 		return hnext;
 	}
 
-	inline void setHPrev(HistoryLink *l)
+	inline void setHPrev(HistoryLink* l)
 	{
 		hprev = l;
 	}
 
-	inline void setHNext(HistoryLink *l)
+	inline void setHNext(HistoryLink* l)
 	{
 		hnext = l;
 	}
 
-	inline Event *getEvent()
+	inline Event* getEvent()
 	{
 		return e;
 	}
@@ -321,62 +216,62 @@ public:
 		e = 0;
 	}
 
-	inline HistoryLink *pPrev() const
+	inline HistoryLink* pPrev() const
 	{
 		return pprev;
 	}
 
-	inline HistoryLink *pNext() const
+	inline HistoryLink* pNext() const
 	{
 		return pnext;
 	}
 
-	inline HistoryLink *uPrev() const
+	inline HistoryLink* uPrev() const
 	{
 		return uprev;
 	}
 
-	inline HistoryLink *uNext() const
+	inline HistoryLink* uNext() const
 	{
 		return unext;
 	}
 
-	inline HistoryLink *fPrev() const
+	inline HistoryLink* fPrev() const
 	{
 		return fprev;
 	}
 
-	inline HistoryLink *fNext() const
+	inline HistoryLink* fNext() const
 	{
 		return fnext;
 	}
 
-	inline HistoryLink *sPrev() const
+	inline HistoryLink* sPrev() const
 	{
 		return sprev;
 	}
 
-	inline HistoryLink *sNext() const
+	inline HistoryLink* sNext() const
 	{
 		return snext;
 	}
 
-	inline PatientState *getPState() const
+	inline PatientState* getPState() const
 	{
 		return pstate;
 	}
 
-	inline LocationState *getUState() const
+	inline LocationState* getUState() const
 	{
 		return ustate;
 	}
 
-	inline LocationState *getFState() const
+	inline LocationState* getFState() const
 	{
 		return fstate;
 	}
 
-	inline LocationState *getSState() const
+	inline LocationState* getSState() const
 	{
 		return sstate;
 	}

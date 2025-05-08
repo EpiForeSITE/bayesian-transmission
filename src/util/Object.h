@@ -8,6 +8,7 @@ using std::ostream;
 
 #include "Allocator.h"
 
+namespace util{
 class Object : public Allocator
 {
 private:
@@ -15,44 +16,20 @@ private:
 	unsigned long index;
 
 public:
-	Object()
-	{
-		index = ++indexcounter;
-	}
+	Object();
 
-	virtual ~Object()
-	{
-	}
+	virtual ~Object();
 
-	virtual long hash()
-	{
-		return index;
-	}
+	virtual long hash();
 
-	virtual int compare(Object *y)
-	{
-		if (y == 0 || y->index < index)
-			return 1;
-		if (index < y->index)
-			return -1;
-		return 0;
-	}
+	virtual int compare(Object *y);
 
-	virtual std::string className() const
-	{
-		return "Object";
-	}
+	virtual std::string className() const;
 
-    virtual void write(std::ostream &os) const
-    {
-        os << className() << "[" << index << "]";
-    }
-    virtual void write(std::ostream &os)
-    {
-        os << className() << "[" << index << "]";
-    }
+    virtual void write(std::ostream &os) const;
+    virtual void write(std::ostream &os);
 
 	//friend std::ostream& operator <<(std::ostream&, Object*);
 };
-
+}
 #endif // ALUN_UTIL_OBJECT_H

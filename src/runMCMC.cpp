@@ -20,21 +20,22 @@ using namespace Rcpp;
 
 #include "modelsetup.h"
 lognormal::LogNormalModel* newModel(
-        std::string modname,
-        int nstates,
         Rcpp::List modelParameters, //< Model specific options.
         bool verbose = false)
 {
     lognormal::LogNormalModel *model = 0;
+    std::string modname = modelParameters["modname"];
+    int nstates = modelParameters["nstates"];
 
     if (modname == "LinearAbxModel")
     {
-        model = new lognormal::LinearAbxModel(
+        model = new LinearAbxModel(
             nstates,
             modelParameters["nmetro"],
             modelParameters["forward"],
             modelParameters["cheat"]
         );
+        modelsetup<LinearAbxModel>((LinearAbxModel*)model, modelParameters, verbose);
     } else
     // if (modname == "LinearAbxModel2")
     // {
@@ -46,12 +47,13 @@ lognormal::LogNormalModel* newModel(
     // } else
     if (modname == "MixedModel")
     {
-        model = new lognormal::MixedModel(
+        model = new MixedModel(
             nstates,
             modelParameters["nmetro"],
             modelParameters["forward"],
             modelParameters["cheat"]
         );
+        modelsetup<MixedModel>((MixedModel*)model, modelParameters, verbose);
     } else
     // if (modname == "LogNormalAbxModel")
     // {
@@ -63,12 +65,13 @@ lognormal::LogNormalModel* newModel(
     // } else
     if (modname == "LogNormalModel")
     {
-        model = new lognormal::LogNormalModel(
+        model = new LogNormalModel(
             nstates,
             modelParameters["nmetro"],
             modelParameters["forward"],
             modelParameters["cheat"]
         );
+        modelsetup<LogNormalModel>((LogNormalModel*)model, modelParameters, verbose);
     }
     else
     {
@@ -76,7 +79,7 @@ lognormal::LogNormalModel* newModel(
     }
 
     //model->setup(modOptions);
-    modelsetup(model, modelParameters, verbose);
+    //modelsetup(model, modelParameters, verbose);
 
     return model;
 }
@@ -104,11 +107,9 @@ lognormal::LogNormalModel* newModel(
 //' @export
 // [[Rcpp::export]]
 SEXP runMCMC(
-    std::string modname,
     Rcpp::DataFrame data,
     Rcpp::List MCMCParameters,
     Rcpp::List modelParameters,
-    int nstates = 2,
     bool verbose = false
 ) {
     if(verbose)
@@ -131,42 +132,35 @@ SEXP runMCMC(
         as<std::vector<int>>(data[3]),//"patient"
         as<std::vector<int>>(data[4])//"event type"
     );
-    if(verbose)
-        Rcpp::Rcout << "Done" << std::endl;
+    if (verbose) Rcpp::Rcout << "Done" << std::endl;
 
 
     //Model
-    if(verbose)
-        Rcpp::Rcout << "Creating model...";
+    if (verbose) Rcpp::Rcout << "Creating model...";
 
-    lognormal::LogNormalModel *model = newModel(modname, nstates, modelParameters, verbose);
-    if(verbose)
-        Rcpp::Rcout << "Done" << std::endl;
+    lognormal::LogNormalModel *model = newModel(modelParameters, verbose);
+    if (verbose) Rcpp::Rcout << "Done" << std::endl;
 
     // Set time origin of model.
     LogNormalICP *icp = (LogNormalICP *) model->getInColParams();
     icp->setTimeOrigin((sys->endTime()-sys->startTime())/2.0);
-    if(verbose)
-        Rcpp::Rcout << "Set time origin" << std::endl;
+    if (verbose) Rcpp::Rcout << "Set time origin" << std::endl;
 
 
     // Create state history.
 
-    if (verbose)
-        Rcpp::Rcout << "Building history structure...";
+    if (verbose) Rcpp::Rcout << "Building history structure...";
 
     SystemHistory *hist = new SystemHistory(sys, model, false);
-    if(verbose)
-        Rcpp::Rcout << "Done" << std::endl;
+    if (verbose) Rcpp::Rcout << "Done" << std::endl;
 
     // Find tests for posterior prediction and, hence, WAIC estimates.
 
-    if (verbose)
-        Rcpp::message(Rcpp::wrap(string("Finding tests for WAIC.\n")));
+    if (verbose) Rcpp::message(Rcpp::wrap(string("Finding tests for WAIC.\n")));
 
-    util::List *tests = hist->getTestLinks();
-    TestParams **testtype = new TestParams*[tests->size()];
-    HistoryLink **histlink = new HistoryLink*[tests->size()];
+    util::List* tests = hist->getTestLinks();
+    TestParams** testtype = new TestParams*[tests->size()];
+    HistoryLink** histlink = new HistoryLink*[tests->size()];
 
     int wntests = 0;
     double wprob = 0;
@@ -179,7 +173,7 @@ SEXP runMCMC(
         if (histlink[wntests]->getEvent()->isClinicalTest())
             testtype[wntests] = model->getClinicalTestParams();
         else
-            testtype[wntests] = model->getSurveilenceTestParams();
+            testtype[wntests] = model->getSurveillanceTestParams();
     }
 
     // Make and runsampler.
@@ -219,8 +213,6 @@ SEXP runMCMC(
 
         if (outputparam)
         {
-        //     cout << model << "\t\t" << model->logLikelihood(hist) << "\n";
-        //     cout.flush();
             if (verbose)
                 Rcout << "Outputting parameters...";
             paramchain(i) = model2R(model);
@@ -247,8 +239,7 @@ SEXP runMCMC(
     wlogsqprob /= wntests * nsims;
     double waic1 = 2*log(wprob) - 4*wlogprob;
     double waic2 = -2 * log(wprob) - 2 * wlogprob*wlogprob + 2 * wlogsqprob;
-    if(verbose)
-        Rcout << "WAIC 1 2 = \t" << waic1 << "\t" << waic2 << "\n";
+    if (verbose) Rcout << "WAIC 1 2 = \t" << waic1 << "\t" << waic2 << "\n";
 
 /*
 */
@@ -258,8 +249,8 @@ SEXP runMCMC(
         _["LogLikelihood"] = llchain,
         _["MCMCParameters"] = MCMCParameters,
         _["ModelParameters"] = modelParameters,
-        _["ModelName"] = modname,
-        _["nstates"] = nstates,
+        // _["ModelName"] = modname,
+        // _["nstates"] = nstates,
         _["waic1"] = waic1,
         _["waic2"] = waic2
     );
@@ -268,8 +259,7 @@ SEXP runMCMC(
 
     if(outputfinal)
     {
-        if (verbose)
-            Rcout << "Writing complete form of final state." << std::endl;
+        if (verbose) Rcout << "Writing complete form of final state." << std::endl;
 
         ret["FinalModel"] = model2R(model);
     }

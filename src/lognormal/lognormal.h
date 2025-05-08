@@ -8,9 +8,9 @@
 	#include <math.h>
 	#include <sstream>
 	#include <exception>
-        #include <stdexcept>
+    #include <stdexcept>
 
-        using namespace std;
+    using namespace std;
 
     #include "../util/util.h"
     #include "../infect/infect.h"

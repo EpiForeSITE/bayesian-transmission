@@ -3,6 +3,9 @@
 #define ALUN_UTIL_MAP_H
 #include "Object.h"
 #include "Random.h"
+
+namespace util{
+
 class MapLink : public Object
 {
 friend class Map;
@@ -322,7 +325,7 @@ public:
 		return current != 0;
 	}
 
-	inline Object *next()
+	inline Object* next()
 	{
 		if (current == 0)
 			return 0;
@@ -331,7 +334,7 @@ public:
 		return res;
 	}
 
-	inline Object *nextValue()
+	inline Object* nextValue()
 	{
 		if (current == 0)
 			return 0;
@@ -370,12 +373,12 @@ public:
 		return tabrand(r)->value;
 	}
 
-	std::string className() const
+	std::string className() const override
 	{
 		return "Map";
 	}
 
-	void write (std::ostream &os)
+	void write (std::ostream &os) const override
 	{
 		Object::write(os);
 		os << "(" << use << "/" << cap << ")";
@@ -383,4 +386,5 @@ public:
 			os << "\n\t" << l;
 	}
 };
+} // namespace util
 #endif // ALUN_UTIL_MAP_H

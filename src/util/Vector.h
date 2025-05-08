@@ -4,6 +4,7 @@
 
 #include "Object.h"
 
+namespace util{
 class Vector : public Object
 {
 private:
@@ -13,42 +14,11 @@ private:
 	int cap;
 	int n;
 
-	void ensure(int m)
-	{
-		if (m <= cap)
-			return;
-
-		int newcap = cap;
-		while (m > newcap)
-			newcap *= 2;
-
-		Object **newx = new Object*[newcap];
-
-		for (int i=0; i<n; i++)
-			newx[i] = x[i];
-		for (int i=n; i<newcap; i++)
-			newx[i] = 0;
-
-		delete x;
-		x = newx;
-		cap = newcap;
-	}
+	void ensure(int m);
 
 public:
-	Vector(int c = defcap) : Object()
-	{
-		cap = c;
-		n = 0;
-		x = new Object*[cap];
-		for (int i=0; i<cap; i++)
-			x[i] = 0;
-	}
-
-	~Vector()
-	{
-		if (x)
-			delete x;
-	}
+	Vector(int c = defcap);
+	~Vector();
 
 	inline void add(Object *o)
 	{
@@ -91,17 +61,8 @@ public:
 		x[i] = o;
 	}
 
-	string className() const
-	{
-		return "Vector";
-	}
-
-	void write(ostream &os) const
-	{
-		Object::write(os);
-		os << "(" << n << "/" << cap << ")";
-		for (int i=0; i<size(); i++)
-			os << "\n\t" << x[i];
-	}
+	string className() const override;
+	void write(ostream &os) const override;
 };
+} // namespace util
 #endif // ALUN_UTIL_VECTOR_H

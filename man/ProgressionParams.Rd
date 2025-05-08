@@ -11,7 +11,14 @@ ProgressionParams(
 )
 }
 \arguments{
-\item{ever_abx}{}
+\item{rate}{Base progression rate}
+
+\item{abx}{Effect of current antibiotics on progression}
+
+\item{ever_abx}{Effect of ever having taken antibiotics on progression}
+}
+\value{
+A list of parameters for progression.
 }
 \description{
 Progression Parameters

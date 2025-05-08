@@ -13,23 +13,9 @@ private:
 	IntMap *unit;
 
 public:
-	Facility(int id)
-	{
-		number = id;
-		unit = new IntMap();
-	}
-
-	~Facility()
-	{
-		for (unit->init(); unit->hasNext(); )
-			delete unit->nextValue();
-		delete unit;
-	}
-
-	void write(ostream &os)
-	{
-        	os << number;
-	}
+	Facility(int id);
+	~Facility();
+	void write(ostream &os) const;
 
 	inline void addUnit(Unit *u)
 	{

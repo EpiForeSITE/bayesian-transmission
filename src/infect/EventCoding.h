@@ -128,6 +128,41 @@ public:
 		if(s == "isoloff") return isoloff;
 		return error;
 	}
-};
 
+	/**
+	 * @brief Checks if the event is an observable event.
+	 *
+	 * @return True if the event is an observable event, false otherwise.
+	 */
+	static inline bool isObservable(EventCode x)
+	{
+	    switch(x)
+	    {
+	    case insitu:
+	    case insitu0:
+	    case insitu1:
+	    case insitu2:
+	    case admission:
+	    case admission0:
+	    case admission1:
+	    case admission2:
+	    case discharge:
+	    case negsurvtest:
+	    case possurvtest:
+	    case negclintest:
+	    case posclintest:
+	    case abxdose:
+	    case abxon:
+	    case abxoff:
+	        return true;
+	    default:
+	        return false;
+	    }
+	}
+
+
+
+
+
+};
 #endif // ALUN_INFECT_EVENTCODING_H

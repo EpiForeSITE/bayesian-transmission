@@ -23,14 +23,14 @@ public:
 		return number;
 	}
 
-	inline string getName()
+	inline string getName() const
 	{
 		stringstream ss;
 		ss << f << ":" << number;
 		return ss.str();
 	}
 
-	void write(ostream &os)
+	void write(ostream &os) const override
 	{
         	os << f << ":" << number;
 	}

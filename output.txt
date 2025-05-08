@@ -1,0 +1,17 @@
+Creating RNG...Done
+Setting up System...Done
+Creating model...
+(In LinearAbxModel specialization)
+  * Setting up Abx...Done
+  * Setting up Insitu...Done
+  * Setting up Surveillance Test...Done
+  * Setting up Clinical Test...Done
+  * Setting up Out of Unit...acquisition clearance Done
+  * Setting up In Unit...Acquisition...
+in setupAcquisitionParams: LinearAbxICP
+Progression...Clearance...Done
+  * Setting up Abx Rates...Done
+Done
+Set time origin
+Building history structure...Done
+0:sample episodes...

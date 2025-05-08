@@ -14,25 +14,13 @@ private:
 	SortedList *s;
 
 public:
-	Episode() : Object()
-	{
-		a = 0;
-		d = 0;
-		s = new SortedList();
-	}
-
+	Episode();
 	~Episode()
-	{
-		delete s;
-	}
+    {
+        delete s;
+    }
 
-	void write(ostream &os)
-	{
-		os << a << "\n";
-		for (s->init(); s->hasNext(); )
-			os << s->next() << "\n";
-		os << d;
-	}
+	void write(ostream &os) const;
 
 	inline void setAdmission(Event *e)
 	{
@@ -61,7 +49,7 @@ public:
 		s->append(e);
 	}
 
-	inline SortedList *getEvents()
+	inline SortedList* getEvents()
 	{
 		s->init();
 		return s;

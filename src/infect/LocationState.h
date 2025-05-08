@@ -13,15 +13,9 @@ private:
 
 public:
 
-	LocationState(Object *own, int nstates = 0) : State(own)
-	{
-		n = nstates;
-	}
+	LocationState(Object *own, int nstates = 0) : State(own), n(nstates){}
 
-	virtual inline int nStates() const
-	{
-		return n;
-	}
+	inline int nStates() const {return n;}
 
 	virtual void clear() = 0;
 	virtual int getTotal() const = 0;
@@ -33,11 +27,7 @@ public:
 	virtual void unapply(Event *e) = 0;
 
 
-	virtual void write(ostream &os) const
-	{
-		os << getOwner() ;
-		os << " (" << getSusceptible() << "+" << getLatent() << "+" << getColonized() << "=" << getTotal() << ")";
-	}
+	virtual void write(ostream &os) const;
 };
 
 #endif // ALUN_INFECT_LOCATIONSTATE_H

@@ -17,3 +17,6 @@ A list of with param and rate.
 \description{
 Specify a random testing parameter with a rate.
 }
+\examples{
+ParamWRate(Param(0.5, 0), rate = Param(1, 0)
+}

@@ -7,20 +7,20 @@
 \usage{
 LogNormalModelParams(
   modname,
-  nstates = 2,
-  nmetro = 1,
+  nstates = 2L,
+  nmetro = 1L,
   forward = TRUE,
   cheat = FALSE,
   Insitu = InsituParams(),
-  SurveilenceTest = SurveillanceTestParams(),
+  SurveillanceTest = SurveillanceTestParams(),
   ClinicalTest = ClinicalTestParams(),
   OutOfUnitInfection = OutOfUnitInfectionParams(),
-  InUnit = LogNormalInUnitAcquisition(),
+  InUnit = InUnitParameters(),
   Abx = AbxParams(),
   AbxRate = AbxRateParams()
 )
 
-LinearAbxModel(..., InUnit = LogNormalABXInUnitParameters())
+LinearAbxModel(..., InUnit = ABXInUnitParameters())
 }
 \arguments{
 \item{modname}{The name of the model used. Usually specified by specification functions.}
@@ -35,7 +35,7 @@ LinearAbxModel(..., InUnit = LogNormalABXInUnitParameters())
 
 \item{Insitu}{In Situ Parameters}
 
-\item{SurveilenceTest}{Surveillance Testing Parameters}
+\item{SurveillanceTest}{Surveillance Testing Parameters}
 
 \item{ClinicalTest}{Clinical Testing Parameters}
 
@@ -48,6 +48,9 @@ for the acquisition, progression and clearance of the disease.}
 
 \item{AbxRate}{Antibiotic Rate Parameters}
 }
+\value{
+A list of parameters for the model.
+}
 \description{
 Model Parameters for a Log Normal Model
 }
@@ -56,3 +59,6 @@ Model Parameters for a Log Normal Model
 \item \code{LinearAbxModel()}: Linear Antibiotic Model Alias
 
 }}
+\examples{
+LogNormalModelParams()
+}

@@ -4,7 +4,7 @@
 
 #include "Object.h"
 
-
+namespace util {
 class IntMapLink : public Object
 {
 friend class IntMap;
@@ -282,4 +282,5 @@ public:
 			os << "\n\t" << l;
 	}
 };
+} // namespace util
 #endif // ALUN_UTIL_INTMAP_H

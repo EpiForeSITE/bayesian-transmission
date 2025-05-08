@@ -43,11 +43,23 @@ EventToCode <- function(x) {
 #'   * `waic2` the WAIC2 estimate
 #'   * and optionally (if `MCMCParameters$outputfinal` is true) `FinalModel` the final model state.
 #' @export
-runMCMC <- function(modname, data, MCMCParameters, modelParameters, nstates = 2L, verbose = FALSE) {
-    .Call(`_bayestransmission_runMCMC`, modname, data, MCMCParameters, modelParameters, nstates, verbose)
+runMCMC <- function(data, MCMCParameters, modelParameters, verbose = FALSE) {
+    .Call(`_bayestransmission_runMCMC`, data, MCMCParameters, modelParameters, verbose)
 }
 
-hello_world <- function() {
-    invisible(.Call(`_bayestransmission_hello_world`))
+asAbxLocationState <- function(x) {
+    .Call(`_bayestransmission_asAbxLocationState`, x)
+}
+
+asMap <- function(x) {
+    .Call(`_bayestransmission_asMap`, x)
+}
+
+asHistoryLink <- function(x) {
+    .Call(`_bayestransmission_asHistoryLink`, x)
+}
+
+WhatAmI <- function(x) {
+    .Call(`_bayestransmission_WhatAmI`, x)
 }
 

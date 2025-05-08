@@ -4,27 +4,20 @@
 \alias{runMCMC}
 \title{Run Bayesian Transmission MCMC}
 \usage{
-runMCMC(
-  modname,
-  data,
-  MCMCParameters,
-  modelParameters,
-  nstates = 2L,
-  verbose = FALSE
-)
+runMCMC(data, MCMCParameters, modelParameters, verbose = FALSE)
 }
 \arguments{
-\item{modname}{Name of the model to run.}
-
 \item{data}{Data frame with columns, in order: facility, unit, time, patient, and event type.}
 
 \item{MCMCParameters}{List of MCMC parameters.}
 
 \item{modelParameters}{List of model parameters, see \if{html}{\out{<LogNormalModelParams>}}.}
 
-\item{nstates}{Number of states in the model.}
-
 \item{verbose}{Print progress messages.}
+
+\item{modname}{Name of the model to run.}
+
+\item{nstates}{Number of states in the model.}
 }
 \value{
 A list with the following elements:

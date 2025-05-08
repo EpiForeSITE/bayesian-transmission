@@ -1,6 +1,8 @@
 
-#pragma once
+#ifndef ALUN_UTIL_ALLOCATOR_H
+#define ALUN_UTIL_ALLOCATOR_H
 
+namespace util{
 class Allocator
 {
 public:
@@ -167,3 +169,5 @@ public:
 		}
 	}
 };
+}
+#endif // ALUN_UTIL_ALLOCATOR_H

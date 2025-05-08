@@ -3,8 +3,11 @@ title: "bayesian-transmission"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{bayesian-transmission}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE}
@@ -17,150 +20,186 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(bayestransmission)
 ```
+
 # Introduction
-This package provides a Bayesian framework for transmission modeling on an
-individual patient level. Modeling is conducted through Markov Chain Monte
-Carlo (MCMC) methods.This document will explain the basic usage of the package,
-specification of parameters, and the output of the model.
+
+This package provides a Bayesian framework for transmission modeling on
+an individual patient level. Modeling is conducted through Markov Chain
+Monte Carlo (MCMC) methods.This document will explain the basic usage of
+the package, specification of parameters, and the output of the model.
 
 # Data Structure
-The algorithms expect a longitudinal data set with the following columns:
-* `facility`: The facility where the event occurred.
-* `unit`: The unit within the facility where the event occurred.
-* `time`: The time at which the event occurred.
-* `patient`: The patient involved in the event.
-* `type`: The type of event.
 
-The package includes a simulated dataset, `simulated.data`. 
+The algorithms expect a longitudinal data set with the following
+columns: \* `facility`: The facility where the event occurred. \*
+`unit`: The unit within the facility where the event occurred. \*
+`time`: The time at which the event occurred. \* `patient`: The patient
+involved in the event. \* `type`: The type of event.
+
+The package includes a simulated dataset, `simulated.data`.
+
 ```{r}
 pillar::glimpse(simulated.data)
 ```
 
-There are 12 different types of events that can be specified in the `type` column.
-These are, expected numerical codes shown in parentheses:
+There are 12 different types of events that can be specified in the
+`type` column. These are, expected numerical codes shown in parentheses:
 
-* Admission (0) and Discharge (3)
-* Surveillance Testing Results
-    + Negative Test (1)
-    + Positive Test (2)
-* Clinical Testing Results
-    + Negative Test (4)
-    + Positive Test (5)
-* Generic Testing
-    + Negative Test (7)
-    + Positive Test (8)
-* Antibiotic Use
-    + single dose (9)
-    + Start (10)
-    + Stop (11)
-* Isolation Procedures
-    + Start (6)
-    + Stop (7)
+-   Admission (0) and Discharge (3)
+-   Surveillance Testing Results
+    -   Negative Test (1)
+    -   Positive Test (2)
+-   Clinical Testing Results
+    -   Negative Test (4)
+    -   Positive Test (5)
+-   Generic Testing
+    -   Negative Test (7)
+    -   Positive Test (8)
+-   Antibiotic Use
+    -   single dose (9)
+    -   Start (10)
+    -   Stop (11)
+-   Isolation Procedures
+    -   Start (6)
+    -   Stop (7)
 
-Not all events need to be used in every data set, but the model selected should
-reflect the data that is available. Care should be taken to correctly code the
-data. The `EventToCode` and `CodeToEvent` functions can be used to convert 
-between.
-
+Not all events need to be used in every data set, but the model selected
+should reflect the data that is available. Care should be taken to
+correctly code the data. The `EventToCode` and `CodeToEvent` functions
+can be used to convert between.
 
 ```{r}
 table(CodeToEvent(simulated.data$type))
 ```
 
-
-
 # Model Specifiction
 
 ## Model Choice
+
 Since the model is implemented in C++ for speed and efficiency, only the
-specified models can be used.  The currently implemented models are:
+specified models can be used. The currently implemented models are:
 
-* `"LinearAbxModel"`, A Linear model with antibiotic use as a covariate.
-* `"MixedModel"`, and
-* `"LogNormalModel"`
+-   `"LinearAbxModel"`, A Linear model with antibiotic use as a
+    covariate.
+-   `"MixedModel"`, and
+-   `"LogNormalModel"`
 
-Model specification and all parameters are controlled through constructor functions of the same name, or generically through the `LogNormalModelParams()` function.
+Model specification and all parameters are controlled through
+constructor functions of the same name, or generically through the
+`LogNormalModelParams()` function.
 
-For all models there is the choice of either a 2 state (susceptible and colonized) or 3 state (susceptible, colonized, and recovered or latent) model.  Number of states is set through the `nstates` parameter, and the number of states in the model overrides what may be specified in any individual component.
+For all models there is the choice of either a 2 state (susceptible and
+colonized) or 3 state (susceptible, colonized, and recovered or latent)
+model. Number of states is set through the `nstates` parameter, and the
+number of states in the model overrides what may be specified in any
+individual component.
 
 ## Parameters
 
-The remainder of the parameters are grouped into the following categories:
+The remainder of the parameters are grouped into the following
+categories:
 
-* `Abx`, Antibiotic use,
-* `AbxRate`, Antibiotic rates,
-* `InUnit`, In unit infection rates,
-* `OutOfUnitInfection`, Out of unit infection rates,
-* `Insitu`, In situ parameters,
-* Testing:
-    + `SurveilenceTest`, Surveillance testing,
-    + `ClinicalTest`, Clinical testing.
+-   `Abx`, Antibiotic use,
+-   `AbxRate`, Antibiotic rates,
+-   `InUnit`, In unit infection rates,
+-   `OutOfUnitInfection`, Out of unit infection rates,
+-   `Insitu`, In situ parameters,
+-   Testing:
+    -   `SurveilenceTest`, Surveillance testing,
+    -   `ClinicalTest`, Clinical testing.
 
-Unless otherwise specified the parameters are all distributed gamma  with
-specified shape and rate parameters.  Each parameter can also be left as fixed
-or be sampled at each iteration of the MCMC.
+Unless otherwise specified the parameters are all distributed gamma with
+specified shape and rate parameters. Each parameter can also be left as
+fixed or be sampled at each iteration of the MCMC.
 
 ### Specifying parameters
 
-Parameters for the model may be specified by the `Param()` function. 
+Parameters for the model may be specified by the `Param()` function.
 This function takes up to four arguments:
-    
-    1. `init`, is the initial value of the parameter.
-    2. `weight`, is the weight of the prior distribution in updates.
-    3. `update`, a flag of if the parameter should be sampled in the MCMC algorithm. 
-        `FALSE` indicates that the parameter should be fixed, and is by default `TRUE` when `weight` is greater than zero.
-    4. `prior`, the mean of the prior distribution.  Taken with the weight will fully parameterize the distribution.
-    
 
+```         
+1. `init`, is the initial value of the parameter.
+2. `weight`, is the weight of the prior distribution in updates.
+3. `update`, a flag of if the parameter should be sampled in the MCMC algorithm. 
+    `FALSE` indicates that the parameter should be fixed, and is by default `TRUE` when `weight` is greater than zero.
+4. `prior`, the mean of the prior distribution.  Taken with the weight will fully parameterize the distribution.
+```
 
-
+```{r paramexamples, results='hide'}
+# Fully specified parameter.
+Param(init = 0, weight = 1, update = TRUE, prior = 0.5)
+# Fixed parameter
+# Weight = 0 implies update=FALSE and prior is ignored.
+Param(0, 0)
+# Update parameter that starts at zero.
+Param(0, weight =1, update=TRUE)
+# Parameters specified at zero implies fixed.
+Param(0)
+```
 
 ## `Abx` Antibiotic use
 
-Antibiotic use is specified by the `Abx` parameter.  This parameter is a list constructed with the `AbxParams()` function with the following components:
+Antibiotic use is specified by the `Abx` parameter. This parameter is a
+list constructed with the `AbxParams()` function with the following
+components:
 
-* `onoff`, If antibiotics are being used or not.  The two following parameters are only used if `onoff` is `TRUE`.
-* `delay`, the delay for the antibiotic to take effect.
-* `life`, the duration where the antibiotic to be effective.
+-   `onoff`, If antibiotics are being used or not. The two following
+    parameters are only used if `onoff` is `TRUE`.
+-   `delay`, the delay for the antibiotic to take effect.
+-   `life`, the duration where the antibiotic to be effective.
 
 ```{r}
 abx <- AbxParams(onoff = TRUE, delay = 0.3, life = 1)
 ```
 
-
-Currently, all antibiotics are assumed to be equally effective and have the same duration of effectiveness.
+Currently, all antibiotics are assumed to be equally effective and have
+the same duration of effectiveness.
 
 ## `AbxRate` Antibiotic rates
 
 The `AbxRate` parameter control the antibiotic administration rates.
 
 ```{r}
-abxrate <- AbxRateParams(uncolonized = 0.05, colonized = 0.7)
+abxrate <- AbxRateParams(
+  # Uncolonized patients do use antibiotics but at a low rate.
+  uncolonized = 0.05,  
+  # Colonized patients use antibiotics at a high rate.
+  colonized = 0.7      
+)
 ```
 
-Here since both parameters are non-zero both will be updated. A rate of zero for 
-either would indicate that group would never be on antibiotics.
+Here since both parameters are non-zero both will be updated. A rate of
+zero for either would indicate that group would never be on antibiotics.
 
-## `InCol` In unit infection rate
+## `InUnit` In unit infection rate
 
-Transmission within unit is the main defining characteristic that differentiates
-models.  For example the linear antibiotic model, `LinearAbxModel()`, is differentiated from the log 
-normal model, `LogNormalModelParams()` by the use of a `LogNormalABXInUnitParameters()` for the 
-`InUnit` argument rather than the `LogNormalInUnitAcquisition()` which does not 
-take into account antibiotic use.  All in unit transmission is defined in terms
-of acquisition, progression, and clearance. 
+Transmission within unit is the main defining characteristic that
+differentiates models. For example the linear antibiotic model,
+`LinearAbxModel()`, is differentiated from the log normal model,
+`LogNormalModelParams()` by the use of a `ABXInUnitParams()` for the
+`InUnit` argument rather than the `LogNormalInUnitAcquisition()` which
+does not take into account antibiotic use. All in unit transmission is
+defined in terms of acquisition, progression, and clearance.
+
+
 
 ### Aqcuisition Model
-In the base log normal antibiotic model, `LogNormalABXInUnitParameters()` log acquisition probability is a linear function.
+
+In the base log normal antibiotic model,
+`LogNormalABXInUnitParameters()` log acquisition probability is a linear
+function.
 
 $$
 \log(P(\mathrm{Acq(t)})) = \beta_0 + \beta_t(t-t_0) + 
     \beta_c N_og(\mathrm{Colonized(t)})a_{ca}N_{ca}(t) + \beta_A A_i(t) + \beta_E E_i(t)
-$$
-Where $\beta_\star$ represents the coefficient corresponding to the amounts, $N_c(t)$ represent the total number of colonized patients at time $t$, $N_{ca}(t)$ the number of colonized on antibiotics, and $A_i(t)$ and $E_i(t)$ represents if patient $i$ is currently or ever on antibiotics.
+$$ Where $\beta_\star$ represents the coefficient corresponding to the
+amounts, $N_c(t)$ represent the total number of colonized patients at
+time $t$, $N_{ca}(t)$ the number of colonized on antibiotics, and
+$A_i(t)$ and $E_i(t)$ represents if patient $i$ is currently or ever on
+antibiotics.
 
-The linear antibiotic (`LinearAbxAcquisitionParams`) takes a more complicated form for the acquisition model.
-$$
+The linear antibiotic (`LinearAbxAcquisitionParams`) takes a more
+complicated form for the acquisition model. $$
 P(\mathrm{Acq(t)}) =
   \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
   \left\{e^{\beta_0}
@@ -178,83 +217,179 @@ P(\mathrm{Acq(t)}) =
 $$
 
 ```{r}
-progression <- LinearAbxAcquisitionParams(
-    base = Param(0, 1, TRUE),
-    time = 1,
-    mass = 
-    
+acquisition <- LinearAbxAcquisitionParams(
+    base = Param(0.01),     #< Base acquisition rate (Updated)
+    time = Param(1, 0),     #< Time effect (Fixed)
+    mass = Param(1),        #< Mass Mixing (Updated)
+    freq = Param(1),        #< Frequency/Density effect (Updated)
+    col_abx = Param(1, 0),  #< Colonized on antibiotics (Fixed)
+    suss_abx = Param(1, 0), #< Susceptible on antibiotics (Fixed)
+    suss_ever = Param(1, 0) #< Ever on antibiotics (Fixed)  
 )
 ```
 
 ### Progression Model
 
-In the 3 state model there is a latent state and the progression model controls 
-how patient transition out of the latent state.  The progression model is simple
-for the log normal antibiotic case.
+In the 3 state model there is a latent state and the progression model
+controls how patient transition out of the latent state. The base rate
+can be affected by currently being on antiboitics or ever being on
+antbiotcs.
 
 $$
 \log(P(\mathrm{progression})) = \delta_0+\delta_AA_i(t) + \delta_EE_i(t)
-$$
-The linear antibiotic model is:
+$$ 
+the linear antibiotic model is: 
+
 $$
 P(\mathrm{progression}) = e^{\delta_0}\left[1-E_i(t)+e^{\delta_2}\left(E_i(t)-A_i(t)+e^{\delta_1}A_i(t)\right)\right]
 $$
 
-Where here we use $\delta$ for the coefficients, but the notation is the same.
+Where here we use $\delta$ for the coefficients, but the notation is the
+same.
+
+```{r}
+progression <- ProgressionParams(
+    rate = Param(0.01),     #< Base progression rate (Updated)
+    abx  = Param(1, 0),     #< Currently on antibiotics (Fixed)
+    ever = Param(1, 0)      #< Ever on antibiotics (Fixed)
+)
+```
 
 ### Clearance Model
 
-The clearance model is the same as the progression model in both
-the log normal and the linear cases, the coefficients however are independent.
+The clearance model is the same as the progression model in both the log
+normal and the linear cases, the coefficients however are independent.
 
+```{r}
+clearance <- ClearanceParams(
+    rate = Param(0.01),     #< Base clearance rate (Updated)
+    abx  = Param(1, 0),     #< Currently on antibiotics (Fixed)
+    ever = Param(1, 0)      #< Ever on antibiotics (Fixed)
+)
+```
+
+```{r}
+inunit <- ABXInUnitParams(
+  acquisition = acquisition,
+  progression = progression,
+  clearance   = clearance
+)
+```
 
 ## Out of Unit Importation
 
-The out of unit parameters control the rate admission come in colonized, or in 
-each stage, un a multistage model.
+The out of unit parameters control the rate at which admissions come in,
+and which state they enter in.
 
+$$
+\log(P(\mathrm{state}_i \rightarrow \mathrm{state}_j)|t) = P_j - Q_{i,j} e^{-t \sum_i r_i}
+$$
+
+```{r}
+outcol <- OutOfUnitInfectionParams(
+  acquisition = 0.1,
+  clearance = 0.5
+)
+```
 
 ## In Situ
 
-**TODO**
+I'm not sure what these parameters do. It's a set of gamma distributed
+parameters one for each state. The updates and probabilities are not
+time dependent.
 
-I'm not sure what these parameters do. It's a set of gamma distributed 
-parameters one for each state.  The updates and probabilities are not time 
-dependent.
+When updating the rates for each state are sampled from a
+$gamma(N_i, 1)$ distribution. Then all three are normalized to sum to 1.
 
-When updating the rates for each state are sampled from a $gamma(N_i, 1)$ distribution.  Then all three are normalized to sum to 1.
+```{r}
+insitu <- InsituParams(
+  # Starting 90/10 split uncolonized to colonized  
+  probs = c(uncolonized = 0.90, #< names are unnecessary.
+              colonized = 0.10)
+)
+```
 
 ## Testing
-There are two types of testing, surveillance, which is conducted routinely at 
-regular intervals such as on admission then every 3 days after, and clinical, 
-where the testing is precipitated by staff, and thus the timing is informative.
 
+There are two types of testing, surveillance, which is conducted
+routinely at regular intervals such as on admission then every 3 days
+after, and clinical, where the testing is precipitated by staff, and
+thus the timing is informative.
 
 ### Surveillance Testing
 
-The timing of surveillance testing is assumed to not be informative.  Therefore,
-surveillance testing is only parameterized in terms of probability of a positive test given the underlying status.
-Surveillance test parameters are updated with a sample from a $Beta(N_{s,1}, N_{s,0})$ distribution where $N_{s,1}$ and $N_{s,0}$ are the number of positive and negative tests respectively for state $s$.
+The timing of surveillance testing is assumed to not be informative.
+Therefore, surveillance testing is only parameterized in terms of
+probability of a positive test given the underlying status. Surveillance
+test parameters are updated with a sample from a
+$Beta(N_{s,1}, N_{s,0})$ distribution where $N_{s,1}$ and $N_{s,0}$ are
+the number of positive and negative tests respectively for state $s$.
+
+```{r}
+surv <- SurveillanceTestParams(
+    # Probability of a positive test when uncolonized
+    uncolonized = Param(0),
+    # Probability of a positive test when colonized
+    colonized = Param(0.9, 1, TRUE)
+)
+
+```
 
 ### Clinical Testing
 
-Since clinical testing time is informative, clinical testing is assumed to be at 
-random within infection stage.  The rate of testing within each stage is sampled
-from a gamma distribution. Sensitivity/Specificity are handled the same as 
-surveillance testing and the likelihood is multiplicative between rate and 
-effectiveness.
+Since clinical testing time is informative, clinical testing is assumed
+to be at random within infection stage. The rate of testing within each
+stage is sampled from a gamma distribution. Sensitivity/Specificity are
+handled the same as surveillance testing and the likelihood is
+multiplicative between rate and effectiveness.
+
+```{r}
+clin <- ClinicalTestParams(
+    # Rate of testing when uncolonized
+    uncolonized = ParamWRate(Param(0, 0), rate = Param(1)),
+    # Rate of testing when colonized
+    colonized = ParamWRate(Param(0, 0), rate = Param(1))
+)
+```
+
+
+### All Together
+
+```{r}
+params <- LinearAbxModel(
+  nstates = 2,
+  Insitu = insitu,
+  SurveillanceTest = surv,
+  ClinicalTest = clin,
+  OutOfUnitInfection = outcol,
+  InUnit = inunit,
+  Abx = abx,
+  AbxRate = abxrate
+)
+```
 
 
 
+# Running the Model
+
+The model is run through the `runMCMC()` function. This function takes
+the following arguments:
 
 
 
-
-
-
-
-
-
+```{r}
+results <- runMCMC(
+  data = simulated.data,
+  MCMCParameters = list(
+    nburn = 0,
+    nsims = 100,
+    outputparam = TRUE,
+    outputfinal = TRUE
+  ),
+  modelParameters = params,
+  verbose = TRUE
+)
+```
 
 
 

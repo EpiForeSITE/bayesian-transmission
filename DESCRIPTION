@@ -3,24 +3,29 @@ Title: Bayesian Transmission Models
 Version: 0.0.0.9000
 Authors@R: c(
     person("Andrew", "Redd", , "andrew.redd@hsc.utah.edu", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-6149-2438")))
+           comment = c(ORCID = "0000-0002-6149-2438")),
+    person("CDC's Center for Forecasting and Outbreak Analytics", role = c("fnd"),
+           comment = c("This project was made possible by cooperative agreement CDC-RFA-FT-23-0069 (grant # NU38FT000009-01-00) from the CDC's Center for Forecasting and Outbreak Analytics. Its contents are solely the responsibility of the authors and do not necessarily represent the official views of the Centers for Disease Control and Prevention."))
+    )
 Description: TBD
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
+    assertthat,
     checkmate,
     dplyr,
     methods,
     Rcpp (>= 1.0.12),
-    RcppEigen
+    RcppArmadillo
 Config/testthat/edition: 3
 Depends:
     R (>= 4.2.0)
 LazyData: true
 LinkingTo:
-    Rcpp, RcppEigen
+    Rcpp, RcppArmadillo
+SystemRequirements: C++17, BLAS, LAPACK
 Suggests:
     testthat (>= 3.0.0),
     knitr,

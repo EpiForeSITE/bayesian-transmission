@@ -5,10 +5,24 @@
 #' @param update a flag indicating if the parameter shouldbe updated in the MCMC.
 #' @param prior mean value of the prior distribution, may be used with weight to fully determine prior parameters.
 #'
-#' @returns
+#' @returns A list with the following elements:
+#'  * `init` the initial value of the parameter.
+#'  * `weight` the weight of the prior.
+#'  * `update` a flag indicating if the parameter shouldbe updated in the MCMC.
+#'  * `prior` mean value of the prior distribution, may be used with weight to fully determine prior parameters.
+#'
 #' @export
 #'
 #' @examples
+#' # Fully specified parameter.
+#' Param(init = 0, weight = 1, update = TRUE, prior = 0.5)
+#' # Fixed parameter
+#' # Weight = 0 implies update=FALSE and prior is ignored.
+#' Param(0, 0)
+#' # Update parameter that starts at zero.
+#' Param(0, weight =1, update=TRUE)
+#' # Parameters specified at zero implies fixed.
+#' Param(0)
 Param <- function(init, weight = if_else(init == 0, 0, 1), update = weight > 0, prior = init) {
   structure(
     list(
@@ -51,6 +65,7 @@ check_param <- function(param, name = deparse(substitute(param))) {
 #' @export
 #'
 #' @examples
+#' ParamWRate(Param(0.5, 0), rate = Param(1, 0)
 ParamWRate <- function(param = Param(), rate = Param()) {
   if (!inherits(param, "Param") || !inherits(rate, "Param")) {
     if (rlang::is_scalar_double(param)) {
@@ -70,21 +85,25 @@ ParamWRate <- function(param = Param(), rate = Param()) {
   )
 }
 check_paramwrate <- function(x, name = deparse(substitute(x))) {
+  assertthat::assert_that(is.list(x),
+              x %has_name% 'param',
+              x %has_name% 'rate')
   x$param <- check_param(x$param, paste0(name, "$parameter"))
   x$rate <- check_param(x$rate, paste0(name, "$rate"))
   return(x)
 }
 
-#' Title
+#' InSitu Parameters
 #'
-#' @param probs
-#' @param priors
-#' @param doit
+#' @param probs The probability of the individual being in each state.
+#' @param priors The prior probability of the individual being in each state.
+#' @param doit A flag indicating if the rate(s) should be updated in the MCMC.
 #'
-#' @returns
+#' @returns A list of parameters for in situ testing.
 #' @export
 #'
 #' @examples
+#' InsituParams()
 InsituParams <- function(probs = c(0.5, 0.5, 0), priors = probs * doit, doit = probs != 0) {
   stopifnot(2 <= length(probs) && length(probs) <= 3)
   if (length(probs) == 2) probs <- c(probs, 0)
@@ -144,22 +163,26 @@ ClinicalTestParams <- RandomTestParams
 
 #' Out of Unit Infection Parameters
 #'
-#' @param acquisition
-#' @param clearance
-#' @param thirdoption What should this be?
+#' @param acquisition Rate of acquisition of the disease moving into latent state.
+#' @param clearance Rate of clearance of the disease moving into uncolonized state.
+#' @param progression Rate of progression of the disease moving into colonized state.
 #'
 #' @returns A list of parameters for out of unit infection.
 #' @export
 #'
 #' @examples
+#' OutOfUnitInfectionParams()
 OutOfUnitInfectionParams <- function(
     acquisition = Param(0),
     clearance = Param(0),
-    thirdoption = Param(0)) {
+    progression = Param(0)) {
+  acquisition <- check_param(acquisition)
+  clearance <- check_param(clearance)
+  progression <- check_param(progression)
   list(
     acquisition = acquisition,
     clearance = clearance,
-    thirdoption = thirdoption
+    progression = progression
   )
 }
 
@@ -170,6 +193,9 @@ OutOfUnitInfectionParams <- function(
 #' @param colonized Also known as the true positive rate for a two state model.
 #' @param uncolonized Also known as the false positive rate for a two state model.
 #' @param latent The rate of positive tests when the individual is in the (optional) latent state.
+#' @export
+#' @examples
+#' SurveillanceTestParams()
 SurveillanceTestParams <- function(
     colonized = Param(0, 0),
     uncolonized = Param(0.8, 1),
@@ -186,6 +212,10 @@ SurveillanceTestParams <- function(
 #' @param onoff If Anti-biotic are used or not.
 #' @param delay The delay in using antibiotics.
 #' @param life The life of antibiotics.
+#' @export
+#'
+#' @examples
+#' AbxParams()
 AbxParams <- function(
     onoff = FALSE,
     delay = 0.0,
@@ -278,11 +308,11 @@ LinearAbxAcquisitionParams <- function(
 
 #' Progression Parameters
 #'
-#' @param rate
-#' @param abx
-#' @param ever_abx
+#' @param rate Base progression rate
+#' @param abx  Effect of current antibiotics on progression
+#' @param ever_abx Effect of ever having taken antibiotics on progression
 #'
-#' @returns
+#' @returns A list of parameters for progression.
 #' @export
 #'
 #' @examples
@@ -304,10 +334,11 @@ ProgressionParams <- function(
 #' @param abx effect of antibiotics on clearance
 #' @param ever_abx effect of ever having taken antibiotics on clearance
 #'
-#' @returns
+#' @returns A list of parameters for clearance.
 #' @export
 #'
 #' @examples
+#' ClearanceParams()
 ClearanceParams <- function(
     rate = Param(0.01),
     abx = Param(1, 0),
@@ -320,21 +351,40 @@ ClearanceParams <- function(
 }
 
 
-LogNormalInUnitAcquisition <- function(
+#' In Unit Parameters
+#'
+#' @param acquisition Acquisition, for rate of acquisition of the disease moving into latent state.
+#' @param progression Progression from latent state to colonized state.
+#' @param clearance Clearance from colonized state to uncolonized state.
+#'
+#' @export
+#' @examples
+#' InUnitParameters()
+InUnitParams <- function(
     acquisition = AcquisitionParams(),
     progression = ProgressionParams(),
     clearance = ClearanceParams()) {
+  assertthat::assert_that(
+    is.list(acquisition),
+    is.list(progression),
+    is.list(clearance)
+  )
   list(
     acquisition = acquisition,
     progression = progression,
     clearance = clearance
   )
 }
-LogNormalABXInUnitParameters <- function(
+
+#' @describeIn InUnitParams In Unit Parameters with Antibiotics.
+#' @export
+#' @examples
+#' ABXInUnitParameters()
+ABXInUnitParams <- function(
     acquisition = LinearAbxAcquisitionParams(),
     progression = ProgressionParams(),
     clearance = ClearanceParams()) {
-  list(
+  InUnitParams(
     acquisition = acquisition,
     progression = progression,
     clearance = clearance
@@ -350,7 +400,7 @@ LogNormalABXInUnitParameters <- function(
 #' @param forward TODO
 #' @param cheat TODO
 #' @param Insitu In Situ Parameters
-#' @param SurveilenceTest Surveillance Testing Parameters
+#' @param SurveillanceTest Surveillance Testing Parameters
 #' @param ClinicalTest Clinical Testing Parameters
 #' @param OutOfUnitInfection Out of Unit Infection Parameters
 #' @param InUnit In Unit Parameters, should be a list of lists with parameters
@@ -358,21 +408,22 @@ LogNormalABXInUnitParameters <- function(
 #' @param Abx Antibiotic Parameters
 #' @param AbxRate Antibiotic Rate Parameters
 #'
-#' @returns
+#' @returns A list of parameters for the model.
 #' @export
 #'
 #' @examples
+#' LogNormalModelParams()
 LogNormalModelParams <-
   function(modname,
-           nstates = 2,
-           nmetro = 1,
+           nstates = 2L,
+           nmetro = 1L,
            forward = TRUE,
            cheat = FALSE,
            Insitu = InsituParams(),
-           SurveilenceTest = SurveillanceTestParams(),
+           SurveillanceTest = SurveillanceTestParams(),
            ClinicalTest = ClinicalTestParams(),
            OutOfUnitInfection = OutOfUnitInfectionParams(),
-           InUnit = LogNormalInUnitAcquisition(),
+           InUnit = InUnitParameters(),
            Abx = AbxParams(),
            AbxRate = AbxRateParams()) {
     assertthat::assert_that(
@@ -390,7 +441,7 @@ LogNormalModelParams <-
       forward = as.logical(forward),
       cheat = cheat,
       Insitu = Insitu,
-      SurveilenceTest = SurveilenceTest,
+      SurveillanceTest = SurveillanceTest,
       ClinicalTest = ClinicalTest,
       OutCol = OutOfUnitInfection,
       InCol = InUnit,
@@ -401,8 +452,9 @@ LogNormalModelParams <-
 
 
 #' @describeIn LogNormalModelParams Linear Antibiotic Model Alias
+#' @export
 LinearAbxModel <- function(
     ...,
-    InUnit = LogNormalABXInUnitParameters()) {
+    InUnit = ABXInUnitParameters()) {
   LogNormalModelParams("LinearAbxModel", ..., InUnit = InUnit)
 }

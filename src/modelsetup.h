@@ -34,13 +34,22 @@ inline void setParam(T* x, int i, Rcpp::List Param){
     );
 }
 template <typename T, typename itype1, typename itype2>
-inline void setParam(T* x, itype1 i, itype2 j, Rcpp::List Param){
-    x->set(i, j,
-           Rcpp::as<double>(Param["init"]),
-           Rcpp::as<bool>(Param["update"]),
-           Rcpp::as<double>(Param["prior"]),
-           Rcpp::as<double>(Param["weight"])
-    );
+inline void setParam(T* x, itype1 i, itype2 j, Rcpp::List Param, bool dolog = false){
+    if(dolog){
+        x->set(i, j,
+               log(Rcpp::as<double>(Param["init"])),
+                   Rcpp::as<bool>(Param["update"]),
+               log(Rcpp::as<double>(Param["prior"])),
+                   Rcpp::as<double>(Param["weight"]))
+        ;
+    } else {
+        x->set(i, j,
+               Rcpp::as<double>(Param["init"]),
+               Rcpp::as< bool >(Param["update"]),
+               Rcpp::as<double>(Param["prior"]),
+               Rcpp::as<double>(Param["weight"])
+        );
+    }
 }
 template <typename T, typename itype1, typename itype2>
 inline void setParamWSig(T* x, itype1 i, itype2 j, Rcpp::List Param){
@@ -83,7 +92,7 @@ inline void setupInsituParams(InsituParams * isp, Rcpp::List insituParameters)
                       as< std::vector<bool> >(insituParameters["doit"]));
 }
 
-inline void setupSurveilenceTestParams(
+inline void setupSurveillanceTestParams(
         TestParams * stp,
         Rcpp::List stpUncolonizedParam,
         Rcpp::List stpColonizedParam,
@@ -94,12 +103,12 @@ inline void setupSurveilenceTestParams(
     setParam(stp, 2, stpLatentParam);
 }
 
-inline void setupSurveilenceTestParams(TestParams * stp, Rcpp::List surveilenceTestParameters)
+inline void setupSurveillanceTestParams(TestParams * stp, Rcpp::List SurveillanceTestParameters)
 {
-    setupSurveilenceTestParams(stp,
-                               Rcpp::as<Rcpp::List>(surveilenceTestParameters["uncolonized"]),
-                               Rcpp::as<Rcpp::List>(surveilenceTestParameters["colonized"]),
-                               Rcpp::as<Rcpp::List>(surveilenceTestParameters["latent"]));
+    setupSurveillanceTestParams(stp,
+                               Rcpp::as<Rcpp::List>(SurveillanceTestParameters["uncolonized"]),
+                               Rcpp::as<Rcpp::List>(SurveillanceTestParameters["colonized"]),
+                               Rcpp::as<Rcpp::List>(SurveillanceTestParameters["latent"]));
 }
 
 
@@ -137,9 +146,15 @@ inline void setupClinicalTestParams(RandomTestParams * ctp, Rcpp::List clinicalT
 
 inline void setupOutOfUnitParams(OutColParams * ocol, Rcpp::List outColParameters)
 {
-    setParam(ocol, 0, outColParameters["acquisition"]);
-    setParam(ocol, 1, outColParameters["clearance"]);
-    setParam(ocol, 2, outColParameters[2]);
+    if(ocol->nParam()==3){
+        setParam(ocol, 0, outColParameters["acquisition"]);
+        setParam(ocol, 1, outColParameters["progression"]);
+        setParam(ocol, 2, outColParameters["clearance"]);
+    } else {
+        setParam(ocol, 0, outColParameters["acquisition"]);
+        setParam(ocol, 2, outColParameters["clearance"]);
+    }
+
 }
 
 inline void setupLogNormalICPAcquisition(
@@ -158,14 +173,13 @@ inline void setupLinearAbxAcquisitionModel(
         Rcpp::List AcquisitionParams
 )
 {
-
-    setParam(icp, 0, 0, Rcpp::as<double>(AcquisitionParams["base"]));
-    setParam(icp, 0, 1, Rcpp::as<double>(AcquisitionParams["time"]));
-    setParam(icp, 0, 2, log(Rcpp::as<double>(AcquisitionParams["mass"])));
-    setParam(icp, 0, 3, log(Rcpp::as<double>(AcquisitionParams["freq"])));
-    setParam(icp, 0, 4, log(Rcpp::as<double>(AcquisitionParams["col_abx"])));
-    setParam(icp, 0, 5, log(Rcpp::as<double>(AcquisitionParams["suss_abx"])));
-    setParam(icp, 0, 6, log(Rcpp::as<double>(AcquisitionParams["suss_ever"])));
+    setParam(icp, 0, 0, AcquisitionParams["base"]);
+    setParam(icp, 0, 1, AcquisitionParams["time"]);
+    setParam(icp, 0, 2, AcquisitionParams["mass"], true);
+    setParam(icp, 0, 3, AcquisitionParams["freq"], true);
+    setParam(icp, 0, 4, AcquisitionParams["col_abx"], true);
+    setParam(icp, 0, 5, AcquisitionParams["suss_abx"], true);
+    setParam(icp, 0, 6, AcquisitionParams["suss_ever"], true);
 }
 
 inline void setupAcquisitionParams(
@@ -239,11 +253,11 @@ void modelsetup(ModelType * model, Rcpp::List modelParameters, bool verbose = fa
     auto isp = model->getInsituParams();
     setupInsituParams(isp, modelParameters["Insitu"]);
 
-    // Surveilence test parameters.
+    // Surveillance test parameters.
     if(verbose) Rcpp::Rcout << "Done" << std::endl
-                            << "  * Setting up Surveilence Test...";
-    auto stp = model->getSurveilenceTestParams();
-    setupSurveilenceTestParams(stp, modelParameters["SurveilenceTest"]);
+                            << "  * Setting up Surveillance Test...";
+    auto stp = model->getSurveillanceTestParams();
+    setupSurveillanceTestParams(stp, modelParameters["SurveillanceTest"]);
 
     //  Clinical test parameters.
     if(verbose) Rcpp::Rcout << "Done" << std::endl
@@ -274,5 +288,56 @@ void modelsetup(ModelType * model, Rcpp::List modelParameters, bool verbose = fa
     if(verbose) Rcpp::Rcout << "Done" << std::endl;
 
 }
+template <>
+void modelsetup(lognormal::LinearAbxModel * model, Rcpp::List modelParameters, bool verbose)
+{
+    if(verbose) Rcpp::Rcout << std::endl << "(In LinearAbxModel specialization)";
+
+    // Antibiotics
+    if(verbose) Rcpp::Rcout << std::endl << "  * Setting up Abx...";
+    setupAbxParams(model, modelParameters["Abx"]);
+
+    // In situ
+    if(verbose) Rcpp::Rcout << "Done" << std::endl
+                            << "  * Setting up Insitu...";
+    auto isp = model->getInsituParams();
+    setupInsituParams(isp, modelParameters["Insitu"]);
+
+    // Surveillance test parameters.
+    if(verbose) Rcpp::Rcout << "Done" << std::endl
+                            << "  * Setting up Surveillance Test...";
+    auto stp = model->getSurveillanceTestParams();
+    setupSurveillanceTestParams(stp, modelParameters["SurveillanceTest"]);
+
+    //  Clinical test parameters.
+    if(verbose) Rcpp::Rcout << "Done" << std::endl
+                            << "  * Setting up Clinical Test...";
+    RandomTestParams * ctp = (RandomTestParams *) model->getClinicalTestParams();
+    setupClinicalTestParams(ctp, modelParameters["ClinicalTest"]);
+
+    // Out of unit infection parameters.
+    if(verbose) Rcpp::Rcout << "Done" << std::endl
+                            << "  * Setting up Out of Unit...";
+    auto ocol = model->getOutColParams();
+    setupOutOfUnitParams(ocol, modelParameters["OutCol"]);
+
+    // In unit infection parameters.
+    if(verbose) Rcpp::Rcout << "Done" << std::endl
+                            << "  * Setting up In Unit...";
+    lognormal::LinearAbxICP* icp = (lognormal::LinearAbxICP*)(model->getInColParams());
+    setupInColParams(icp, modelParameters["InCol"]);
+
+    // Abx rates
+    if(verbose) Rcpp::Rcout << "Done" << std::endl
+                            << "  * Setting up Abx Rates...";
+    auto abxp = model->getAbxParams();
+    if(abxp != 0)
+    {
+        setupAbxRateParams(abxp, modelParameters["AbxRate"]);
+    }
+    if(verbose) Rcpp::Rcout << "Done" << std::endl;
+
+}
+
 
 #endif //BAYESIAN_TRANSMISSION_MODELSETUP_H

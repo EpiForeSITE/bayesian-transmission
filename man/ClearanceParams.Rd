@@ -13,6 +13,12 @@ ClearanceParams(rate = Param(0.01), abx = Param(1, 0), ever_abx = Param(1, 0))
 
 \item{ever_abx}{effect of ever having taken antibiotics on clearance}
 }
+\value{
+A list of parameters for clearance.
+}
 \description{
 Clearance Parameters
+}
+\examples{
+ClearanceParams()
 }

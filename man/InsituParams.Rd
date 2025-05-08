@@ -2,13 +2,23 @@
 % Please edit documentation in R/constructors.R
 \name{InsituParams}
 \alias{InsituParams}
-\title{Title}
+\title{InSitu Parameters}
 \usage{
 InsituParams(probs = c(0.5, 0.5, 0), priors = probs * doit, doit = probs != 0)
 }
 \arguments{
-\item{doit}{}
+\item{probs}{The probability of the individual being in each state.}
+
+\item{priors}{The prior probability of the individual being in each state.}
+
+\item{doit}{A flag indicating if the rate(s) should be updated in the MCMC.}
+}
+\value{
+A list of parameters for in situ testing.
 }
 \description{
-Title
+InSitu Parameters
+}
+\examples{
+InsituParams()
 }

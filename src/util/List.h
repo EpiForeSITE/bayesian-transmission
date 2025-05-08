@@ -5,6 +5,7 @@
 #include "Object.h"
 #include "Random.h"
 
+namespace util{
 class ListLink : public Object
 {
 friend class List;
@@ -15,29 +16,16 @@ private:
 	ListLink *next;
 	ListLink *prev;
 
-	ListLink(Object *k)
-	{
-		key = k;
-		prev = 0;
-		next = 0;
-	}
+	ListLink(Object *k);
 
 public:
-	inline Object *getKey()
+	inline Object* getKey()
 	{
 		return key;
 	}
 
-	std::string className() const
-	{
-		return "ListLink";
-	}
-
-	void write(std::ostream &os) const
-	{
-		Object::write(os);
-		os << "(" << key << ")";
-	}
+	std::string className() const;
+	void write(std::ostream &os) const;
 };
 
 class List : public Object
@@ -58,17 +46,8 @@ private:
 	}
 
 public:
-	List() : Object()
-	{
-		head = 0;
-		tail = 0;
-		current = 0;
-	}
-
-	~List()
-	{
-		clear();
-	}
+	List();
+	~List();
 
 	inline void clear()
 	{
@@ -91,54 +70,9 @@ public:
 		return l;
 	}
 
-	Object * random(Random *r) const
-	{
-		int x = size();
-		if (x == 0)
-			return 0;
-
-		double u = r->runif() * x;
-		x = 0;
-
-		for (ListLink *l = head; l != 0; l = l->next)
-		{
-			if (u <= ++x)
-				return l->key;
-		}
-
-		return 0;
-	}
-
-	inline virtual void append(Object *k)
-	{
-		ListLink *l = new ListLink(k);
-
-		if (head == 0)
-			head = l;
-
-		if (tail != 0)
-		{
-			l->prev = tail;
-			tail->next = l;
-		}
-		tail = l;
-	}
-
-	inline virtual void prepend(Object *k)
-	{
-		ListLink *l = new ListLink(k);
-
-		if (tail == 0)
-			tail = l;
-
-		if (head != 0)
-		{
-			l->next = head;
-			head->prev = l;
-		}
-		head = l;
-	}
-
+	Object * random(Random *r) const;
+	virtual void append(Object *k);
+	virtual void prepend(Object *k);
 	inline Object *remove(Object *k)
 	{
 		ListLink *l = listget(k);
@@ -182,12 +116,12 @@ public:
 	}
 
 
-	inline Object *getFirst()
+	inline Object* getFirst()
 	{
 		return head == 0 ? 0 : head->key ;
 	}
 
-	inline Object *getLast()
+	inline Object* getLast()
 	{
 		return tail == 0 ? 0 : tail->key ;
 	}
@@ -202,7 +136,7 @@ public:
 		return current != 0;
 	}
 
-	inline Object *next()
+	inline Object* next()
 	{
 		if (current == 0)
 			return 0;
@@ -212,7 +146,7 @@ public:
 		return res;
 	}
 
-	inline Object *prev()
+	inline Object* prev()
 	{
 		if (current == 0)
 			return 0;
@@ -235,7 +169,7 @@ public:
 		return count;
 	}
 
-	inline Object *pop()
+	inline Object* pop()
 	{
 		if (head == 0)
 			return 0;
@@ -255,16 +189,8 @@ public:
 		return res;
 	}
 
-	std::string className() const
-	{
-		return "List";
-	}
-
-	void write(std::ostream &os) const
-	{
-		Object::write(os);
-		for (ListLink *l = head; l != 0; l = l->next)
-			os << "\n\t" << l;
-	}
+	std::string className() const override;
+	void write(std::ostream &os) const override;
 };
+} // namespace util
 #endif // ALUN_UTIL_LIST_H

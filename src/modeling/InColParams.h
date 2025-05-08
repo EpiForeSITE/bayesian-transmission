@@ -3,6 +3,8 @@
 
 #include "Parameters.h"
 
+namespace models {
+
 class InColParams : public Parameters
 {
 protected:
@@ -27,4 +29,7 @@ public:
 
 	virtual double **rateMatrix(double time, infect::PatientState *p, infect::LocationState *u) = 0;
 };
+
+} // namespace models
+
 #endif //ALUN_MODELING_INCOLPARAMS_H

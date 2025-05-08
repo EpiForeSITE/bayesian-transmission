@@ -15,19 +15,18 @@ protected:
 
 public:
 
-	UnitTrackingModel(int ns = 2)
+	UnitTrackingModel(int ns = 2): nstates(ns)
 	{
-		nstates = ns;
 		units = new Map();
 	}
 
-	virtual inline Map *getUnits()
+	virtual Map *getUnits()
 	{
 		units->init();
 		return units;
 	}
 
-	virtual inline int getNStates() const
+	virtual int getNStates() const
 	{
 		return nstates;
 	}
@@ -49,67 +48,66 @@ public:
 	}
 */
 
-	virtual string header()
+	virtual string header() const override
 	{
 		return "";
 	}
 
-	virtual void write (ostream &os)
+	virtual void write (ostream &os) override
 	{
 	}
 
-	virtual int needEventType(EventCode e)
+	virtual int needEventType(EventCode e) override
 	{
 		return true;
 	}
 
-	virtual LocationState *makeSystemState()
+	virtual LocationState *makeSystemState() override
 	{
 		return 0;
 	}
 
-	virtual LocationState *makeFacilityState(Facility *f)
+	virtual LocationState *makeFacilityState(Facility *f) override
 	{
 		return 0;
 	}
 
-	virtual LocationState *makeUnitState(Unit *u)
+	virtual LocationState *makeUnitState(Unit *u) override
 	{
 		return u == 0 ? 0 : new SetLocationState(u,nstates);
 		//return u == 0 ? 0 : new SetLocationState(u,nstates);
 	}
 
-	virtual PatientState *makePatientState(Patient *p)
+	virtual PatientState *makePatientState(Patient *p) override
 	{
 		return p == 0 ? 0 : new PatientState(p,nstates);
 	}
 
-	virtual EpisodeHistory *makeEpisodeHistory(HistoryLink *a, HistoryLink *d)
+	virtual EpisodeHistory *makeEpisodeHistory(HistoryLink *a, HistoryLink *d) override
 	{
 		return new UnitEpisodeHistory(a,d);
 	}
 
 // Dummy methods to satisfy Model requirements.
 
-	virtual double logLikelihood(SystemHistory *h)
+	virtual double logLikelihood(SystemHistory *h) override
 	{
 		return 0;
 	}
 
-	virtual void forwardSimulate(SystemHistory *h, Random *r)
+	virtual void forwardSimulate(SystemHistory *h, Random *r) override
 	{
 	}
 
-	virtual void initEpisodeHistory(EpisodeHistory *h, bool b)
+	virtual void initEpisodeHistory(EpisodeHistory *h, bool b) override
 	{
 	}
 
-	virtual void sampleEpisodes(SystemHistory *h, int i, Random *r)
+	virtual void sampleEpisodes(SystemHistory *h, int i, Random *r) override
 	{
 	}
 
-	virtual void update(SystemHistory *h, Random *r, int i)
-	{
-	}
+	virtual void update(SystemHistory *h, Random *r, int i)  override = 0;
+
 };
 #endif // ALUN_MODELING_UNITTRACKINGMODEL_H
