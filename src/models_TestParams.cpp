@@ -74,7 +74,7 @@ double* TestParams::resultProbs(int onabx, EventCode e) const
 
 // Implement Parameters.
 
-double TestParams::logProb(infect::HistoryLink *h)
+double TestParams::logProb(infect::HistoryLink *h) const
 {
     int i = stateIndex(h->getPState()->infectionStatus());
     int j = testResultIndex(h->getEvent()->getType());

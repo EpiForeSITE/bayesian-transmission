@@ -14,7 +14,7 @@ private:
 	// value 0 == frequency dependent; 1 == density dependent; 2 == constant;
 	int isDensity;
 
-	virtual double logAcquisitionRate(double ncol, double tot);
+	virtual double logAcquisitionRate(double ncol, double tot) const;
 
 
 public:
@@ -23,12 +23,12 @@ public:
 
 
 // Implement LogNormalICP.
-	virtual double logProgressionRate(double time, PatientState *p, LocationState *s) override;
-	virtual double logProgressionGap(double t0, double t1, LocationState *s) override;
-	virtual double logClearanceRate(double time, PatientState *p, LocationState *s) override;
-	virtual double logClearanceGap(double t0, double t1, LocationState *s) override;
-	virtual double logAcquisitionRate(double time, PatientState *p, LocationState *s) override;
-	virtual double logAcquisitionGap(double t0, double t1, LocationState *s) override;
-	virtual double* acquisitionRates(double time, PatientState *p, LocationState *s) override;
+	virtual double logProgressionRate(double time, PatientState *p, LocationState *s) const override;
+	virtual double logProgressionGap(double t0, double t1, LocationState *s) const override;
+	virtual double logClearanceRate(double time, PatientState *p, LocationState *s) const override;
+	virtual double logClearanceGap(double t0, double t1, LocationState *s) const override;
+	virtual double logAcquisitionRate(double time, PatientState *p, LocationState *s) const override;
+	virtual double logAcquisitionGap(double t0, double t1, LocationState *s) const override;
+	virtual double* acquisitionRates(double time, PatientState *p, LocationState *s) const override;
 };
 #endif // ALUN_LOGNORMAL_LOGNORMALMASSACT_H

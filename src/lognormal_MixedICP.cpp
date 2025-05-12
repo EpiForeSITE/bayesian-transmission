@@ -24,7 +24,7 @@ MixedICP::MixedICP(int nst, int isDensity, int nmet, int cap) : LogNormalAbxICP(
 // Susceptible patient on Abx effect on colonizeation is par[0][6].
 // Susceptible patient ever on Abx effect on colonizeation is par[0][7].
 
-double MixedICP::acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot)
+double MixedICP::acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot) const
 {
     double gamma = logistic(par[0][1]);
     double y = 0;
@@ -41,7 +41,7 @@ double MixedICP::acqRate(double time, int onabx, int everabx, double ncolabx, do
     return y * exp(x);
 }
 
-double MixedICP::timePar()
+double MixedICP::timePar() const
 {
     return par[0][4];
 }

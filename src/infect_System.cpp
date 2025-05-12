@@ -9,7 +9,6 @@ void System::handleOutOfRangeEvent(Patient *p, int t)
 
 void System::init(RawEventList *l, stringstream &err)
 {
-    fac = new IntMap();
     pat = new IntMap();
     pepis = new Map();
     start = (int)l->firstTime();
@@ -109,9 +108,9 @@ System::~System()
         delete pat->nextValue();
     delete pat;
 
-    for (fac->init(); fac->hasNext(); )
-        delete fac->nextValue();
-    delete fac;
+    for (auto& pair : fac) {
+        delete pair.second;
+    }
 }
 
 Map *System::getEpisodes(Patient *p)
@@ -502,11 +501,12 @@ void System::makeAllEpisodes(RawEventList *l, stringstream &err)
 
 void System::getOrMakeFacUnit(int m, int n, Facility **f, Unit **u)
 {
-    *f = (Facility *) fac->get(m);
-    if (*f == 0)
-    {
+    auto it = fac.find(m);
+    if (it == fac.end()) {
         *f = new Facility(m);
-        fac->put(m,*f);
+        fac[m] = *f;
+    } else {
+        *f = it->second;
     }
 
     *u = (*f)->getUnit(n);
@@ -516,6 +516,18 @@ void System::getOrMakeFacUnit(int m, int n, Facility **f, Unit **u)
         (*f)->addUnit(*u);
     }
 }
+
+// {
+//
+//     auto& units = (*f)->getUnits();
+//     auto unitIt = units.find(n);
+//     if (unitIt == units.end()) {
+//         *u = new Unit(n);
+//         (*f)->addUnit(*u);
+//     } else {
+//         *u = unitIt->second;
+//     }
+// }
 
 Patient* System::getOrMakePatient(int n)
 {

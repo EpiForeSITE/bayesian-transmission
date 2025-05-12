@@ -4,6 +4,8 @@
 
 #include "EpisodeHistory.h"
 
+namespace infect
+{
 class FacilityEpisodeHistory : public EpisodeHistory
 {
 protected:
@@ -144,4 +146,5 @@ public:
 	}
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_FACILITY_EPISODE_HISTORY_H

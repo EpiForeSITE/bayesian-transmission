@@ -4,6 +4,8 @@
 
 #include "State.h"
 #include "Event.h"
+namespace infect
+{
 
 class LocationState : public State
 {
@@ -30,4 +32,5 @@ public:
 	virtual void write(ostream &os) const;
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_LOCATIONSTATE_H

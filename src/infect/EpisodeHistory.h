@@ -7,6 +7,8 @@
 #include "Event.h"
 #include "HistoryLink.h"
 
+namespace infect
+{
 class EpisodeHistory : public Object, public EventCoding
 {
 protected:
@@ -80,4 +82,5 @@ public:
 
 	void write(ostream &os) const;
 };
+} // namespace infect
 #endif // ALUN_INFECT_EPISODEHISTORY_H

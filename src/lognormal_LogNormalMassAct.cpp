@@ -2,7 +2,7 @@
 
 namespace lognormal{
 
-double LogNormalMassAct::logAcquisitionRate(double ncol, double tot)
+double LogNormalMassAct::logAcquisitionRate(double ncol, double tot) const
 {
     double x =  par[0][0] + par[0][2] * log(tot);
     if (par[0][1] > 0)
@@ -45,32 +45,32 @@ LogNormalMassAct::LogNormalMassAct(int k, int isDen, int nmet) : LogNormalICP(k,
 
 // Implement LogNormalICP.
 
-double LogNormalMassAct::logProgressionRate(double time, PatientState *p, LocationState *s)
+double LogNormalMassAct::logProgressionRate(double time, PatientState *p, LocationState *s) const
 {
     return par[1][0];
 }
 
-double LogNormalMassAct::logProgressionGap(double t0, double t1, LocationState *s)
+double LogNormalMassAct::logProgressionGap(double t0, double t1, LocationState *s) const
 {
     return ( s->getLatent() == 0 ?  0 : -(t1 - t0) * s->getLatent() * exp(par[1][0]) );
 }
 
-double LogNormalMassAct::logClearanceRate(double time, PatientState *p, LocationState *s)
+double LogNormalMassAct::logClearanceRate(double time, PatientState *p, LocationState *s) const
 {
     return par[2][0];
 }
 
-double LogNormalMassAct::logClearanceGap(double t0, double t1, LocationState *s)
+double LogNormalMassAct::logClearanceGap(double t0, double t1, LocationState *s) const
 {
     return ( s->getColonized() == 0 ? 0 :  -(t1 - t0) * s->getColonized() * exp(par[2][0]) );
 }
 
-double LogNormalMassAct::logAcquisitionRate(double time, PatientState *p, LocationState *s)
+double LogNormalMassAct::logAcquisitionRate(double time, PatientState *p, LocationState *s) const
 {
     return logAcquisitionRate(s->getColonized(),s->getTotal());
 }
 
-double LogNormalMassAct::logAcquisitionGap(double t0, double t1, LocationState *s)
+double LogNormalMassAct::logAcquisitionGap(double t0, double t1, LocationState *s) const
 {
     if (s->getSusceptible() > 0)
         return - (t1 - t0) * s->getSusceptible() * exp(logAcquisitionRate(s->getColonized(),s->getTotal()));
@@ -78,7 +78,7 @@ double LogNormalMassAct::logAcquisitionGap(double t0, double t1, LocationState *
         return 0;
 }
 
-double* LogNormalMassAct::acquisitionRates(double time, PatientState *p, LocationState *s)
+double* LogNormalMassAct::acquisitionRates(double time, PatientState *p, LocationState *s) const
 {
     double *P = new double[nstates];
 

@@ -6,6 +6,8 @@
 #include "PatientState.h"
 #include "UnitEpisodeHistory.h"
 
+namespace infect
+{
 class UnitTrackingModel : public Model
 {
 protected:
@@ -110,4 +112,5 @@ public:
 	virtual void update(SystemHistory *h, Random *r, int i)  override = 0;
 
 };
+} // namespace infect
 #endif // ALUN_MODELING_UNITTRACKINGMODEL_H

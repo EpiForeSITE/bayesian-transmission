@@ -4,6 +4,8 @@
 
 #include "../util/util.h"
 
+namespace infect
+{
 class Patient : public Object
 {
 private:
@@ -35,4 +37,5 @@ public:
 	void write(ostream &os) const override;
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_PATIENT_H

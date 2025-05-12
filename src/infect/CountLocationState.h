@@ -3,7 +3,8 @@
 #define ALUN_INFECT_COUNTLOCATIONSTATE_H
 
 #include "LocationState.h"
-
+namespace infect
+{
 class CountLocationState : public LocationState
 {
 private:
@@ -27,4 +28,5 @@ public:
 	virtual void unapply(Event *e);
 	virtual void write(ostream &os) const;
 };
+} // namespace infect
 #endif // ALUN_INFECT_COUNTLOCATIONSTATE_H

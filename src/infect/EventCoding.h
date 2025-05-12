@@ -5,6 +5,9 @@
 #include <string>
 using std::string;
 
+namespace infect
+{
+
 class EventCoding
 {
 public:
@@ -165,4 +168,5 @@ public:
 
 
 };
+} // namespace infect
 #endif // ALUN_INFECT_EVENTCODING_H

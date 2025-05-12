@@ -5,6 +5,8 @@
 #include "LocationState.h"
 #include "InfectionCoding.h"
 
+namespace infect
+{
 class SetLocationState : public LocationState, public InfectionCoding
 {
 protected:
@@ -24,7 +26,7 @@ public:
 
 	~SetLocationState();
 
-	inline void clear()
+	inline void clear() override
 	{
 		pat->clear();
 		sus->clear();
@@ -52,4 +54,5 @@ public:
 	void write(ostream &os) const override;
 
 };
+} // namespace infect
 #endif // ALUN_INFECT_SETLOCATIONSTATE_H

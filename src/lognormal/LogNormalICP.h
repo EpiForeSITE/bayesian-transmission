@@ -42,21 +42,21 @@ public:
 // For models that have a time trend.
 
 	void setTimeOrigin(double t);
-	double getTimeOrigin();
+	double getTimeOrigin() const;
 
 	virtual double logpost(Random *r, int max);
 
 // Sufficient to implement LogNormalICP.
 
-	virtual double logAcquisitionRate(double time, PatientState *p, LocationState *s) = 0;
-	virtual double logAcquisitionGap(double t0, double t1, LocationState *s) = 0;
-	virtual double* acquisitionRates(double time, PatientState *p, LocationState *s) override = 0;
+	virtual double logAcquisitionRate(double time, PatientState *p, LocationState *s) const = 0;
+	virtual double logAcquisitionGap(double t0, double t1, LocationState *s) const = 0;
+	virtual double* acquisitionRates(double time, PatientState *p, LocationState *s) const override = 0;
 
-	virtual double logProgressionRate(double time, PatientState *p, LocationState *s) = 0;
-	virtual double logProgressionGap(double t0, double t1, LocationState *s) = 0;
+	virtual double logProgressionRate(double time, PatientState *p, LocationState *s) const = 0;
+	virtual double logProgressionGap(double t0, double t1, LocationState *s) const = 0;
 
-	virtual double logClearanceRate(double time, PatientState *p, LocationState *s) = 0;
-	virtual double logClearanceGap(double t0, double t1, LocationState *s) = 0;
+	virtual double logClearanceRate(double time, PatientState *p, LocationState *s) const = 0;
+	virtual double logClearanceGap(double t0, double t1, LocationState *s) const = 0;
 
 	virtual double unTransform(int i, int j);
 
@@ -75,14 +75,14 @@ public:
 
 // Implement InColParams.
 
-    virtual double eventRate(double time, EventCode c, PatientState *p, LocationState *s) override;
-	virtual double **rateMatrix(double time, PatientState *p, LocationState *u) override;
+    virtual double eventRate(double time, EventCode c, PatientState *p, LocationState *s) const override;
+	virtual double **rateMatrix(double time, PatientState *p, LocationState *u) const override;
 
 // Implement Parameters.
 	virtual std::vector<std::string> paramNames() const override;
 	virtual std::vector<double> getValues() const override;
-    virtual double logProb(HistoryLink *h) override;
-    virtual double logProbGap(HistoryLink *g, HistoryLink *h) override;
+    virtual double logProb(HistoryLink *h) const override;
+    virtual double logProbGap(HistoryLink *g, HistoryLink *h) const override;
 	virtual void initCounts() override;
 	virtual void count(HistoryLink *h) override;
 	virtual void countGap(HistoryLink *g, HistoryLink *h) override;

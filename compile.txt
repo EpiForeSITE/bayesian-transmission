@@ -1,55 +1,0 @@
-Exports from C:/Users/u0092104/Documents/Projects/bayesian-transmission/src/CodeToEvent.cpp:
-   CharacterVector CodeToEvent(IntegerVector x)
-   std::vector<int> EventToCode(const std::vector<std::string> x)
-
-Exports from C:/Users/u0092104/Documents/Projects/bayesian-transmission/src/Module.cpp:
-
-Exports from C:/Users/u0092104/Documents/Projects/bayesian-transmission/src/runMCMC.cpp:
-   SEXP runMCMC(Rcpp::DataFrame data, Rcpp::List MCMCParameters, Rcpp::List modelParameters, bool verbose = false)
-
-Exports from C:/Users/u0092104/Documents/Projects/bayesian-transmission/src/wrap.cpp:
-   SEXP asMap(SEXP x)
-   SEXP asHistoryLink(SEXP x)
-   std::string WhatAmI(util::Object * const x)
-
-C:/Users/u0092104/Documents/Projects/bayesian-transmission/src/RcppExports.cpp updated.
-C:/Users/u0092104/Documents/Projects/bayesian-transmission/R/RcppExports.R updated.
-── R CMD INSTALL ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-  ─  installing *source* package 'bayestransmission' ... (1.4s)
-     ** using staged installation
-     ** libs
-     using C++ compiler: 'G__~1.EXE (GCC) 13.2.0'
-     using C++17
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c CodeToEvent.cpp -o CodeToEvent.o
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c Markov.cpp -o Markov.o
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c Module-Infect.cpp -o Module-Infect.o
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c Module-lognormal.cpp -o Module-lognormal.o
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c Module-models.cpp -o Module-models.o
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c Module-utils.cpp -o Module-utils.o
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c Module.cpp -o Module.o
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c RRandom.cpp -o RRandom.o
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c Random.cpp -o Random.o
-     g++  -std=gnu++17 -I"C:/PROGRA~1/R/R-44~1.2/include" -DNDEBUG  -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/Rcpp/include' -I'C:/Users/u0092104/AppData/Local/R/win-library/4.4/RcppArmadillo/include'   -I"C:/RBuildTools/4.4/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall -gdwarf-2 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -UNDEBUG -Wall -pedantic -g -O0 -c RcppExports.cpp -o RcppExports.o
-     RcppExports.cpp:73:21: error: 'util' has not been declared
-      73 | std::string WhatAmI(util::Object * const x);
-         |                     ^~~~
-     RcppExports.cpp:73:36: error: expected primary-expression before 'const'
-      73 | std::string WhatAmI(util::Object * const x);
-         |                                    ^~~~~
-     RcppExports.cpp: In function 'SEXPREC* _bayestransmission_WhatAmI(SEXP)':
-   RcppExports.cpp:78:36: error: 'util' was not declared in this scope
-      78 |     Rcpp::traits::input_parameter< util::Object * const >::type x(xSEXP);
-         |                                    ^~~~
-     RcppExports.cpp:78:57: error: template argument 1 is invalid
-      78 |     Rcpp::traits::input_parameter< util::Object * const >::type x(xSEXP);
-         |                                                         ^
-   RcppExports.cpp:78:65: error: qualified-id in declaration before 'x'
-      78 |     Rcpp::traits::input_parameter< util::Object * const >::type x(xSEXP);
-         |                                                                 ^
-     RcppExports.cpp:79:42: error: 'x' was not declared in this scope
-      79 |     rcpp_result_gen = Rcpp::wrap(WhatAmI(x));
-         |                                          ^
-     make: *** [C:/PROGRA~1/R/R-44~1.2/etc/x64/Makeconf:296: RcppExports.o] Error 1
-     ERROR: compilation failed for package 'bayestransmission'
-─  removing 'C:/Users/u0092104/AppData/Local/Temp/RtmpyaU9Gf/devtools_install_7d0868d07721/bayestransmission'
-

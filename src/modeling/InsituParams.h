@@ -33,7 +33,7 @@ public:
 	virtual double *statusProbs() const;
 // Implement Parameters.
 
-	virtual double logProb(infect::HistoryLink *h) override;
+	virtual double logProb(infect::HistoryLink *h) const override;
 	virtual void initCounts() override;
 	virtual void count(infect::HistoryLink *h) override;
 	virtual void update(Random *r, bool max) override;

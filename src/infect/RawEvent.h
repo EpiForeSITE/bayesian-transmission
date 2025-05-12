@@ -4,6 +4,8 @@
 
 #include "../util/util.h"
 
+namespace infect
+{
 class RawEvent : public Object
 {
 private:
@@ -51,4 +53,5 @@ public:
 	}
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_RAWEVENT_H

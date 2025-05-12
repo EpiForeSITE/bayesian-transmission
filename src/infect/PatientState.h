@@ -5,6 +5,8 @@
 #include "InfectionCoding.h"
 #include "State.h"
 
+namespace infect
+{
 class PatientState : public State, public InfectionCoding
 {
 protected:
@@ -35,4 +37,5 @@ public:
 	virtual void unapply(Event *e);
 	virtual void write(ostream &os) const;
 };
+} // namespace infect
 #endif // ALUN_INFECT_PATIENTSTATE_H

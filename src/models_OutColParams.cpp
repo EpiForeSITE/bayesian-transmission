@@ -65,7 +65,7 @@ double OutColParams::logpost(Random *r, int x)
  * @param j Current patient infection state.
  * @param t Time between points.
  */
-double OutColParams::prob(int i, int j, double t)
+double OutColParams::prob(int i, int j, double t) const
 {
     if (j < 0)
         return 0;
@@ -316,7 +316,7 @@ double** OutColParams::rateMatrix()
 
 // Implement Parameters.
 
-double OutColParams::logProb(infect::HistoryLink *h)
+double OutColParams::logProb(infect::HistoryLink *h) const
 {
     if (!h->getEvent()->isAdmission())
         return 0;

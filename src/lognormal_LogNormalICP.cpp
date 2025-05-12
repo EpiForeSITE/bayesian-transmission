@@ -95,7 +95,7 @@ void LogNormalICP::setTimeOrigin(double t)
     tOrigin = t;
 }
 
-double LogNormalICP::getTimeOrigin()
+double LogNormalICP::getTimeOrigin() const
 {
     return tOrigin;
 }
@@ -269,7 +269,7 @@ std::vector<double> LogNormalICP::getValues() const
 ///
 ///
 ///
-double LogNormalICP::eventRate(double time, EventCode c, PatientState *p, LocationState *s)
+double LogNormalICP::eventRate(double time, EventCode c, PatientState *p, LocationState *s) const
 {
     switch(c)
     {
@@ -291,7 +291,7 @@ double LogNormalICP::eventRate(double time, EventCode c, PatientState *p, Locati
 ///
 ///
 ///
-double** LogNormalICP::rateMatrix(double time, PatientState *p, LocationState *u)
+double** LogNormalICP::rateMatrix(double time, PatientState *p, LocationState *u) const
 {
     double **Q = cleanAlloc(nstates,nstates);
 
@@ -319,7 +319,7 @@ double** LogNormalICP::rateMatrix(double time, PatientState *p, LocationState *u
 // Implement Parameters.
 
 /// Log probability of an event given in the HistoryLink
-double LogNormalICP::logProb(HistoryLink *h)
+double LogNormalICP::logProb(HistoryLink *h) const
 {
     switch(h->getEvent()->getType())
     {
@@ -334,7 +334,7 @@ double LogNormalICP::logProb(HistoryLink *h)
     }
 }
 
-double LogNormalICP::logProbGap(HistoryLink *g, HistoryLink *h)
+double LogNormalICP::logProbGap(HistoryLink *g, HistoryLink *h) const
 {
     LocationState *s = h->uPrev()->getUState();
     double t0 = g->getEvent()->getTime();

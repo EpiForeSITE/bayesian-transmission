@@ -6,6 +6,8 @@
 
 #include "RawEvent.h"
 
+namespace infect
+{
 class RawEventList : public SortedList
 {
 public:
@@ -123,4 +125,5 @@ public:
 	// }
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_RAWEVENTLIST_H

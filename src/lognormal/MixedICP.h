@@ -18,8 +18,8 @@ public:
 	// Susceptible patient on Abx effect on colonizeation is par[0][6].
 	// Susceptible patient ever on Abx effect on colonizeation is par[0][7].
 
-	double acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot);
-	virtual double timePar() override;
+	double acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot) const;
+	virtual double timePar() const override;
 	virtual double unTransform(int i, int j) override;
 	virtual void set(int i, int j, double value, int update, double prival, double priorn, double sig = 0.1) override;
 };

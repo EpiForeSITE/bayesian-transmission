@@ -7,7 +7,7 @@ void Parameters::update(Random *r)
     update(r,0);
 }
 
-int Parameters::eventIndex(EventCode e)
+int Parameters::eventIndex(EventCode e) const
 {
     switch(e)
     {

@@ -5,6 +5,8 @@
 #include "../util/util.h"
 #include "SystemHistory.h"
 
+namespace infect
+{
 class Sampler : public Object
 {
 private:
@@ -24,4 +26,5 @@ public:
 	void initializeEpisodes();
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_SAMPLER_H

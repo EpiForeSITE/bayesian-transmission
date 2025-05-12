@@ -38,7 +38,7 @@ private:
 	 * @param j Current patient infection state.
 	 * @param t Time between points.
 	 */
-	virtual double prob(int i, int j, double t);
+	virtual double prob(int i, int j, double t) const;
 	/// Normalize probability across groups
 	void resetPQ();
 	virtual void update(Random *r, int nsteps, int max);
@@ -62,7 +62,7 @@ public:
 // Implement Parameters.
 	virtual int stateIndex(InfectionStatus s) const override;
 	virtual int getNStates() const override;
-	virtual double logProb(infect::HistoryLink *h) override;
+	virtual double logProb(infect::HistoryLink *h) const override;
 	virtual void initCounts() override;
 	virtual void count(infect::HistoryLink *h) override;
 	virtual void update(Random *r, bool max) override;

@@ -5,6 +5,8 @@
 #include "../util/util.h"
 #include "Event.h"
 
+namespace infect
+{
 class Episode : public Object
 {
 private:
@@ -55,4 +57,5 @@ public:
 		return s;
 	}
 };
+} // namespace infect
 #endif // ALUN_INFECT_EPISODE_H

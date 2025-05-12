@@ -4,6 +4,8 @@
 
 #include "../util/util.h"
 
+namespace infect
+{
 class Unit : public Object
 {
 private:
@@ -36,4 +38,5 @@ public:
 	}
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_UNIT_H

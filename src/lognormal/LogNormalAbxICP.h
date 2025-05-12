@@ -26,22 +26,22 @@ class LogNormalAbxICP: public LogNormalICP
 private:
 	void setParameterNames();
 
-    inline const double * const logbeta_acq(){return par[0];}
-    inline double logbeta_acq_time(){return par[0][0];}
-    inline double logbeta_acq_constant(){return par[0][0];}
-    inline double logbeta_acq_tot_inpat(){return par[0][2];}
-    inline double logbeta_acq_log_col(){return par[0][3];}
-    inline double logbeta_acq_col(){return par[0][4];}
-    inline double logbeta_acq_abx_col(){return par[0][5];}
-    inline double logbeta_acq_onabx(){return par[0][6];}
-    inline double logbeta_acq_everabx(){return par[0][7];}
+    inline const double * const logbeta_acq() const{return par[0];}
+    inline double logbeta_acq_time() const{return par[0][0];}
+    inline double logbeta_acq_constant() const{return par[0][0];}
+    inline double logbeta_acq_tot_inpat() const{return par[0][2];}
+    inline double logbeta_acq_log_col() const{return par[0][3];}
+    inline double logbeta_acq_col() const{return par[0][4];}
+    inline double logbeta_acq_abx_col() const{return par[0][5];}
+    inline double logbeta_acq_onabx() const{return par[0][6];}
+    inline double logbeta_acq_everabx() const{return par[0][7];}
 
 public:
 	virtual string header() const override;
 
 protected:
 
-	virtual double timePar();
+	virtual double timePar() const;
 
     /// Log Acquisition Rate
     /// \param time Time of acquisition.
@@ -50,12 +50,12 @@ protected:
     /// \param ncolabx Number of colonized patients on antibiotics.
     /// \param ncol Number of colonized patients.
     /// \param tot Total number of patients.
-	virtual double logAcqRate(int onabx, int everabx, int ncolabx, int ncol, int tot, double time);
-	double acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot);
-	virtual double progRate(int onabx, int ever);
-	virtual double logProgRate(int onabx, int ever);
-	virtual double clearRate(int onabx, int ever);
-	virtual double logClearRate(int onabx, int ever);
+	virtual double logAcqRate(int onabx, int everabx, int ncolabx, int ncol, int tot, double time) const;
+	double acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot) const;
+	virtual double progRate(int onabx, int ever) const;
+	virtual double logProgRate(int onabx, int ever) const;
+	virtual double clearRate(int onabx, int ever) const;
+	virtual double logClearRate(int onabx, int ever) const;
 
 public:
 
@@ -64,13 +64,13 @@ public:
 
 // Implement LogNormalICP.
 
-	virtual double logProgressionRate(double time, PatientState *p, LocationState *s) override;
-	virtual double logProgressionGap(double t0, double t1, LocationState *s) override;
-	virtual double logClearanceRate(double time, PatientState *p, LocationState *s) override;
-	virtual double logClearanceGap(double t0, double t1, LocationState *s) override;
-	virtual double logAcquisitionRate(double time, PatientState *p, LocationState *ls) override;
-	virtual double logAcquisitionGap(double u, double v, LocationState *ls) override;
-	virtual double *acquisitionRates(double time, PatientState *p, LocationState *ls) override;
+	virtual double logProgressionRate(double time, PatientState *p, LocationState *s) const override;
+	virtual double logProgressionGap(double t0, double t1, LocationState *s) const override;
+	virtual double logClearanceRate(double time, PatientState *p, LocationState *s) const override;
+	virtual double logClearanceGap(double t0, double t1, LocationState *s) const override;
+	virtual double logAcquisitionRate(double time, PatientState *p, LocationState *ls) const override;
+	virtual double logAcquisitionGap(double u, double v, LocationState *ls) const override;
+	virtual double *acquisitionRates(double time, PatientState *p, LocationState *ls) const override;
     virtual std::vector<std::string> paramNames() const override;
 
 };

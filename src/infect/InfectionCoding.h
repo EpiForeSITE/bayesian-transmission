@@ -4,6 +4,8 @@
 
 
 #include <string>
+namespace infect
+{
 
 class InfectionCoding
 {
@@ -30,4 +32,5 @@ public:
 	}
 };
 
+} // namespace infect
 #endif // INFECTIONCODING_H

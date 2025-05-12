@@ -4,6 +4,8 @@
 
 #include "Event.h"
 
+namespace infect
+{
 class State : public Object, public EventCoding
 {
 private:
@@ -35,4 +37,5 @@ public:
 	}
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_STATE_H

@@ -24,14 +24,14 @@ public:
 	virtual string header() const override;
 // Implement Parameters.
 
-	inline double logProb(infect::HistoryLink *h) override
+	inline double logProb(infect::HistoryLink *h) const override
 	{
 		double x = TestParams::logProb(h);
 		x += log(rates[stateIndex(h->getPState()->infectionStatus())]);
 		return x;
 	}
 
-	virtual double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) override;
+	virtual double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) const override;
 	inline void initCounts() override
 	{
 		TestParams::initCounts();

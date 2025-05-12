@@ -23,11 +23,11 @@ public:
 		return nstates;
 	}
 
-	virtual double *acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s) = 0;
+	virtual double *acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s) const = 0;
 
-	virtual double eventRate(double time, EventCode c, infect::PatientState *p, infect::LocationState *s) = 0;
+	virtual double eventRate(double time, EventCode c, infect::PatientState *p, infect::LocationState *s) const = 0;
 
-	virtual double **rateMatrix(double time, infect::PatientState *p, infect::LocationState *u) = 0;
+	virtual double **rateMatrix(double time, infect::PatientState *p, infect::LocationState *u) const = 0;
 };
 
 } // namespace models

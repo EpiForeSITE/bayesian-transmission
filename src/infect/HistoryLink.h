@@ -5,6 +5,8 @@
 #include "LocationState.h"
 #include "PatientState.h"
 
+namespace infect
+{
 class HistoryLink : public Object
 {
 private:
@@ -276,5 +278,5 @@ public:
 		return sstate;
 	}
 };
-
+} // namespace infect
 #endif // ALUN_INFECT_HISTORYLINK_H

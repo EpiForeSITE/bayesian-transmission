@@ -9,6 +9,10 @@
 #include "Facility.h"
 #include "Patient.h"
 
+namespace infect
+{
+
+
 class LocationState;
 class PatientState;
 class HistoryLink;
@@ -47,4 +51,5 @@ public:
 	virtual void sampleEpisodes(SystemHistory *h, int max, Random *r) = 0;
 	virtual void update(SystemHistory *h, Random *r, int max) = 0;
 };
+} // namespace infect
 #endif // ALUN_INFECT_MODEL_H

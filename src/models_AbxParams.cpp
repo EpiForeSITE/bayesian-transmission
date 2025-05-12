@@ -77,7 +77,7 @@ int AbxParams::nParam() const
 
 // Implement Parameters.
 
-double AbxParams::logProb(infect::HistoryLink* h)
+double AbxParams::logProb(infect::HistoryLink* h) const
 {
     if (h->getEvent()->getType() == abxon)
     {
@@ -90,7 +90,7 @@ double AbxParams::logProb(infect::HistoryLink* h)
     return 0;
 }
 
-double AbxParams::logProbGap(infect::HistoryLink *g, infect::HistoryLink *h)
+double AbxParams::logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) const
 {
     infect::AbxLocationState *s = (infect::AbxLocationState *) h->uPrev()->getUState();
     return - (h->getEvent()->getTime() - g->getEvent()->getTime()) *

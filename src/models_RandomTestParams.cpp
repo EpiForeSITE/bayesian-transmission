@@ -59,7 +59,7 @@ string RandomTestParams::header() const
 
 // Implement Parameters.
 
-double RandomTestParams::logProbGap(infect::HistoryLink *g, infect::HistoryLink *h)
+double RandomTestParams::logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) const
 {
     double time = h->getEvent()->getTime()-g->getEvent()->getTime();
     infect::LocationState *s = h->uPrev()->getUState();

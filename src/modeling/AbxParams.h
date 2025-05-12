@@ -30,8 +30,8 @@ public:
 
 // Implement Parameters.
 
-	virtual double logProb(infect::HistoryLink *h) override;
-	virtual double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) override;
+	virtual double logProb(infect::HistoryLink *h) const override;
+	virtual double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) const override;
 	virtual void count(infect::HistoryLink *h) override;
 	virtual void countGap(infect::HistoryLink *g, infect::HistoryLink *h) override;
 	virtual void initCounts() override;

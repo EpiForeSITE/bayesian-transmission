@@ -2,7 +2,7 @@
 
 namespace lognormal{
 
-double MultiUnitAbxICP::acqRate(int unit, int onabx, double ncolabx, double ncol, double tot)
+double MultiUnitAbxICP::acqRate(int unit, int onabx, double ncolabx, double ncol, double tot) const
 {
     //double x = par[0][1] + par[0][2] * log(tot) + par[0][4] * ncol + par[0][5] * ncolabx + par[0][6] * onabx;
 
@@ -13,7 +13,7 @@ double MultiUnitAbxICP::acqRate(int unit, int onabx, double ncolabx, double ncol
     return exp(x);
 }
 
-int MultiUnitAbxICP::index(Object *u)
+int MultiUnitAbxICP::index(Object *u) const
 {
     return ((Integer *)units->get(u))->intValue();
 }
@@ -73,7 +73,7 @@ void MultiUnitAbxICP::setUnit(int i, Object *u, double value, int update, double
 
 // Implement LogNormalICP.
 
-double MultiUnitAbxICP::logAcquisitionRate(double time, PatientState *p, LocationState *ls)
+double MultiUnitAbxICP::logAcquisitionRate(double time, PatientState *p, LocationState *ls) const
 {
     AbxLocationState *as = (AbxLocationState *) ls;
     int onabx = as->onAbx((Patient *)p->getOwner());
@@ -81,7 +81,7 @@ double MultiUnitAbxICP::logAcquisitionRate(double time, PatientState *p, Locatio
     return log(acqRate(unit,onabx,as->getAbxColonized(),as->getColonized(),as->getTotal())) + (time-tOrigin)*par[0][0];
 }
 
-double MultiUnitAbxICP::logAcquisitionGap(double u, double v, LocationState *ls)
+double MultiUnitAbxICP::logAcquisitionGap(double u, double v, LocationState *ls) const
 {
     double t = (abs(par[0][0]) < 0.0000001 ? (v-u) : (exp(par[0][0]*(v-tOrigin)) - exp(par[0][0]*(u-tOrigin))) / par[0][0] ) ;
     double x = 0;
@@ -99,7 +99,7 @@ double MultiUnitAbxICP::logAcquisitionGap(double u, double v, LocationState *ls)
     return -t*x;
 }
 
-double* MultiUnitAbxICP::acquisitionRates(double time, PatientState *p, LocationState *ls)
+double* MultiUnitAbxICP::acquisitionRates(double time, PatientState *p, LocationState *ls) const
 {
     AbxLocationState *as = (AbxLocationState *) ls;
     int onabx = as->onAbx((Patient *)p->getOwner());

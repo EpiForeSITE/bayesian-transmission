@@ -42,7 +42,7 @@ public:
 
 // Implement Parameters.
 
-	virtual double logProb(infect::HistoryLink *h);
+	virtual double logProb(infect::HistoryLink *h) const;
 	virtual void initCounts();
 	virtual void count(infect::HistoryLink *h);
 	virtual void update(Random *r, bool max);

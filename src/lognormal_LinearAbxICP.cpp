@@ -33,33 +33,33 @@ double LinearAbxICP::getRate(int i, int risk, int ever, int cur) const
     return epar[i][0] * ( risk-ever + epar[i][2] * (ever-cur + epar[i][1] * cur));
 }
 
-double LinearAbxICP::logProgressionRate(double time, PatientState *p, LocationState *s)
+double LinearAbxICP::logProgressionRate(double time, PatientState *p, LocationState *s) const
 {
     int everabx =((AbxLocationState *)s)->everAbx((Patient *)p->getOwner());
     int onabx = ((AbxLocationState *)s)->onAbx((Patient *)p->getOwner());
     return log(getRate(1,1,everabx,onabx));
 }
 
-double LinearAbxICP::logProgressionGap(double t0, double t1, LocationState *s)
+double LinearAbxICP::logProgressionGap(double t0, double t1, LocationState *s) const
 {
     AbxLocationState *as = (AbxLocationState *) s;
     return -(t1-t0) * getRate(1,as->getLatent(),as->getEverAbxLatent(),as->getAbxLatent());
 }
 
-double LinearAbxICP::logClearanceRate(double time, PatientState *p, LocationState *s)
+double LinearAbxICP::logClearanceRate(double time, PatientState *p, LocationState *s) const
 {
     int everabx =((AbxLocationState *)s)->everAbx((Patient *)p->getOwner());
     int onabx = ((AbxLocationState *)s)->onAbx((Patient *)p->getOwner());
     return log(getRate(2,1,everabx,onabx));
 }
 
-double LinearAbxICP::logClearanceGap(double t0, double t1, LocationState *s)
+double LinearAbxICP::logClearanceGap(double t0, double t1, LocationState *s) const
 {
     AbxLocationState *as = (AbxLocationState *) s;
     return -(t1-t0) * getRate(2,as->getColonized(),as->getEverAbxColonized(),as->getAbxColonized());
 }
 
-double LinearAbxICP::acqRate(int nsus, int onabx, int everabx, int ncolabx, int ncol, int tot, double time)
+double LinearAbxICP::acqRate(int nsus, int onabx, int everabx, int ncolabx, int ncol, int tot, double time) const
 {
     double x = (abs(par[0][1]) < timepartol ? 1 : exp(par[0][1] * (time-tOrigin)));
 
@@ -74,7 +74,7 @@ double LinearAbxICP::acqRate(int nsus, int onabx, int everabx, int ncolabx, int 
     return x * y * z;
 }
 
-double LinearAbxICP::logAcquisitionRate(double time, PatientState *p, LocationState *ls)
+double LinearAbxICP::logAcquisitionRate(double time, PatientState *p, LocationState *ls) const
 {
     AbxLocationState *as = (AbxLocationState *) ls;
     int everabx = as->everAbx((Patient *)p->getOwner());
@@ -82,7 +82,7 @@ double LinearAbxICP::logAcquisitionRate(double time, PatientState *p, LocationSt
     return log(acqRate(1,onabx,everabx,as->getAbxColonized(),as->getColonized(),as->getTotal(),time));
 }
 
-double LinearAbxICP::logAcquisitionGap(double u, double v, LocationState *ls)
+double LinearAbxICP::logAcquisitionGap(double u, double v, LocationState *ls) const
 {
     AbxLocationState *as = (AbxLocationState *) ls;
     int nsus = as->getSusceptible();
@@ -102,7 +102,7 @@ double LinearAbxICP::logAcquisitionGap(double u, double v, LocationState *ls)
     }
 }
 
-double* LinearAbxICP::acquisitionRates(double time, PatientState *p, LocationState *ls)
+double* LinearAbxICP::acquisitionRates(double time, PatientState *p, LocationState *ls) const
 {
     AbxLocationState *as = (AbxLocationState *) ls;
     int onabx = as->onAbx((Patient *)p->getOwner());

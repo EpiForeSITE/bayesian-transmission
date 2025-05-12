@@ -114,33 +114,23 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
     HistoryLink *stail = makeHistoryLink(m,0,0,s->endTime(),0,stop);
     shead->insertBeforeS(stail);
 
-    for (IntMap *facs = s->getFacilities(); facs->hasNext(); )
-    {
-        Facility *f = (Facility *) facs->nextValue();
 
-        HistoryLink *fhead = makeHistoryLink(m,f,0,s->startTime(),0,start);
-        HistoryLink *ftail = makeHistoryLink(m,f,0,s->endTime(),0,stop);
-
+    for (auto& [key, facility] : s->getFacilities()) {
+        HistoryLink *fhead = makeHistoryLink(m, facility, 0, s->startTime(), 0, start);
+        HistoryLink *ftail = makeHistoryLink(m, facility, 0, s->endTime(), 0, stop);
         fhead->insertBeforeF(ftail);
-        fheads->put(f,fhead);
-        tails->put(f,ftail);
+        fheads->put(facility, fhead);
+        tails->put(facility, ftail);
 
-        // Make map of units to list heads and tails.
-        // Initialize to contain just links to start and stop events.
-
-        for (IntMap *i = f->getUnits(); i->hasNext(); )
-        {
-            Unit *u = (Unit *) i->nextValue();
-
-            HistoryLink *uhead = makeHistoryLink(m,f,u,s->startTime(),0,start);
-            HistoryLink *utail = makeHistoryLink(m,f,u,s->endTime(),0,stop);
-
+        for (auto& [unitKey, unit] : facility->getUnits()) {
+            HistoryLink *uhead = makeHistoryLink(m, facility, unit, s->startTime(), 0, start);
+            HistoryLink *utail = makeHistoryLink(m, facility, unit, s->endTime(), 0, stop);
             uhead->insertBeforeU(utail);
-            uheads->put(u,uhead);
-            tails->put(u,utail);
+            uheads->put(unit, uhead);
+            tails->put(unit, utail);
         }
-
     }
+
 
     HistoryLink **hx = new HistoryLink*[s->getPatients()->size()];
     int hxn = 0;
@@ -235,30 +225,20 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
 
     // Put the sub lists into the full lists.
 
-    for (IntMap *facs = s->getFacilities(); facs->hasNext(); )
-    {
-        Facility *f = (Facility *) facs->nextValue();
 
-        HistoryLink *fhead = (HistoryLink *) fheads->get(f);
-        HistoryLink *ftail = (HistoryLink *) tails->get(f);
-
+    for (auto& [key, facility] : s->getFacilities()) {
+        HistoryLink *fhead = (HistoryLink *) fheads->get(facility);
+        HistoryLink *ftail = (HistoryLink *) tails->get(facility);
         ftail->insertBeforeS(stail);
         fhead->insertBeforeS(shead->sNext());
-
-        for (IntMap *i = f->getUnits(); i->hasNext(); )
-        {
-            Unit *u = (Unit *) i->nextValue();
-
-            HistoryLink *uhead = (HistoryLink *) uheads->get(u);
-            HistoryLink *utail = (HistoryLink *) tails->get(u);
-
+        for (auto& [unitKey, unit] : facility->getUnits()) {
+            HistoryLink *uhead = (HistoryLink *) uheads->get(unit);
+            HistoryLink *utail = (HistoryLink *) tails->get(unit);
             utail->insertBeforeF(ftail);
             uhead->insertBeforeF(fhead->fNext());
-
             utail->insertBeforeS(ftail);
             uhead->insertBeforeS(fhead->sNext());
         }
-
     }
 
     // Filter events model then propagate events.

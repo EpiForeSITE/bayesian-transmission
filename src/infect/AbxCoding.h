@@ -3,6 +3,8 @@
 #define ALUN_INFECT_ABXCODING_H
 
 #include "../util/util.h"
+namespace infect
+{
 
 class AbxCoding
 {
@@ -20,4 +22,5 @@ public:
     static string abxCodeString(AbxStatus x);
 };
 
+}
 #endif // ALUN_INFECT_ABXCODING_H

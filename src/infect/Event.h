@@ -6,6 +6,9 @@
 #include "Patient.h"
 #include "EventCoding.h"
 
+namespace infect
+{
+
 /**
  * @class Event
  * @brief Represents an event in the infection system.
@@ -272,5 +275,5 @@ public:
      */
     void write2(ostream &os, int opt) const;
 };
-
+} // namespace infect
 #endif // ALUN_INFECT_EVENT_H

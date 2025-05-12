@@ -68,7 +68,7 @@ string MassActionICP::header() const
 
 // Implement InColParams.
 
-double* MassActionICP::acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s)
+double* MassActionICP::acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s) const
 {
     double *P = new double[nstates];
 
@@ -88,7 +88,7 @@ double* MassActionICP::acquisitionRates(double time, infect::PatientState *p, in
     return P;
 }
 
-double MassActionICP::eventRate(double time, EventCode c, infect::PatientState *p, infect::LocationState *s)
+double MassActionICP::eventRate(double time, EventCode c, infect::PatientState *p, infect::LocationState *s) const
 {
     switch(c)
     {
@@ -103,7 +103,7 @@ double MassActionICP::eventRate(double time, EventCode c, infect::PatientState *
     }
 }
 
-double** MassActionICP::rateMatrix(double time, infect::PatientState *p, infect::LocationState *u)
+double** MassActionICP::rateMatrix(double time, infect::PatientState *p, infect::LocationState *u) const
 {
     double **Q = cleanAlloc(nstates,nstates);
 
@@ -129,7 +129,7 @@ double** MassActionICP::rateMatrix(double time, infect::PatientState *p, infect:
 }
 // Implement Parameters.
 
-double MassActionICP::logProb(infect::HistoryLink *h)
+double MassActionICP::logProb(infect::HistoryLink *h) const
 {
     switch(h->getEvent()->getType())
     {
@@ -145,7 +145,7 @@ double MassActionICP::logProb(infect::HistoryLink *h)
 /*
  This will fail if eventRate depends on PatientStatus.
  */
-double MassActionICP::logProbGap(infect::HistoryLink *g, infect::HistoryLink *h)
+double MassActionICP::logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) const
 {
     infect::LocationState *s = h->uPrev()->getUState();
     return - (h->getEvent()->getTime() - g->getEvent()->getTime()) *
@@ -263,7 +263,7 @@ std::vector<double> MassActionICP::getValues() const
     return vals;
 }
 
-void MassActionICP::write (ostream &os)
+void MassActionICP::write (ostream &os) const
 {
     char *buffer = new char[100];
     sprintf(buffer,"%12.10f\t",rates[0]);

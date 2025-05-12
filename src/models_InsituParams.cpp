@@ -145,7 +145,7 @@ double* InsituParams::statusProbs() const
 
 // Implement Parameters.
 
-double InsituParams::logProb(infect::HistoryLink *h)
+double InsituParams::logProb(infect::HistoryLink *h) const
 {
     int i = stateIndex(h->getPState()->infectionStatus());
     return ( i >= 0 ? logprobs[i] : 0);

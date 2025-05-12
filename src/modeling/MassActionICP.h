@@ -23,7 +23,7 @@ private:
 
 	// The following function should be the only thing depending on
 	// isDensity in the whole class.
-	virtual double acquisitionFactor(int c, int n)
+	virtual double acquisitionFactor(int c, int n) const
 	{
 		switch(isDensity)
 		{
@@ -46,16 +46,16 @@ public:
 	virtual string header() const override;
 // Implement InColParams.
 
-	virtual double *acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s) override;
-	virtual double eventRate(double time, EventCode c, infect::PatientState *p, infect::LocationState *s) override;
-	virtual double **rateMatrix(double time, infect::PatientState *p, infect::LocationState *u) override;
+	virtual double *acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s) const override;
+	virtual double eventRate(double time, EventCode c, infect::PatientState *p, infect::LocationState *s) const override;
+	virtual double **rateMatrix(double time, infect::PatientState *p, infect::LocationState *u) const override;
 // Implement Parameters.
 
-	virtual double logProb(infect::HistoryLink *h) override;
+	virtual double logProb(infect::HistoryLink *h) const override;
 /*
 	This will fail if eventRate depends on PatientStatus.
 */
-	virtual double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) override;
+	virtual double logProbGap(infect::HistoryLink *g, infect::HistoryLink *h) const override;
 	virtual void initCounts() override;
 	virtual void count(infect::HistoryLink *h) override;
 	virtual void countGap(infect::HistoryLink *g, infect::HistoryLink *h) override;
@@ -66,7 +66,7 @@ public:
 	virtual int nParam() const;
 	virtual std::vector<std::string> paramNames() const override;
     virtual std::vector<double> getValues() const override;
-	virtual void write (ostream &os) override;
+	virtual void write (ostream &os) const override;
 };
 
 } // namespace models

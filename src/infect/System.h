@@ -7,7 +7,10 @@
 #include "Patient.h"
 #include "Episode.h"
 #include <exception>
+#include <map>
 
+namespace infect
+{
 class lab : public Object, public EventCoding
 {
 public:
@@ -25,7 +28,7 @@ private:
 	double start;
 	double end;
 	IntMap *pat;
-	IntMap *fac;
+	std::map<int, Facility *> fac;
 	Map *pepis;
 
 	void handleOutOfRangeEvent(Patient *p, int t);
@@ -54,22 +57,22 @@ public:
 
 	std::string className() const override { return "System";}
 
-	inline IntMap *getFacilities()
-	{
-		fac->init();
-		return fac;
+
+	inline std::map<int, Facility*>& getFacilities() {
+	    return fac;
 	}
 
-	inline List *getUnits()
-	{
-		List *l = new List();
 
-		for (fac->init(); fac->hasNext(); )
-			for (IntMap *u = ((Facility *)fac->nextValue())->getUnits(); u->hasNext(); )
-				l->append(u->nextValue());
-
-		return l;
+	inline List *getUnits() {
+	    List *l = new List();
+	    for (auto& [key, facility] : fac) {
+	        for (auto& [unitKey, unit] : facility->getUnits()) {
+	            l->append(unit);
+	        }
+	    }
+	    return l;
 	}
+
 
 	inline IntMap *getPatients()
 	{
@@ -104,4 +107,5 @@ private:
 	Patient *getOrMakePatient(int n);
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_SYSTEM_H

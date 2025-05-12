@@ -6,6 +6,8 @@
 #include "AbxCoding.h"
 #include "CountLocationState.h"
 
+namespace infect
+{
 
 class AbxLocationState : public CountLocationState, AbxCoding
 {
@@ -46,5 +48,5 @@ public:
     void apply(Event *e);
     void unapply(Event *e);
 };
-
+} // namespace infect
 #endif // ALUN_INFECT_ABXLOCATIONSTATE_H

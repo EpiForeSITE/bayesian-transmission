@@ -8,6 +8,8 @@
 #include "Model.h"
 #include "System.h"
 
+namespace infect
+{
 class SystemHistory: public Object, public EventCoding
 {
 private:
@@ -85,4 +87,5 @@ public:
 	void write2(ostream &os, int opt);
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_SYSTEMHISTORY_H

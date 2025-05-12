@@ -4,6 +4,8 @@
 
 #include "EpisodeHistory.h"
 
+namespace infect
+{
 class SystemEpisodeHistory : public EpisodeHistory
 {
 protected:
@@ -21,4 +23,5 @@ public:
 
 };
 
+} // namespace infect
 #endif // ALUN_INFECT_SYSTEMEPISODEHISTORY_H
