@@ -25,7 +25,7 @@ HistoryLink* SystemHistory::makeHistoryLink(Model *mod, Facility *f, Unit *u, do
 {
     Event *e = new Event(f,u,t,p,c);
     HistoryLink *h = makeHistoryLink(mod,e);
-    mylinks->append(h);
+    mylinks.push_back(h);
     return h;
 }
 
@@ -52,63 +52,32 @@ int SystemHistory::needEventType(EventCode e)
     }
 }
 
+
 SystemHistory::~SystemHistory()
 {
-    delete adm2ep;
-    delete ep2adm;
-    delete ep2dis;
-    delete uheads;
-    delete fheads;
-
-    if (ep2ephist != 0)
-    {
-        for (ep2ephist->init(); ep2ephist->hasNext(); )
-        {
-            //delete ep2ephist->nextValue();
-            Episode *ep = (Episode *) ep2ephist->next();
-            EpisodeHistory *eh = (EpisodeHistory *) ep2ephist->get(ep);
-            eh->removeEvents(ep->getEvents());
-            delete eh;
-        }
-        delete ep2ephist;
+    // Clean up dynamically allocated memory if necessary
+    for (auto& [key, ep] : ep2ephist) {
+        delete ep;
     }
-
-    for (pheads->init(); pheads->hasNext(); )
-    {
-        for (HistoryLink *l = (HistoryLink *)pheads->nextValue(); l != 0; )
-        {
-            HistoryLink *ll = l;
-            l = l->pNext();
-            delete ll;
-        }
+    for (auto& [key, link] : pheads) {
+        delete link;
     }
-    delete pheads;
-
-    for (mylinks->init(); mylinks->hasNext(); )
-    {
-        HistoryLink *l = (HistoryLink *) mylinks->next();
-        delete l->getEvent();
-        delete l;
+    for (auto& [key, link] : uheads) {
+        delete link;
     }
-    delete mylinks;
+    for (auto& [key, link] : fheads) {
+        delete link;
+    }
+    for (auto& link : mylinks) {
+        delete link;
+    }
 }
+
 
 SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
 {
-    mylinks = new List();
-
-    ep2ephist = 0;
-
-    ep2adm = new Map();
-    adm2ep = new Map();
-    ep2dis = new Map();
-
-    pheads = new Map();
-
-    uheads = new Map();
     Map *tails = new Map();
 
-    fheads = new Map();
 
     shead = makeHistoryLink(m,0,0,s->startTime(),0,start);
     HistoryLink *stail = makeHistoryLink(m,0,0,s->endTime(),0,stop);
@@ -119,61 +88,50 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
         HistoryLink *fhead = makeHistoryLink(m, facility, 0, s->startTime(), 0, start);
         HistoryLink *ftail = makeHistoryLink(m, facility, 0, s->endTime(), 0, stop);
         fhead->insertBeforeF(ftail);
-        fheads->put(facility, fhead);
+        fheads[facility->getId()] = fhead;
         tails->put(facility, ftail);
 
         for (auto& [unitKey, unit] : facility->getUnits()) {
-            HistoryLink *uhead = makeHistoryLink(m, facility, unit, s->startTime(), 0, start);
-            HistoryLink *utail = makeHistoryLink(m, facility, unit, s->endTime(), 0, stop);
+            HistoryLink* uhead = makeHistoryLink(m, facility, unit, s->startTime(), 0, start);
+            HistoryLink* utail = makeHistoryLink(m, facility, unit, s->endTime(), 0, stop);
             uhead->insertBeforeU(utail);
-            uheads->put(unit, uhead);
+            uheads[unit->getId()] = uhead;
             tails->put(unit, utail);
+            unit->setStart(uhead);
         }
     }
 
 
-    HistoryLink **hx = new HistoryLink*[s->getPatients()->size()];
+    HistoryLink **hx = new HistoryLink*[s->getPatients().size()];
     int hxn = 0;
-
-    for (IntMap *pat = s->getPatients(); pat->hasNext(); )
-    {
+    for (auto& [key, patient] : s->getPatients()) {
         HistoryLink *prev = 0;
-
-        Patient *patient = (Patient *) pat->nextValue();
-
         for (Map *episodes = (Map *) s->getEpisodes(patient); episodes->hasNext();)
         {
             Episode *ep = (Episode *) episodes->next();
-
-            // Make list of new links and connect the patient pointers.
-
             for (SortedList *t = ep->getEvents(); t->hasNext(); )
             {
                 Event *e = (Event *) t->next();
-
                 HistoryLink *x = makeHistoryLink(m,e);
-
                 if (prev == 0)
                 {
-                    pheads->put(patient,x);
+                    pheads[patient->getId()] = x;
                 }
                 else
                 {
                     x->insertAfterP(prev);
                 }
 
-                if (ep2adm->get(ep) == 0)
+                if (ep2adm.find(ep) == ep2adm.end())
                 {
-                    ep2adm->put(ep,x);
-                    adm2ep->put(x,ep);
+                    ep2adm[ep] = x;
+                    adm2ep[x] = ep;
                 }
                 prev = x;
             }
-
-            ep2dis->put(ep,prev);
+            ep2dis[ep] = prev;
         }
-
-        hx[hxn++] = (HistoryLink *) pheads->get(patient);
+        hx[hxn++] = pheads[patient->getId()];
     }
 
     for (int i=0; i<hxn; i++)
@@ -227,12 +185,12 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
 
 
     for (auto& [key, facility] : s->getFacilities()) {
-        HistoryLink *fhead = (HistoryLink *) fheads->get(facility);
+        HistoryLink *fhead = fheads[facility->getId()];
         HistoryLink *ftail = (HistoryLink *) tails->get(facility);
         ftail->insertBeforeS(stail);
         fhead->insertBeforeS(shead->sNext());
         for (auto& [unitKey, unit] : facility->getUnits()) {
-            HistoryLink *uhead = (HistoryLink *) uheads->get(unit);
+            HistoryLink *uhead = uheads[unit->getId()];
             HistoryLink *utail = (HistoryLink *) tails->get(unit);
             utail->insertBeforeF(ftail);
             uhead->insertBeforeF(fhead->fNext());
@@ -274,12 +232,10 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
 
     if (m != 0)
     {
-        ep2ephist = new Map();
-        for (ep2adm->init(); ep2adm->hasNext(); )
+        for (auto& [ep, adm] : ep2adm)
         {
-            Episode *ep = (Episode *) ep2adm->next();
-            EpisodeHistory *eh = m->makeEpisodeHistory((HistoryLink*)ep2adm->get(ep),(HistoryLink*)ep2dis->get(ep));
-            ep2ephist->put(ep,eh);
+            EpisodeHistory *eh = m->makeEpisodeHistory(ep2adm[ep], ep2dis[ep]);
+            ep2ephist[ep] = eh;
         }
     }
 
@@ -292,16 +248,16 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
 EpisodeHistory** SystemHistory::getPatientHistory(Patient *pat, int *n)
 {
     int k = 0;
-    for (HistoryLink *l = (HistoryLink *) pheads->get(pat); l != 0; l = l->pNext())
+    for (HistoryLink *l = pheads[pat->getId()]; l != 0; l = l->pNext())
         if (l->getEvent()->isAdmission() || l->getEvent()->isInsitu())
             k++;
     *n = k;
 
     EpisodeHistory **eps = new EpisodeHistory*[k];
     k = 0;
-    for (HistoryLink *l = (HistoryLink *) pheads->get(pat); l != 0; l = l->pNext())
+    for (HistoryLink *l = pheads[pat->getId()]; l != 0; l = l->pNext())
         if (l->getEvent()->isAdmission() || l->getEvent()->isInsitu())
-            eps[k++] = (EpisodeHistory *) ep2ephist->get(adm2ep->get(l));
+            eps[k++] = ep2ephist[adm2ep[l]];
 
     return eps;
 }
@@ -319,16 +275,18 @@ List* SystemHistory::getTestLinks()
     return res;
 }
 
-Map* SystemHistory::positives()
+
+std::map<int, Patient*> SystemHistory::positives()
 {
-    Map *pos = new Map();
+    std::map<int, Patient*> pos;
     for (HistoryLink *l = getSystemHead(); l != 0; l = l->sNext())
     {
         if (l->getEvent()->isPositiveTest())
-            pos->add(l->getEvent()->getPatient());
+            pos[l->getEvent()->getPatient()->getId()] = l->getEvent()->getPatient();
     }
     return pos;
 }
+
 
 int SystemHistory::sumocc()
 {
@@ -348,104 +306,85 @@ void SystemHistory::write(ostream &os)
 
 void SystemHistory::write2(ostream &os, int opt)
 {
-    Map *count = new Map();
-
+    std::map<Object*, int> count;
     switch(opt)
     {
     case 9: // All events. With count data influencing performance.
-
-        for (uheads->init(); uheads->hasNext(); )
+        for (auto& [key, link] : uheads)
         {
-            count->put(uheads->next(), new Integer(0));
-            cerr << count << "\n";
+            count[link] = 0;
+            cerr << count[link] << "\n";
         }
-
         for (HistoryLink *l = shead; l != 0; l = l->sNext())
         {
             l->getEvent()->write(os);
-
             os << "\t";
-
-            Integer *cc = (Integer *) count->get(l->getEvent()->getUnit());
+            int cc = count[l->getEvent()->getUnit()];
             if (cc != 0)
-                cc->set(l->getUState()->getTotal());
-
-            for (count->init(); count->hasNext(); )
-                os << "\t" << count->nextValue();
-
+                cc = l->getUState()->getTotal();
+            for (auto& [key, value] : count)
+                os << "\t" << value;
             os << "\n";
         }
         break;
-
     case 8: // By unit. All link data.
-        for (Map *m = getUnitHeads(); m->hasNext(); )
-            for (HistoryLink *l = (HistoryLink *) m->nextValue(); l != 0; l = l->pNext())
+        for (auto& [key, link] : uheads)
+            for (HistoryLink* l = link; l != 0; l = l->pNext())
             {
-                l->write2(os,1);
+                l->write2(os, 1);
                 os << "\n";
             }
         break;
-
     case 7: // By unit. All events.
-        for (Map *m = getUnitHeads(); m->hasNext(); )
-            for (HistoryLink *l = (HistoryLink *) m->nextValue(); l != 0; l = l->pNext())
+        for (auto& [key, link] : uheads)
+            for (HistoryLink *l = link; l != 0; l = l->pNext())
             {
-                l->getEvent()->write2(os,1);
+                l->getEvent()->write2(os, 1);
                 os << "\n";
             }
         break;
-
     case 6: // By unit. Observable events only.
-        for (Map *m = getUnitHeads(); m->hasNext(); )
-            for (HistoryLink *l = (HistoryLink *) m->nextValue(); l != 0; l = l->pNext())
+        for (auto& [key, link] : uheads)
+            for (HistoryLink *l = link; l != 0; l = l->pNext())
                 if (l->getEvent()->isObservable())
                     os << l->getEvent() << "\n";
         break;
-
     case 5: // By patient. All link data.
-        for (Map *m = getPatientHeads(); m->hasNext(); )
-            for (HistoryLink *l = (HistoryLink *) m->nextValue(); l != 0; l = l->pNext())
+        for (auto& [key, link] : pheads)
+            for (HistoryLink *l = link; l != 0; l = l->pNext())
             {
-                l->write2(os,1);
+                l->write2(os, 1);
                 os << "\n";
             }
         break;
-
     case 4: // By patient. All events.
-        for (Map *m = getPatientHeads(); m->hasNext(); )
-            for (HistoryLink *l = (HistoryLink *) m->nextValue(); l != 0; l = l->pNext())
+        for (auto& [key, link] : pheads)
+            for (HistoryLink *l = link; l != 0; l = l->pNext())
             {
-                l->getEvent()->write2(os,1);
+                l->getEvent()->write2(os, 1);
                 os << "\n";
             }
         break;
-
     case 3: // By patient. Observable events only.
-        for (Map *m = getPatientHeads(); m->hasNext(); ){
-            for (HistoryLink *l = (HistoryLink *) m->nextValue(); l != 0; l = l->pNext()){
-                if (l->getEvent()->isObservable()){
+        for (auto& [key, link] : pheads)
+            for (HistoryLink *l = link; l != 0; l = l->pNext())
+                if (l->getEvent()->isObservable())
                     os << l->getEvent() << "\n";
-                }
-            }
-        }
         break;
-
     case 2: // By system, all events and link states. NB: Not all events may be reachable by system links.
         for (HistoryLink *l = shead; l != 0; l = l->sNext())
         {
-            l->write2(os,1);
+            l->write2(os, 1);
             os << "\n";
         }
         break;
-
     case 1: // By system. All events. NB: Not all events may be reachable by system links.
         for (HistoryLink *l = shead; l != 0; l = l->sNext())
         {
-            l->getEvent()->write2(os,1);
+            l->getEvent()->write2(os, 1);
             os << "\n";
         }
         break;
-
     case 0: // By system, observable events only.
     default:
         for (HistoryLink *l = shead; l != 0; l = l->sNext())
@@ -453,8 +392,6 @@ void SystemHistory::write2(ostream &os, int opt)
                 os << l->getEvent() << "\n";
         break;
     }
-
-    delete count;
 }
 
 } // namespace infect

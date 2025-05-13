@@ -172,9 +172,9 @@ Markov* ConstrainedSimulator::getMarkovProcess(UnitLinkedModel *mod, infect::His
 // Public methods
 void ConstrainedSimulator::sampleEpisodes(UnitLinkedModel *mod, infect::SystemHistory *h, int max, Random *rand)
 {
-    for (Map *p = h->getPatientHeads(); p->hasNext(); ){
-        cout << "Sampling patient " << p->hash() << endl;
-        sampleHistory(mod,h,(infect::HistoryLink *)p->nextValue(),max,rand);
+    for ( auto& [patient, link] : h->getPatientHeads()){
+        cout << "Sampling patient " << patient << endl;
+        sampleHistory(mod,h,link,max,rand);
     }
 }
 

@@ -7,6 +7,8 @@
 #include "HistoryLink.h"
 #include "Model.h"
 #include "System.h"
+#include <map>
+#include <list>
 
 namespace infect
 {
@@ -14,20 +16,21 @@ class SystemHistory: public Object, public EventCoding
 {
 private:
 
-	Map *adm2ep;
-	Map *ep2adm;
-	Map *ep2dis;
-
-	Map *pheads;
-	Map *uheads;
-	Map *fheads;
 
 
-	Map *ep2ephist;
+    std::map<HistoryLink*, Episode*> adm2ep;
+    std::map<Episode*, HistoryLink*> ep2adm;
+    std::map<Episode*, HistoryLink*> ep2dis;
+
+    std::map<int, HistoryLink*> pheads;
+    std::map<int, HistoryLink*> uheads;
+    std::map<int, HistoryLink*> fheads;
+
+    std::map<Episode*, EpisodeHistory*> ep2ephist;
 
 	HistoryLink *shead;
 
-	List *mylinks;
+	std::list<HistoryLink*> mylinks;
 
 	HistoryLink *makeHistoryLink(Model *mod, Event *e);
 	HistoryLink *makeHistoryLink(Model *mod, Facility *f, Unit *u, double t, Patient *p, EventCode c);
@@ -38,50 +41,32 @@ public:
 	~SystemHistory();
 	SystemHistory(System *s, Model *m = 0, bool verbose = 0);
 
-	inline Map* getPatientHeads()
-	{
-	    pheads->init();
+
+	inline std::map<int, HistoryLink*>& getPatientHeads() {
 	    return pheads;
 	}
-
-	inline Map *getUnitHeads()
-	{
-	    uheads->init();
+	inline std::map<int, HistoryLink*>& getUnitHeads() {
 	    return uheads;
 	}
-
-	inline Map *getFacilityHeads()
-	{
-	    fheads->init();
+	inline std::map<int, HistoryLink*>& getFacilityHeads() {
 	    return fheads;
 	}
-
-	inline HistoryLink *getSystemHead()
-	{
+	inline HistoryLink *getSystemHead() {
 	    return shead;
 	}
-
-	inline Map *getEpisodes()
-	{
-	    ep2ephist->init();
+	inline std::map<Episode*, EpisodeHistory*>& getEpisodes() {
 	    return ep2ephist;
 	}
-
-	inline Map *getAdmissions()
-	{
-	    ep2adm->init();
+	inline std::map<Episode*, HistoryLink*>& getAdmissions() {
 	    return ep2adm;
 	}
-
-	inline Map *getDischarges()
-	{
-	    ep2dis->init();
+	inline std::map<Episode*, HistoryLink*>& getDischarges() {
 	    return ep2dis;
 	}
 
 	EpisodeHistory** getPatientHistory(Patient *pat, int *n);
 	List* getTestLinks();
-	Map* positives();
+	std::map<int, Patient*> positives();
 	int sumocc();
 	void write(ostream &os);
 	void write2(ostream &os, int opt);

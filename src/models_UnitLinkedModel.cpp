@@ -22,11 +22,12 @@ double UnitLinkedModel::logLikelihood(infect::SystemHistory *hist)
 {
     // cout << "UnitLinkedModel::logLikelihood(infect::SystemHistory *hist=" << hist << ")\n";
     double xtot = 0;
-    for (Map *h = hist->getUnitHeads(); h->hasNext(); )
+    // for (Map *h = hist->getUnitHeads(); h->hasNext(); )
+    for (auto& [unit, link] : hist->getUnitHeads())
     {
         // cout << "Map *h = " << h << std::endl;
         double utot = 0;
-        for (infect::HistoryLink *l = (infect::HistoryLink *) h->nextValue(); l != 0; l=l->uNext()){
+        for (infect::HistoryLink *l = link; l != 0; l=l->uNext()){
             auto ll = logLikelihood(l);
             cout << "infect::HistoryLink *l = " << l
                  << "; logLikelihood(l) = " << ll << std::endl;
@@ -379,8 +380,8 @@ void UnitLinkedModel::update(infect::SystemHistory *hist, Random *r, int max)
     if (abxp != 0)
         abxp->initCounts();
 
-    for (Map *h = hist->getUnitHeads(); h->hasNext(); )
-        countUnitStats((infect::HistoryLink *)h->nextValue());
+    for (auto& [unit, link] : hist->getUnitHeads())
+        countUnitStats(link);
 
     isp->update(r,max);
     icp->update(r,max);

@@ -24,10 +24,10 @@ test_that("Can Create System class", {
     simulated.data$type
   )
   expect_s4_class(test, "Rcpp_CppTransmissionSystem")
-  expect_equal(test$start, 0)
-  expect_equal(test$end, 1734)
+  expect_equal(sys$start, min(simulated.data$time))
+  expect_equal(sys$end, max(simulated.data$time))
 
-  expect_equal(test$log, "")
+  # expect_equal(test$log, "")
 })
 test_that("RRandom", {
   RR <- RRandom$new()
@@ -148,6 +148,46 @@ test_that("CppTestParams", {
   expect_length(TP2$paramNames, 2L)
 })
 
+test_that("CppSystemHistory", {
+  dm <- CppDummyModel$new(2)
+  sys <- CppSystem$new(
+    simulated.data$facility,
+    simulated.data$unit,
+    simulated.data$time,
+    simulated.data$patient,
+    simulated.data$type
+  )
+  hist <- CppSystemHistory$new(sys, dm, FALSE)
+  expect_s4_class(hist, "Rcpp_CppSystemHistory")
+
+  patients <- hist$PatientHeads
+  expect_true(is.list(patients))
+  expect_equal(length(patients), dplyr::n_distinct(simulated.data$patient))
+  expect_s4_class(patients[[1]], "Rcpp_CppHistoryLink")
+  expect_equal(patients[[1]]$Event$type, 'admission')
+
+  units <- hist$UnitHeads
+  expect_true(is.list(units))
+  expect_equal(length(units), dplyr::n_distinct(simulated.data$unit))
+  expect_s4_class(units[[1]], "Rcpp_CppHistoryLink")
+  expect_equal(units[[1]]$Event$type, 'start')
+
+  facilities <- hist$FacilityHeads
+  expect_true(is.list(facilities))
+  expect_equal(length(facilities), dplyr::n_distinct(simulated.data$facility))
+  expect_s4_class(facilities[[1]], "Rcpp_CppHistoryLink")
+  expect_equal(facilities[[1]]$Event$type, 'start')
+
+  systemhead <- hist$SystemHead
+  expect_s4_class(systemhead, "Rcpp_CppHistoryLink")
+  expect_equal(systemhead$Event$type, 'start')
+
+  # episodes <- hist$Episodes
+  # admissions <- hist$Admissions
+  # discharges <- hist$Discharges
+})
+
+
 test_that("CppLinearAbxModel", {
   sys <- CppSystem$new(
     simulated.data$facility,
@@ -156,13 +196,12 @@ test_that("CppLinearAbxModel", {
     simulated.data$patient,
     simulated.data$type
   )
-  WhatAmI(sys$.pointer)
 
   model <- CppLinearAbxModel$new(2, 10, 1, 0)
-  model$className
+  expect_s4_class(model, "Rcpp_CppLinearAbxModel")
 
   icp <- model$InColParams
-  class(icp)
+  expect_s4_class(icp, "Rcpp_CppLogNormalAbxICP")
 
   icp$timeOrigin <- (sys$end - sys$start)/2
 

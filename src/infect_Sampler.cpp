@@ -32,29 +32,25 @@ void Sampler::sampleEpisodes(int max)
 
 void Sampler::initializeEpisodes()
 {
-    Map *pos = hist->positives();
-    for (Map *e = hist->getEpisodes(); e->hasNext();)
+    std::map<int, Patient*> pos = hist->positives();
+    for (auto& [ep, eh] : hist->getEpisodes())
     {
-        EpisodeHistory *eh = (EpisodeHistory *)e->nextValue();
         Patient *ppp = eh->admissionLink()->getEvent()->getPatient();
-        model->initEpisodeHistory(eh, pos->got(ppp));
+        model->initEpisodeHistory(eh, pos[ppp->getId()]);
     }
     if (model->isCheating())
     {
-        for (Map *e = hist->getEpisodes(); e->hasNext();)
+        for (auto& [ep, eh] :  hist->getEpisodes())
         {
-            EpisodeHistory *eh = (EpisodeHistory *)e->nextValue();
             eh->unapply();
         }
         for (HistoryLink *l = hist->getSystemHead(); l != 0; l = l->sNext())
             l->setCopyApply();
-        for (Map *e = hist->getEpisodes(); e->hasNext();)
+        for (auto& [ep, eh] :  hist->getEpisodes())
         {
-            EpisodeHistory *eh = (EpisodeHistory *)e->nextValue();
             eh->apply();
         }
     }
-    delete pos;
 }
 
 } // namespace infect

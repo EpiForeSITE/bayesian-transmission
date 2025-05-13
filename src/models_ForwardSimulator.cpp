@@ -12,11 +12,9 @@ void ForwardSimulator::forwardSimulate(UnitLinkedModel *mod, infect::SystemHisto
 
     Map *map = new Map();
 
-    for (Map *x = hist->getAdmissions(); x->hasNext(); )
+    for (auto& [e, a] : hist->getAdmissions())
     {
-        infect::Episode *e = (infect::Episode *) x->next();
-        infect::HistoryLink *a = (infect::HistoryLink *) x->get(e);
-        map->put(a,hist->getEpisodes()->get(e));
+        map->put(a,(hist->getEpisodes())[e]);
     }
 
     for (infect::HistoryLink *l = hist->getSystemHead(); l != 0; )
