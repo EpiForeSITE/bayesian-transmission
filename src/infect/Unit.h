@@ -3,9 +3,14 @@
 #define ALUN_INFECT_UNIT_H
 
 #include "../util/util.h"
+#include <vector>
+#include <sstream>
 
 namespace infect
 {
+//Forward declarations
+class HistoryLink;
+
 class Unit : public Object
 {
 private:
@@ -13,12 +18,19 @@ private:
 	int number;
 	Object *f;
 
+	HistoryLink* start;
+
 public:
 	Unit(Object *fac, int id)
 	{
 		number = id;
 		f = fac;
 	}
+
+    inline HistoryLink* getStart(){return start;}
+    inline void setStart(HistoryLink* s){start = s;}
+
+    vector<HistoryLink*> GetHistory(Unit* x);
 
 	inline int getId() const
 	{
