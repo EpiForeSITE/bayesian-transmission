@@ -27,7 +27,7 @@ private:
 
 	double start;
 	double end;
-	IntMap *pat;
+	std::map<int, Patient*> pat;
 	std::map<int, Facility *> fac;
 	Map *pepis;
 
@@ -63,22 +63,23 @@ public:
 	}
 
 
-	inline List *getUnits() {
-	    List *l = new List();
+
+	inline std::map<int, Unit*> getUnits() {
+	    std::map<int, Unit*> unitMap;
 	    for (auto& [key, facility] : fac) {
 	        for (auto& [unitKey, unit] : facility->getUnits()) {
-	            l->append(unit);
+	            unitMap[unitKey] = unit;
 	        }
 	    }
-	    return l;
+	    return unitMap;
 	}
 
 
-	inline IntMap *getPatients()
-	{
-		pat->init();
-		return pat;
+
+	inline std::map<int, Patient*>& getPatients() {
+	    return pat;
 	}
+
 
 	inline double startTime()
 	{

@@ -9,7 +9,6 @@ void System::handleOutOfRangeEvent(Patient *p, int t)
 
 void System::init(RawEventList *l, stringstream &err)
 {
-    pat = new IntMap();
     pepis = new Map();
     start = (int)l->firstTime();
     end = (int) (0.99999999 + l->lastTime());
@@ -104,9 +103,9 @@ System::~System()
     }
     delete pepis;
 
-    for (pat->init(); pat->hasNext(); )
-        delete pat->nextValue();
-    delete pat;
+    for (auto& pair : pat) {
+        delete pair.second;
+    }
 
     for (auto& pair : fac) {
         delete pair.second;
@@ -530,15 +529,17 @@ void System::getOrMakeFacUnit(int m, int n, Facility **f, Unit **u)
 // }
 
 Patient* System::getOrMakePatient(int n)
+
 {
-    Patient *p = (Patient*) pat->get(n);
-    if (p == 0)
+    Patient *p = pat[n];
+    if (p == nullptr)
     {
         p = new Patient(n);
-        pat->put(n,p);
+        pat[n] = p;
     }
     return p;
 }
+
 
 
 } // namespace infect
