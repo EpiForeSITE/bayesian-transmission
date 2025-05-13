@@ -91,5 +91,9 @@ void init_Module_models(){
         .method("sampleEpisodes", &models::BasicModel::sampleEpisodes)
     ;
 
+    class_<models::DummyModel>("CppDummyModel")
+        .derives<models::BasicModel>("CppBasicModel")
+        .constructor<int>()
+    ;
 
 }
