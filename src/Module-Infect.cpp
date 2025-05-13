@@ -202,7 +202,9 @@ void init_Module_infect(){
         .derives<util::Object>("CppObject")
         .constructor<Object*, int>()
         .property("id", &infect::Unit::getId)
-        .method("getName", &infect::Unit::getName);
+        .method("getName", &infect::Unit::getName)
+        .method("getHistory", &infect::Unit::getHistory)
+    ;
 
     init_Module_infect_System();
 }

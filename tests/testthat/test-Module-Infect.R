@@ -209,7 +209,7 @@ test_that("CppLinearAbxModel", {
 
   model$logLikelihood(hist)
 
-  h <- hist$UnitHeads
+  units <- hist$UnitHeads
   expect_s4_class(h, "Rcpp_CppMap")
 
   expect_equal(h$size, 3)
