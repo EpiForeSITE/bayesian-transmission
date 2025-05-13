@@ -22,7 +22,6 @@ double UnitLinkedModel::logLikelihood(infect::SystemHistory *hist)
 {
     // cout << "UnitLinkedModel::logLikelihood(infect::SystemHistory *hist=" << hist << ")\n";
     double xtot = 0;
-    // for (Map *h = hist->getUnitHeads(); h->hasNext(); )
     for (auto& [unit, link] : hist->getUnitHeads())
     {
         // cout << "Map *h = " << h << std::endl;
