@@ -38,7 +38,7 @@ RCPP_EXPOSED_AS(infect::SystemHistory)
 RCPP_EXPOSED_AS(infect::Unit)
 RCPP_EXPOSED_AS(infect::UnitEpisodeHistory)
 
-
+void init_Module_infect_System();
 void init_Module_infect(){
     using namespace Rcpp;
 
@@ -189,25 +189,6 @@ void init_Module_infect(){
         .method<void>("sampleModel", &infect::Sampler::sampleModel)
         .method<void>("sampleEpisodes", &infect::Sampler::sampleEpisodes)
     ;
-    class_<System>("CppSystem")
-        .derives<util::Object>("CppObject")
-        .constructor<std::vector<int>, std::vector<int>, std::vector<double>, std::vector<int>, std::vector<int>>()
-        .property("log", &System::get_log)
-        .property("start", &System::startTime)
-        .property("end", &System::endTime)
-    ;
-    class_<infect::SystemHistory>("CppSystemHistory")
-        .derives<util::Object>("CppObject")
-        .constructor<infect::System*, infect::Model*, bool>()
-        .property("sumocc", &infect::SystemHistory::sumocc)
-        .property("UnitHeads", &infect::SystemHistory::getUnitHeads)
-        .property("PatientHeads", &infect::SystemHistory::getPatientHeads)
-        .property("FacilityHeads", &infect::SystemHistory::getFacilityHeads)
-        .property("SystemHead", &infect::SystemHistory::getSystemHead)
-        .property("Episodes", &infect::SystemHistory::getEpisodes)
-        .property("Admissions", &infect::SystemHistory::getAdmissions)
-        .property("Discharges", &infect::SystemHistory::getDischarges)
-    ;
     class_<TestParamsAbx>("CppTestParamsAbx")
         .derives<util::Object>("CppObject")
         //     .constructor<int, bool>()
@@ -223,5 +204,5 @@ void init_Module_infect(){
         .property("id", &infect::Unit::getId)
         .method("getName", &infect::Unit::getName);
 
-
+    init_Module_infect_System();
 }
