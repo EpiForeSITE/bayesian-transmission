@@ -2,7 +2,7 @@
 #include "infect/HistoryLink.h"
 
 namespace infect{
-vector<HistoryLink*> Unit::GetHistory(Unit* x) {
+vector<HistoryLink*> Unit::getHistory(Unit* x) {
     vector<HistoryLink*> history;
 
 

@@ -30,7 +30,7 @@ public:
     inline HistoryLink* getStart(){return start;}
     inline void setStart(HistoryLink* s){start = s;}
 
-    vector<HistoryLink*> GetHistory(Unit* x);
+    vector<HistoryLink*> getHistory(Unit* x);
 
 	inline int getId() const
 	{
