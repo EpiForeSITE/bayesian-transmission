@@ -394,4 +394,11 @@ void SystemHistory::write2(ostream &os, int opt)
     }
 }
 
+vector<Unit*> SystemHistory::getUnits(){
+    vector<Unit*> units;
+    for (auto& [key, link] : uheads)
+        units.push_back(link->getEvent()->getUnit());
+    return units;
+}
+
 } // namespace infect

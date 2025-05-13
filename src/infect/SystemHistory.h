@@ -64,6 +64,9 @@ public:
 	    return ep2dis;
 	}
 
+
+	vector<Unit*> getUnits();
+
 	EpisodeHistory** getPatientHistory(Patient *pat, int *n);
 	List* getTestLinks();
 	std::map<int, Patient*> positives();
