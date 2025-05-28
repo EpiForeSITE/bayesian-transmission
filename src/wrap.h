@@ -40,6 +40,8 @@ namespace infect{
     DECLARE_POINTER(System);
     DECLARE_POINTER(SystemEpisodeHistory);
     DECLARE_POINTER(SystemHistory);
+    DECLARE_POINTER(RawEvent);
+    DECLARE_POINTER(RawEventList);
     DECLARE_POINTER(Unit);
     DECLARE_POINTER(UnitEpisodeHistory);
     // typedef UnitTrackingModel* UnitTrackingModel_ptr;
@@ -109,6 +111,8 @@ namespace Rcpp {
     DECLARE_WRAP(infect::System);
     DECLARE_WRAP(infect::SystemEpisodeHistory);
     DECLARE_WRAP(infect::SystemHistory);
+    DECLARE_WRAP(infect::RawEvent);
+    DECLARE_WRAP(infect::RawEventList);
     DECLARE_WRAP(infect::Unit);
     DECLARE_WRAP(infect::UnitEpisodeHistory);
     // DECLARE_WRAP(infect::UnitTrackingModel);

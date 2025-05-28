@@ -4,14 +4,14 @@
 namespace lognormal{
 LogNormalModel::LogNormalModel(int nst, int fw, int ch) : BasicModel(nst,fw,ch)
 {
-    abxbyonoff = 0;
+    abxbyonoff = AbxMode::DOSE;
     dumpers = new List();
 }
 
 // public
-LogNormalModel::LogNormalModel(int nst, int abxtest, int nmetro, int fw, int ch) : BasicModel(nst,fw,ch)
+LogNormalModel::LogNormalModel(int nst, int nmetro, int abxmode, bool abxtest, bool fw, bool ch) :
+    BasicModel(nst,fw,ch),abxbyonoff(AbxMode(abxmode))
 {
-    abxbyonoff = 0;
     dumpers = new List();
 
     isp = new InsituParams(nstates);
@@ -24,7 +24,7 @@ LogNormalModel::LogNormalModel(int nst, int abxtest, int nmetro, int fw, int ch)
 
 LogNormalModel::LogNormalModel(List *l, int nst, int abxtest, int nmetro, int fw, int ch) : BasicModel(nst,fw,ch)
 {
-    abxbyonoff = 0;
+    abxbyonoff = AbxMode::DOSE;
     dumpers = new List();
 
     //icp = ( l == 0 ? new LogNormalAbxICP(nst,0,nmetro) :  new MultiUnitAbxICP(l,nst,0,nmetro) );
@@ -112,8 +112,8 @@ LocationState* LogNormalModel::makeUnitState(Unit *u)
     return u == 0 ? 0 : new AbxLocationState(u,nstates);
 }
 
-void LogNormalModel::setAbx(bool onoff, double delay, double life){
-    abxbyonoff = onoff;
+void LogNormalModel::setAbx(int onoff, double delay, double life){
+    abxbyonoff = AbxMode(onoff);
     if (!abxbyonoff)
     {
         setAbxDelay(delay);
@@ -125,8 +125,10 @@ void LogNormalModel::setAbx(bool onoff, double delay, double life){
 void LogNormalModel::read(istream &is)
 {
     string sdump;
+    int mode;
 
-    is >> sdump >> abxbyonoff;
+    is >> sdump >> mode;
+    abxbyonoff = AbxMode(mode);
     skipLine(is);
 
     if (!abxbyonoff)

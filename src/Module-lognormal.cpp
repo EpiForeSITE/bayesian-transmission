@@ -77,16 +77,17 @@ void init_Module_lognormal(){
 
     class_<lognormal::LogNormalModel>("CppLogNormalModel")
         .derives<models::BasicModel>("CppBasicModel")
-        .constructor<int, int, int, int, int>()
+        .constructor<int, int, int, bool, bool, bool>()
         .property("InColParams", &lognormal::LogNormalModel::getInColParams)
         .property("ClinicalTestParams", &lognormal::LogNormalModel::getClinicalTestParams)
         .property("IncolParams", &lognormal::LogNormalModel::getInColParams)
+        .property("AbxMode", &lognormal::LogNormalModel::getAbxMode)
         .method("setAbx", &lognormal::LogNormalModel::setAbx)
     ;
 
     class_<lognormal::LinearAbxModel>("CppLinearAbxModel")
         .derives<lognormal::LogNormalModel>("CppLogNormalModel")
-        .constructor<int, int, int, int>()
+        .constructor<int, int, int, bool, bool, bool>()
         .property("InColParams", &lognormal::LinearAbxModel::getInColParams)
     ;
 }
