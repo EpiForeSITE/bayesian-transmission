@@ -187,32 +187,145 @@ test_that("CppSystemHistory", {
   # discharges <- hist$Discharges
 })
 
+test_that("CppRawEvent", {
+  event <- CppRawEvent$new(1, 2, 1.5, 3, EventToCode('abxon'))
+  expect_equal(event$facility, 1L)
+  expect_equal(event$unit, 2L)
+  expect_equal(event$time, 1.5)
+  expect_equal(event$patient, 3L)
+  expect_equal(event$type, 10L)
+})
+
+test_that("CppRawEventList", {
+  sub <- dplyr::filter(simulated.data, patient <= 10) %>%
+    dplyr::mutate(event = CodeToEvent(type)) %>%
+    dplyr::arrange(patient, time)
+
+  rel <- CppRawEventList$new(sub$facility, sub$unit, sub$time, sub$patient, sub$type)
+
+  events <- rel$getEvents()
+
+  purrr::map(events, \(x)x$type)
+
+
+  sys <- CppSystem$new(
+    sub$facility,
+    sub$unit,
+    sub$time,
+    sub$patient,
+    sub$type
+  )
+  sys$log == ""
+  sys$log %>% cat()
+
+  sub %>% dplyr::arrange(patient, time)
+
+  hist <- CppSystemHistory$new(sys, CppDummyModel$new(2), FALSE)
+
+
+})
+
 
 test_that("CppLinearAbxModel", {
-  sys <- CppSystem$new(
-    simulated.data$facility,
-    simulated.data$unit,
-    simulated.data$time,
-    simulated.data$patient,
-    simulated.data$type
-  )
 
-  model <- CppLinearAbxModel$new(2, 10, 1, 0)
+  data.in <- simulated.data %>%
+    dplyr::arrange(patient, time)
+
+  sys <- CppSystem$new(
+    data.in$facility,
+    data.in$unit,
+    data.in$time,
+    data.in$patient,
+    data.in$type
+  )
+  expect_equal(sys$log, "")
+
+  # model <- CppDummyModel$new(2)
+  model <- CppLinearAbxModel$new(
+    nstates = 2,
+    nmetro = 10,
+    abxmode = 1,
+    abxtest = TRUE,
+    forward = TRUE,
+    cheating = FALSE)
+
   expect_s4_class(model, "Rcpp_CppLinearAbxModel")
+  expect_equal(model$AbxMode, "on/off")
+
+  isp <- model$InsituParams
+  expect_s4_class(isp, "Rcpp_CppInsituParams")
+  isp$paramNames
+  isp$values
+  isp$
+
 
   icp <- model$InColParams
   expect_s4_class(icp, "Rcpp_CppLogNormalAbxICP")
 
   icp$timeOrigin <- (sys$end - sys$start)/2
 
-  hist <- CppSystemHistory$new(sys, model, FALSE)
+  hist <- CppSystemHistory$new(sys, model, TRUE)
+  expect_equal(hist$errlog, "")
 
-  model$logLikelihood(hist)
 
-  units <- hist$UnitHeads
-  expect_s4_class(h, "Rcpp_CppMap")
+  units <- hist$Units
+  expect_true(is.list(units))
+  expect_s4_class(units[[1]], "Rcpp_CppUnit")
+  expect_length(units, 3)
 
-  expect_equal(h$size, 3)
+  unit <- units[[1]]
+  tmp <- unit$getHistory()
+  expect_true(is.list(tmp))
+  expect_s4_class(tmp[[1]], "Rcpp_CppHistoryLink")
+  length(tmp)
+
+  event.types <- purrr::map_chr(tmp, function(x) x$Event$type)
+  event.ints  <- purrr::map_int(tmp, function(x) x$Event$type_int)
+  compare_event_counts <- function(event){
+    expect_equal(
+      sum(event.types == event),
+      simulated.data %>%
+        dplyr::filter(
+          unit == 1,
+          type == EventToCode(event)
+        ) %>%
+        nrow()
+    )
+  }
+
+  compare_event_counts('admission')
+  compare_event_counts('discharge')
+  compare_event_counts('abxon')
+  compare_event_counts('abxoff')
+  compare_event_counts('negsurvtest')
+  compare_event_counts('possurvtest')
+
+  patients <- purrr::map_int(tmp, \(x){x$Event$patient$id %||% NA_integer_})
+  times <- purrr::map_dbl(tmp, \(x)x$Event$time)
+
+  LLs <- purrr::map_dbl(tmp, function(x) model$logLikelihood_HL(x))
+  i <- min(which(is.infinite(LLs)))
+
+  hl <- tmp[[i]]
+  hl$Event$time
+  hl$Event$patient$id
+  hl$Event$type
+  hl$PatientState$infectionStatus
+
+  model$logLikelihood_HL(hl)
+  survtsp <- model$SurveillanceTestParams
+  survtsp$logProb(hl)
+  survtsp$values
+
+  PE <- tibble::tibble(patient = patients, event = event.types, int= event.ints, time=times)
+
+  PE %>% dplyr::filter(patient == 1)
+  simulated.data %>%
+    dplyr::filter(patient <= 10) %>%
+    dplyr::mutate(
+      EVENT = CodeToEvent(type)
+    )
+
 
 
   first <- asHistoryLink(h$FirstValue())
@@ -325,6 +438,11 @@ test_that("CppLinearAbxModel", {
   rr <- RRandom$new()
   mc <- CppSampler$new(hist, model, rr)
 
+  hist$ll
+
+  history_links <-
+
+  model$logLikelihood(hist)
 
 })
 

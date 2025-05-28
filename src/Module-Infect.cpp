@@ -93,6 +93,7 @@ void init_Module_infect(){
         .constructor()
         .property("time", &Event::getTime)
         .property("type", &Event::getTypeAsString)
+        .property("type_int", &Event::getTypeAsInt)
         .property("patient", &Event::getPatient)
         .property("facility", &Event::getFacility)
         .property("unit", &Event::getUnit)
@@ -182,6 +183,7 @@ void init_Module_infect(){
         >()
         .method("FirstTime", &RawEventList::firstTime)
         .method("LastTime", &RawEventList::lastTime)
+        .method("getEvents", &RawEventList::getEvents)
     ;
     class_<infect::Sampler>("CppSampler")
         .derives<util::Object>("CppObject")
@@ -204,6 +206,16 @@ void init_Module_infect(){
         .property("id", &infect::Unit::getId)
         .method("getName", &infect::Unit::getName)
         .method("getHistory", &infect::Unit::getHistory)
+    ;
+
+    class_<infect::RawEvent>("CppRawEvent")
+        .derives<util::Object>("CppObject")
+        .constructor<int, int, double, int, int>()
+        .property("facility", &infect::RawEvent::getFacilityId)
+        .property("unit", &infect::RawEvent::getUnitId)
+        .property("time", &infect::RawEvent::getTime)
+        .property("patient", &infect::RawEvent::getPatientId)
+        .property("type", &infect::RawEvent::getTypeId)
     ;
 
     init_Module_infect_System();

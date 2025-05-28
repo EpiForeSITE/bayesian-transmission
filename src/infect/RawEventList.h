@@ -113,6 +113,16 @@ public:
 		return x;
 	}
 
+	inline std::vector<RawEvent*> getEvents()
+	{
+		vector<RawEvent*> events;
+		for (init(); hasNext(); )
+		{
+			events.push_back(dynamic_cast<RawEvent *>(next()));
+		}
+		return events;
+	}
+
 	// virtual void write(ostream &os) override
 	// {
 	// 	int i = 0;

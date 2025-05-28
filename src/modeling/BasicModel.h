@@ -15,7 +15,7 @@ public:
 	{
 	}
 
-	BasicModel(int nst, int fw, int ch) : UnitLinkedModel(nst,fw,ch)
+	BasicModel(int nst, bool fw = true, bool ch = false) : UnitLinkedModel(nst,fw,ch)
 	{
 	}
 

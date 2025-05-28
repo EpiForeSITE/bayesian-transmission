@@ -108,6 +108,16 @@ public:
     }
 
     /**
+     * @brief Gets the type of the event as an integer.
+     *
+     * @return Type of the event as an integer.
+     */
+    inline int getTypeAsInt() const
+    {
+        return static_cast<int>(type);
+    }
+
+    /**
      * @brief Sets the type of the event.
      *
      * @param c Type to set.

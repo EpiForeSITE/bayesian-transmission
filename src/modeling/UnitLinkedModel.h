@@ -20,7 +20,7 @@ class UnitLinkedModel : public infect::Model
 protected:
 
 	int nstates;
-	int forwardEnabled;
+	bool forwardEnabled;
 
 	InsituParams *isp;
 	OutColParams *ocp;
@@ -31,7 +31,7 @@ protected:
 
 public:
 
-	UnitLinkedModel(int ns, int fw, int ch);
+	UnitLinkedModel(int ns, bool fw, bool ch);
 	virtual double logLikelihood(infect::SystemHistory *hist) override;
 
 public:
