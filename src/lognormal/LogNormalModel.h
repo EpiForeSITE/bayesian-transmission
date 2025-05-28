@@ -9,14 +9,21 @@
 class LogNormalModel : public BasicModel
 {
 protected:
+    enum AbxMode
+    {
+        DOSE = 0,
+        ONOFF = 1
+    };
 
-    bool abxbyonoff;
+    AbxMode abxbyonoff;
 
     LogNormalModel(int nst, int fw, int ch);
 
+
 public:
 
-	LogNormalModel(int nst, int abxtest, int nmetro, int fw = 0, int ch = 0);
+	LogNormalModel(int nst, int nmetro, int abxmode = 0, bool abxtest = true, bool fw = true, bool ch = false);
+
     LogNormalModel(List *l, int nst, int abxtest, int nmetro, int fw = 0, int ch = 0);
     ~LogNormalModel();
 
@@ -29,10 +36,14 @@ public:
     virtual int needEventType(EventCode e) override;
     virtual PatientState *makePatientState(Patient *p) override;
     virtual LocationState *makeUnitState(Unit *u) override;
-    virtual void setAbx(bool onoff, double delay, double life);
+    virtual void setAbx(int mode, double delay, double life);
     virtual void handleAbxDoses(HistoryLink *shead) override;
 
 	virtual void read(istream &is);
+	inline string getAbxMode() const
+	{
+	    return abxbyonoff ? "on/off" : "dose";
+	}
 protected:
 	static void skipLine(istream &is);
 	virtual void readInColParams(LogNormalICP *icp, istream &is);

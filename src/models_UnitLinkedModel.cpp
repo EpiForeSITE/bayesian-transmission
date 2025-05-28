@@ -2,7 +2,7 @@
 
 namespace models {
 
-UnitLinkedModel::UnitLinkedModel(int ns, int fw, int ch)
+UnitLinkedModel::UnitLinkedModel(int ns, bool fw, bool ch)
 {
     setAbxLife(1.5);
     setAbxDelay(0.0);

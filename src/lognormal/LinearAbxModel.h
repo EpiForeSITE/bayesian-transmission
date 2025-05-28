@@ -8,7 +8,7 @@ class LinearAbxModel : public LogNormalModel
 {
 public:
 
-LinearAbxModel(int nst, int nmetro, int fw, int ch);
+LinearAbxModel(int nst, int nmetro, int abxmode = 0, bool abxtest = true, bool fw = true, bool ch = false);
 inline LinearAbxICP *getInColParams() const
 {
     return (LinearAbxICP *)icp;
