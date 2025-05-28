@@ -134,6 +134,7 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
         hx[hxn++] = pheads[patient->getId()];
     }
 
+    // Sort the history links by time.
     for (int i=0; i<hxn; i++)
     {
         for (int j=i; j>0; j--)
@@ -151,6 +152,7 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
         }
     }
 
+    // Insert the history links into the system history.
     for (int i=0; i<hxn; )
     {
         hx[i]->insertBeforeS(stail);
@@ -165,6 +167,7 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
         }
         else
         {
+            // Sort the history links by time.
             for (int j=i+1; j<hxn; j++)
             {
                 if (hx[j]->getEvent()->getTime() < hx[j-1]->getEvent()->getTime())
@@ -212,7 +215,7 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
             else
             {
                 if (verbose)
-                    cout << "Removing un needed event \t" << l->getEvent() << "\n";
+                    errlog << "Removing un needed event \t()" << l->getEvent()->getTypeAsString() << "\n";
 
                 HistoryLink *ll = l;
                 l = l->sNext();

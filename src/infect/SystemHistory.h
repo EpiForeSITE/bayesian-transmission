@@ -36,6 +36,9 @@ private:
 	HistoryLink *makeHistoryLink(Model *mod, Facility *f, Unit *u, double t, Patient *p, EventCode c);
 	int needEventType(EventCode e);
 
+protected:
+    stringstream errlog;
+
 public:
 
 	~SystemHistory();
@@ -73,6 +76,8 @@ public:
 	int sumocc();
 	void write(ostream &os);
 	void write2(ostream &os, int opt);
+	inline std::string getErrLog() {return errlog.str();}
+
 };
 
 } // namespace infect

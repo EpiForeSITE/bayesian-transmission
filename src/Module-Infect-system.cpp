@@ -56,6 +56,8 @@ void init_Module_infect_System(){
         .property("PatientHeads", &infect::SystemHistory::getPatientHeads)
         .property("FacilityHeads", &infect::SystemHistory::getFacilityHeads)
         .property("SystemHead", &infect::SystemHistory::getSystemHead)
+        .property("Units", &infect::SystemHistory::getUnits)
+        .property("errlog", &infect::SystemHistory::getErrLog)
         // .property("Episodes", &infect::SystemHistory::getEpisodes)
         // .property("Admissions", &infect::SystemHistory::getAdmissions)
         // .property("Discharges", &infect::SystemHistory::getDischarges)
