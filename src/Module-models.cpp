@@ -36,27 +36,47 @@ RCPP_EXPOSED_AS(infect::Unit)
 RCPP_EXPOSED_AS(infect::UnitEpisodeHistory)
 
 void init_Module_models(){
-    class_<TestParams>("CppTestParams")
+    class_<Parameters>("CppParameters")
         .derives<util::Object>("CppObject")
-    //     .constructor<int>()
-    //     .property("paramNames", &TestParams::paramNames)
-    //     .property("nParam", &TestParams::nParam)
-    //     .property("values", &TestParams::getValues)
-    //     // .method("set", &TestParams::set)
-    //     // .method("update", &TestParams::update)
+        .property("nStates", &Parameters::getNStates)
+        .property("names", &Parameters::paramNames)
+        .property("values", &Parameters::getValues)
+        .method("logProb", &Parameters::logProb)
+        .method("logProbGap", &Parameters::logProbGap)
+        //.method("update", &Parameters::update)
+        //.property("nParam", &Parameters::nParam)
+    ;
+
+    class_<AbxParams>("CppAbxParams")
+        .derives<Parameters>("CppParameters")
+        .property("nStates", &AbxParams::getNStates)
+        .method("set", &AbxParams::set)
+    ;
+
+    class_<TestParams>("CppTestParams")
+        .derives<Parameters>("CppParameters")
+        // .constructor<int>()
+        // .property("names", &TestParams::paramNames)
+        // .property("nParam", &TestParams::nParam)
+        // .property("values", &TestParams::getValues)
+        // .method("set", &TestParams::set)
+        // .method("update", &TestParams::update)
     ;
 
     class_<InsituParams>("CppInsituParams")
-        .derives<util::Object>("CppObject")
-        //     .constructor<int>()
-        //     .constructor<std::vector<double>, std::vector<double>, std::vector<bool>>()
-        //     .property("nParam", &InsituParams::nParam)
-        //     .property("paramNames", &InsituParams::paramNames)
+        .derives<Parameters>("CppParameters")
+        .constructor<>()
+        .constructor<int>()
+        .constructor<std::vector<double>, std::vector<double>, std::vector<bool>>()
+        .property("nParam", &InsituParams::nParam)
+        .property("paramNames", &InsituParams::paramNames)
+        .property("values", &InsituParams::getValues)
+        .property("counts", &InsituParams::getCounts, &InsituParams::setCounts)
         //     .method("set", &InsituParams::set)
         //     .method("setPriors", &InsituParams::setPriors)
         //     .method("setUpdate", &InsituParams::setUpdate)
-        //     //.method("update", &InsituParams::update)
-        ;
+        .method("update", &InsituParams::update)
+    ;
 // IncolParams
     //virtual
     class_<models::InColParams>("CppInColParams")

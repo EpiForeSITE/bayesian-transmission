@@ -35,6 +35,8 @@ public:
 
 	virtual double logProb(infect::HistoryLink *h) const override;
 	virtual void initCounts() override;
+	std::vector<double> getCounts() const;
+	void setCounts(const std::vector<double>);
 	virtual void count(infect::HistoryLink *h) override;
 	virtual void update(Random *r, bool max) override;
 // Personal accessors.

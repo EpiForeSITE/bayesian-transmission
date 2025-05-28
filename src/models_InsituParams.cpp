@@ -1,4 +1,7 @@
 #include "modeling/modeling.h"
+#include <functional>
+#include <numeric>
+#include <vector>
 
 namespace models {
 
@@ -53,10 +56,11 @@ InsituParams::InsituParams(std::vector<double> probs, std::vector<double> priors
     this->priors = new double[nstates];
     this->doit = new bool[3];
 
+    double t = std::accumulate(probs.begin(), probs.end(), 0);
     for (int i = 0; i < 3; i++)
     {
-        this->probs[i] = probs[i];
-        this->logprobs[i] = log(probs[i]);
+        this->probs[i] = probs[i]/t;
+        this->logprobs[i] = log(probs[i]/t);
         this->priors[i] = priors[i];
         this->doit[i] = doit[i];
     }
@@ -101,6 +105,7 @@ std::vector<std::string> InsituParams::paramNames() const
 
     return res;
 }
+
 std::vector<double> InsituParams::getValues() const
 {
     std::vector<double> vals;
@@ -155,6 +160,23 @@ void InsituParams::initCounts()
 {
     for (int i=0; i<3; i++)
         counts[i] = priors[i];
+}
+
+std::vector<double> InsituParams::getCounts() const
+{
+    vector<double> res(3);
+    for (int i=0; i<3; i++)
+        res[i] = counts[i];
+    return res;
+}
+
+void InsituParams::setCounts(const std::vector<double> c)
+{
+    if (c.size() != nstates)
+        throw std::runtime_error("InsituParams::setCounts: counts vector must have size " + std::to_string(nstates));
+
+    for (int i=0; i<3; i++)
+        counts[i] = c[i];
 }
 
 void InsituParams::count(infect::HistoryLink *h)
