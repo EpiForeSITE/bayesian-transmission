@@ -163,6 +163,8 @@ ClinicalTestParams <- RandomTestParams
 
 #' Out of Unit Infection Parameters
 #'
+#' Effects on patients between hospital visits.
+#'
 #' @param acquisition Rate of acquisition of the disease moving into latent state.
 #' @param clearance Rate of clearance of the disease moving into uncolonized state.
 #' @param progression Rate of progression of the disease moving into colonized state.
@@ -209,7 +211,7 @@ SurveillanceTestParams <- function(
 
 #' Antibiotic Parameters
 #'
-#' @param onoff If Anti-biotic are used or not.
+#' @param onoff The mode of the antibiotics, dose with delay and life vs on/off events.
 #' @param delay The delay in using antibiotics.
 #' @param life The life of antibiotics.
 #' @export
