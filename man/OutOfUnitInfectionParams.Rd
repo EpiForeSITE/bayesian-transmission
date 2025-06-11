@@ -21,7 +21,7 @@ OutOfUnitInfectionParams(
 A list of parameters for out of unit infection.
 }
 \description{
-Out of Unit Infection Parameters
+Effects on patients between hospital visits.
 }
 \examples{
 OutOfUnitInfectionParams()

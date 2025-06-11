@@ -7,7 +7,7 @@
 AbxParams(onoff = FALSE, delay = 0, life = 1)
 }
 \arguments{
-\item{onoff}{If Anti-biotic are used or not.}
+\item{onoff}{The mode of the antibiotics, dose with delay and life vs on/off events.}
 
 \item{delay}{The delay in using antibiotics.}
 
