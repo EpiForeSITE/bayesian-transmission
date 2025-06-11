@@ -457,6 +457,6 @@ LogNormalModelParams <-
 #' @export
 LinearAbxModel <- function(
     ...,
-    InUnit = ABXInUnitParameters()) {
+    InUnit = ABXInUnitParams()) {
   LogNormalModelParams("LinearAbxModel", ..., InUnit = InUnit)
 }
