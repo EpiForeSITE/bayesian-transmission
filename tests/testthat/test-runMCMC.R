@@ -3,7 +3,7 @@ test_that("runMCMC Works", {
   modelParameters <- LinearAbxModel(nstates = 2)
 
   expect_named(modelParameters, c("modname", "nstates", "nmetro", "forward",
-    "cheat", "Insitu", "SurveilenceTest",
+    "cheat", "Insitu", "SurveillanceTest",
     "ClinicalTest", "OutCol", "InCol", "Abx",
     "AbxRate"))
   expect_true(rlang::is_string(modelParameters$modname))
@@ -14,32 +14,31 @@ test_that("runMCMC Works", {
 
   expect_true(rlang::is_list(modelParameters$Insitu))
   expect_named(modelParameters$Insitu, c("probs", "priors", "doit"))
-  expect_double(modelParameters$Insitu$probs, 0, 1, len = 3)
-  expect_double(modelParameters$Insitu$priors, 0, 1, len = 3)
-  expect_logical(modelParameters$Insitu$doit, len = 3)
+  checkmate::expect_double(modelParameters$Insitu$probs, 0, 1, len = 3)
+  checkmate::expect_double(modelParameters$Insitu$priors, 0, 1, len = 3)
+  checkmate::expect_logical(modelParameters$Insitu$doit, len = 3)
 
-  expect_true(rlang::is_list(modelParameters$SurveilenceTest))
-  expect_named(modelParameters$SurveilenceTest, c("colonized", "uncolonized", "recovered"))
+  expect_true(rlang::is_list(modelParameters$SurveillanceTest))
+  expect_named(modelParameters$SurveillanceTest, c("colonized", "latent", "uncolonized"), ignore.order = TRUE)
 
   expect_true(rlang::is_list(modelParameters$ClinicalTest))
-  expect_named(modelParameters$SurveilenceTest, c("colonized", "uncolonized", "recovered"))
+  expect_named(modelParameters$ClinicalTest, c("colonized", "latent", "uncolonized"), ignore.order = TRUE)
 
   expect_true(rlang::is_list(modelParameters$OutCol))
-  expect_named(modelParameters$OutCol, c("acquisition", "clearance"))
+  expect_named(modelParameters$OutCol, c("acquisition", "clearance", "progression"), ignore.order = TRUE)
 
   expect_true(rlang::is_list(modelParameters$InCol))
-  expect_named(modelParameters$InCol, c("acquisition", "progression", "clearance"))
+  expect_named(modelParameters$InCol, c("acquisition", "progression", "clearance"), ignore.order = TRUE)
 
   expect_true(rlang::is_list(modelParameters$Abx))
-  expect_named(modelParameters$Abx, c("onoff", "delay", "life"))
+  expect_named(modelParameters$Abx, c("onoff", "delay", "life"), ignore.order = TRUE)
 
   expect_true(rlang::is_list(modelParameters$AbxRate))
-  expect_named(modelParameters$AbxRate, c("onoff", "delay", "life"))
+  expect_named(modelParameters$AbxRate, c("colonized", "latent", "uncolonized"), ignore.order = TRUE)
 
 
   results <- runMCMC(
-    modname = "LinearAbxModel",
-    data = simulated.data,
+    data = dplyr::arrange(simulated.data, facility, unit, patient, time),
     MCMCParameters = list(
       nburn = 2,
       nsims = 3,
@@ -47,7 +46,6 @@ test_that("runMCMC Works", {
       outputfinal = TRUE
     ),
     modelParameters = modelParameters,
-    nstates = 2,
     verbose = TRUE
   )
 })

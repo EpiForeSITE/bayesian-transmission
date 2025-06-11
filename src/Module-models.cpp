@@ -35,6 +35,11 @@ RCPP_EXPOSED_AS(infect::SystemHistory)
 RCPP_EXPOSED_AS(infect::Unit)
 RCPP_EXPOSED_AS(infect::UnitEpisodeHistory)
 
+typedef double (models::OutColParams::*OutColParams_transitionProb_iid)(int, int, double);
+typedef void (models::TestParams::*TestParams_set)(int, double, int, double, double);
+typedef void (models::Parameters::*update_type)(Random*);
+typedef void (models::Parameters::*update_type2)(Random*, bool);
+
 void init_Module_models(){
     class_<Parameters>("CppParameters")
         .derives<util::Object>("CppObject")
@@ -43,7 +48,8 @@ void init_Module_models(){
         .property("values", &Parameters::getValues)
         .method("logProb", &Parameters::logProb)
         .method("logProbGap", &Parameters::logProbGap)
-        //.method("update", &Parameters::update)
+        .method("update", (update_type)&Parameters::update)
+        .method("update_max", (update_type)&Parameters::update_max)
         //.property("nParam", &Parameters::nParam)
     ;
 
@@ -55,12 +61,12 @@ void init_Module_models(){
 
     class_<TestParams>("CppTestParams")
         .derives<Parameters>("CppParameters")
-        // .constructor<int>()
-        // .property("names", &TestParams::paramNames)
-        // .property("nParam", &TestParams::nParam)
-        // .property("values", &TestParams::getValues)
-        // .method("set", &TestParams::set)
-        // .method("update", &TestParams::update)
+        .constructor<int>()
+        .method("set", static_cast<TestParams_set>(&TestParams::set))
+        .property("nParam", &TestParams::nParam)
+        .property("counts", &TestParams::getCounts)//, &TestParams::setCounts)
+        .method("setCount", &TestParams::setCount)
+        .method("getCount", &TestParams::getCount)
     ;
 
     class_<InsituParams>("CppInsituParams")
@@ -80,14 +86,16 @@ void init_Module_models(){
 // IncolParams
     //virtual
     class_<models::InColParams>("CppInColParams")
-        .derives<util::Object>("CppObject")
+        .derives<Parameters>("CppParameters")
         .property("NStates", &models::InColParams::getNStates)
         .method("eventRate", &models::InColParams::eventRate)
     ;
     class_<OutColParams>("CppOutColParams")
-        .derives<util::Object>("CppObject")
+        .derives<Parameters>("CppParameters")
+        .constructor<int, int>()
         .property("NStates", &models::OutColParams::getNStates)
         .method("logProb", &models::OutColParams::logProb)
+        .method("transitionProb", (OutColParams_transitionProb_iid)(&models::OutColParams::transitionProb))
     ;
     class_<models::UnitLinkedModel>("CppUnitLinkedModel")
         .derives<infect::Model>("CppModel")

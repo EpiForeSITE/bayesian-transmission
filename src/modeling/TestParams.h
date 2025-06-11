@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <stdexcept>
+#include <armadillo>
 
 namespace models {
 
@@ -60,6 +61,34 @@ public:
 	    return nstates;
 	}
 
+	void setCount(int i, int j, double value)
+	{
+		if (i < 0 || i >= n || j < 0 || j >= m)
+			throw std::out_of_range("Index out of range in TestParams::setCount");
+		counts[i][j] = value;
+	}
+	arma::mat getCounts() const
+	{
+	    arma::mat res(n, m);
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				res(i, j) = counts[i][j];
+		return res;
+	}
+	void setCounts(arma::mat val)
+	{
+		if (val.n_rows != n || val.n_cols != m)
+			throw std::invalid_argument("Invalid dimensions for counts in TestParams::setCounts");
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				counts[i][j] = val(i, j);
+	}
+	double getCount(int i, int j) const
+	{
+		if (i < 0 || i >= n || j < 0 || j >= m)
+			throw std::out_of_range("Index out of range in TestParams::getCount");
+		return counts[i][j];
+	}
 };
 
 } // namespace models

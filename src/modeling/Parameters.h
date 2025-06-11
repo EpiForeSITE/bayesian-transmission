@@ -22,7 +22,8 @@ public:
 	virtual void countGap(infect::HistoryLink *g, infect::HistoryLink *h) { }
 
 	virtual void update(Random *r, bool max) = 0;
-	virtual void update(Random *r);
+	virtual inline void update(Random *r){update(r,false);}
+	virtual inline void update_max(Random *r){update(r,true);}
 
 
 	virtual int getNStates() const = 0;

@@ -229,7 +229,7 @@ test_that("CppRawEventList", {
 test_that("CppLinearAbxModel", {
 
   data.in <- simulated.data %>%
-    dplyr::arrange(patient, time)
+    dplyr::arrange(facility, unit, patient, time)
 
   sys <- CppSystem$new(
     data.in$facility,
@@ -256,7 +256,6 @@ test_that("CppLinearAbxModel", {
   expect_s4_class(isp, "Rcpp_CppInsituParams")
   isp$paramNames
   isp$values
-  isp$
 
 
   icp <- model$InColParams
@@ -306,12 +305,16 @@ test_that("CppLinearAbxModel", {
   LLs <- purrr::map_dbl(tmp, function(x) model$logLikelihood_HL(x))
   i <- min(which(is.infinite(LLs)))
 
-  hl <- tmp[[i]]
+  hl <- tmp[i][[1]]
   hl$Event$time
   hl$Event$patient$id
   hl$Event$type
   hl$PatientState$infectionStatus
 
+
+  model$SurveillanceTestParams$values
+  model$SurveillanceTestParams$names
+  model$SurveillanceTestParams$values <- c(0.95, 0.05, 0.95, 0.05)
   model$logLikelihood_HL(hl)
   survtsp <- model$SurveillanceTestParams
   survtsp$logProb(hl)
