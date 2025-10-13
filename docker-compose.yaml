@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  r-debug:
+    image: wch1/r-debug:latest
+    container_name: r-debug-container
+    hostname: 6c18ee9a0f69
+    environment:
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - LANG=en_US.UTF-8
+      - ASAN_OPTIONS=detect_leaks=0:detect_odr_violation=0
+      - UBSAN_OPTIONS=print_stacktrace=1
+      - RJAVA_JVM_STACK_WORKAROUND=0
+      - RGL_USE_NULL=true
+      - R_DONT_USE_TK=true
+    volumes:
+      - C:\Users\u0092104\Documents\Projects\bayesian-transmission:/home/bt
+    networks:
+      - default
+    restart: "no"
+    labels:
+      org.opencontainers.image.ref.name: "ubuntu"
+      org.opencontainers.image.version: "22.04"
+    runtime: runc
+    detach: true  # Note: This is not a valid docker-compose option; containers are detached by default when using `docker-compose up -d`
+
+networks:
+  default:
+    driver: bridge
