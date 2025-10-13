@@ -1,0 +1,17 @@
+{
+    "build": {
+        "dockerfile": "Containerfile"
+    },
+    "remoteUser": "root",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "quarto.quarto",
+                "ms-vscode.makefile-tools"
+            ]
+        }
+    },
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached,readonly"
+    ]
+}
