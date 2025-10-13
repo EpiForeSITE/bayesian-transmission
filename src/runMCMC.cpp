@@ -227,20 +227,21 @@ SEXP runMCMC(
             if (verbose) Rcout << "likelhood...";
             llchain(i) = model->logLikelihood(hist);
         }
+
+        for (int j=0; j<wntests; j++)
+        {
+            HistoryLink *hh = histlink[j];
+            double p = testtype[j]->eventProb(hh->getPState()->infectionStatus(),hh->getPState()->onAbx(),hh->getEvent()->getType());
+            wprob += p;
+            wlogprob += log(p);
+            wlogsqprob += log(p)*log(p);
+        }
+
         if(verbose) Rcout << "done." << std::endl;
     }
 
     if (verbose)
         Rcpp::message(Rcpp::wrap(string("MCMC done.\n")));
-
-    for (int j=0; j<wntests; j++)
-    {
-        HistoryLink *hh = histlink[j];
-        double p = testtype[j]->eventProb(hh->getPState()->infectionStatus(),hh->getPState()->onAbx(),hh->getEvent()->getType());
-        wprob += p;
-        wlogprob += log(p);
-        wlogsqprob += log(p)*log(p);
-    }
 
     wprob /= wntests * nsims;
     wlogprob /= wntests * nsims;
