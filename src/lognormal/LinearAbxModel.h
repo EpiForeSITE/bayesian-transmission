@@ -14,6 +14,7 @@ inline LinearAbxICP *getInColParams() const
     return (LinearAbxICP *)icp;
 }
 
+virtual inline string className() const override { return "LinearAbxModel"; }
 
 };
 

@@ -56,7 +56,7 @@ string LogNormalAbxICP::header() const
 /// \param ncolabx Number of colonized patients on antibiotics.
 /// \param ncol Number of colonized patients.
 /// \param tot Total number of patients.
-double LogNormalAbxICP::logAcqRate(int onabx, int everabx, int ncolabx, int ncol, int tot, double time) const
+double LogNormalAbxICP::logAcqRate(bool onabx, bool everabx, int ncolabx, int ncol, int tot, double time) const
 {
     double x = 0;
 
@@ -75,12 +75,12 @@ double LogNormalAbxICP::logAcqRate(int onabx, int everabx, int ncolabx, int ncol
     return x;
 }
 
-double LogNormalAbxICP::acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot) const
+double LogNormalAbxICP::acqRate(double time, bool onabx, bool everabx, double ncolabx, double ncol, double tot) const
 {
     return exp(logAcqRate(onabx,everabx,ncolabx,ncol,tot,time));
 }
 
-double LogNormalAbxICP::progRate(int onabx, int ever) const
+double LogNormalAbxICP::progRate(bool onabx, bool ever) const
 {
     double x = exp(par[1][0]);
     if (onabx)
@@ -90,7 +90,7 @@ double LogNormalAbxICP::progRate(int onabx, int ever) const
     return x;
 }
 
-double LogNormalAbxICP::logProgRate(int onabx, int ever) const
+double LogNormalAbxICP::logProgRate(bool onabx, bool ever) const
 {
     double x = par[1][0];
     if (onabx)
@@ -100,7 +100,7 @@ double LogNormalAbxICP::logProgRate(int onabx, int ever) const
     return x;
 }
 
-double LogNormalAbxICP::LogNormalAbxICP::clearRate(int onabx, int ever) const
+double LogNormalAbxICP::LogNormalAbxICP::clearRate(bool onabx, bool ever) const
 {
     double x = exp(par[2][0]);
     if (onabx)
@@ -110,7 +110,7 @@ double LogNormalAbxICP::LogNormalAbxICP::clearRate(int onabx, int ever) const
     return x;
 }
 
-double LogNormalAbxICP::logClearRate(int onabx, int ever) const
+double LogNormalAbxICP::logClearRate(bool onabx, bool ever) const
 {
     double x = par[2][0];
     if (onabx)
@@ -165,8 +165,8 @@ double LogNormalAbxICP::timePar() const{return par[0][0];}
 
 double LogNormalAbxICP::logProgressionRate(double time, PatientState *p, LocationState *s) const
 {
-    int onabx = ((AbxLocationState *)s)->onAbx((Patient *)p->getOwner());
-    int everabx = ((AbxLocationState *)s)->everAbx((Patient *)p->getOwner());
+    bool onabx = ((AbxLocationState *)s)->onAbx((Patient *)p->getOwner());
+    bool everabx = ((AbxLocationState *)s)->everAbx((Patient *)p->getOwner());
     return logProgRate(onabx,everabx);
 }
 
@@ -182,8 +182,8 @@ double LogNormalAbxICP::logProgressionGap(double t0, double t1, LocationState *s
 
 double LogNormalAbxICP::logClearanceRate(double time, PatientState *p, LocationState *s) const
 {
-    int onabx = ((AbxLocationState *)s)->onAbx((Patient *)p->getOwner());
-    int everabx = ((AbxLocationState *)s)->everAbx((Patient *)p->getOwner());
+    bool onabx = ((AbxLocationState *)s)->onAbx((Patient *)p->getOwner());
+    bool everabx = ((AbxLocationState *)s)->everAbx((Patient *)p->getOwner());
     return logClearRate(onabx,everabx);
 }
 
@@ -200,8 +200,8 @@ double LogNormalAbxICP::logClearanceGap(double t0, double t1, LocationState *s) 
 double LogNormalAbxICP::logAcquisitionRate(double time, PatientState *p, LocationState *ls) const
 {
     AbxLocationState *as = (AbxLocationState *) ls;
-    int onabx = as->onAbx((Patient *)p->getOwner());
-    int everabx = as->everAbx((Patient *)p->getOwner());
+    bool onabx = as->onAbx((Patient *)p->getOwner());
+    bool everabx = as->everAbx((Patient *)p->getOwner());
     return log(acqRate(time,onabx,everabx,as->getAbxColonized(),as->getColonized(),as->getTotal()));
 }
 
@@ -231,8 +231,8 @@ double LogNormalAbxICP::logAcquisitionGap(double u, double v, LocationState *ls)
 double* LogNormalAbxICP::acquisitionRates(double time, PatientState *p, LocationState *ls) const
 {
     AbxLocationState *as = (AbxLocationState *) ls;
-    int onabx = as->onAbx((Patient *)p->getOwner());
-    int everabx = as->everAbx((Patient *)p->getOwner());
+    bool onabx = as->onAbx((Patient *)p->getOwner());
+    bool everabx = as->everAbx((Patient *)p->getOwner());
 
     double *P = new double[nstates];
 

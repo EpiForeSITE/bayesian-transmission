@@ -28,6 +28,7 @@ protected:
 
 	inline void setNormal(int i, int j, double x)
 	{
+	    cout << "LogNormalICP::setNormal(" << i << "," << j << "," << x << ")\n";
 		par[i][j] = x;
 		epar[i][j] = unTransform(i,j);
 	}
@@ -70,7 +71,7 @@ public:
 
 //implement Object
 	virtual void write (ostream &os) override;
-
+	virtual inline string className() const override {return "LogNormalICP";}
 	virtual int nParam() const;
 
 // Implement InColParams.

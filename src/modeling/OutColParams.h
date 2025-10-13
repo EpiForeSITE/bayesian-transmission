@@ -49,6 +49,7 @@ protected:
 	virtual void set(double a, double b);
 public:
     using Parameters::update;
+    virtual std::string className() const override { return "OutColParams"; }
 
 	OutColParams(int nst, int nmet);
 	~OutColParams();
@@ -68,6 +69,7 @@ public:
 	virtual void update(Random *r, bool max) override;
     virtual std::vector<double> getValues() const override;
 	virtual std::vector<std::string> paramNames() const override;
+
 
 // Personal accessors.
 	virtual void set(int i, double value, int update, double prival, double prin);

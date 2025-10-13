@@ -18,7 +18,7 @@ private:
 
 
 public:
-
+    virtual inline string className() const override {return "LogNormalMassAct";}
 	LogNormalMassAct(int k, int isDen, int nmet=10);
 
 

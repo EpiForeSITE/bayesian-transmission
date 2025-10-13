@@ -9,7 +9,7 @@ class ForwardSimulator : public Object, infect::EventCoding, infect::InfectionCo
 {
 public:
 	static void forwardSimulate(UnitLinkedModel *mod, infect::SystemHistory *hist, Random *rand);
-
+    virtual inline string className() const override {return "ForwardSimulator";}
 protected:
 	static infect::EpisodeHistory *getEpisodeHistory(Map *map, infect::HistoryLink *h);
 	static void randImportState(UnitLinkedModel *mod, infect::HistoryLink *h, infect::EpisodeHistory *eh, Random *rand);

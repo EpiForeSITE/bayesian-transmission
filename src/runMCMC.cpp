@@ -19,6 +19,9 @@ using namespace Rcpp;
 #include "RRandom.h"
 
 #include "modelsetup.h"
+
+
+
 lognormal::LogNormalModel* newModel(
         Rcpp::List modelParameters, //< Model specific options.
         bool verbose = false)
@@ -82,6 +85,24 @@ lognormal::LogNormalModel* newModel(
     //modelsetup(model, modelParameters, verbose);
 
     return model;
+}
+
+// [[Rcpp::export]]
+SEXP MakeCPPModel(
+    Rcpp::List modelParameters,
+    bool verbose = true
+) {
+    if(verbose)
+        Rcpp::message(Rcpp::wrap(string("Initializing Variables")));
+
+    // Create model.
+    lognormal::LogNormalModel *model = newModel(modelParameters, verbose);
+    if (verbose) Rcpp::Rcout << "Model created." << std::endl;
+    if(model == 0) {return R_NilValue;}
+    Function methods_new = Rcpp::Environment::namespace_env("methods")["new"];
+    return methods_new(
+        "Rcpp_CppLogNormalModel",
+        Rcpp::Named(".object_pointer") = Rcpp::XPtr<lognormal::LogNormalModel>(model, false));
 }
 
 

@@ -448,6 +448,7 @@ std::vector<std::string> OutColParams::paramNames() const
 
 std::vector<double> OutColParams::getValues() const
 {
+    // cout << "OutColParams::getValues() called.\n";
     std::vector<double> res(nstates);
 
     for (int i=0; i<nstates; i++)

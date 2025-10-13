@@ -23,6 +23,10 @@ EventToCode <- function(x) {
     .Call(`_bayestransmission_EventToCode`, x)
 }
 
+MakeCPPModel <- function(modelParameters, verbose = TRUE) {
+    .Call(`_bayestransmission_MakeCPPModel`, modelParameters, verbose)
+}
+
 #' Run Bayesian Transmission MCMC
 #'
 #' @param modname Name of the model to run.

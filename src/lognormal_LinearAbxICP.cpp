@@ -27,6 +27,29 @@ string LinearAbxICP::header() const
     s << "\t" << "LABX.clrEver";
     return s.str();
 }
+std::vector<std::string> LinearAbxICP::paramNames() const
+{
+    std::vector<std::string> res;
+
+    res.push_back("LABX.base");
+    res.push_back("LABX.time");
+    res.push_back("LABX.mass.mx");
+    res.push_back("LABX.freq.mx");
+    res.push_back("LABX.colabx");
+    res.push_back("LABX.susabx");
+    res.push_back("LABX.susever");
+    if (nstates == 3)
+    {
+        res.push_back("LABX.pro");
+        res.push_back("LABX.proAbx");
+        res.push_back("LABX.proEver");
+    }
+    res.push_back("LABX.clr");
+    res.push_back("LABX.clrAbx");
+    res.push_back("LABX.clrEver");
+
+    return res;
+}
 
 double LinearAbxICP::getRate(int i, int risk, int ever, int cur) const
 {
@@ -135,6 +158,7 @@ double LinearAbxICP::unTransform(int i, int j)
 
 void LinearAbxICP::set(int i, int j, double value, int update, double prival, double priorn)
 {
+    cout << "LinearAbxICP::set(" << i << "," << j << "," << value << "," << update << "," << prival << "," << priorn << ")\n";
     if (i == 0)
     {
         switch(j)

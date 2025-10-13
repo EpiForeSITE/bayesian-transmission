@@ -21,18 +21,19 @@ public:
 
 
 public:
+    virtual inline string className() const override { return "BasicModel";}
 
-	virtual void forwardSimulate(infect::SystemHistory *h, Random *r)
+	virtual void forwardSimulate(infect::SystemHistory *h, Random *r) override
 	{
 		ForwardSimulator::forwardSimulate(this,h,r);
 	}
 
-	virtual void initEpisodeHistory(infect::EpisodeHistory *eh, bool pos)
+	virtual void initEpisodeHistory(infect::EpisodeHistory *eh, bool pos) override
 	{
 		ConstrainedSimulator::initEpisodeHistory(this,eh,pos);
 	}
 
-	virtual void sampleEpisodes(infect::SystemHistory *h, int max, Random *rand)
+	virtual void sampleEpisodes(infect::SystemHistory *h, int max, Random *rand) override
 	{
 		ConstrainedSimulator::sampleEpisodes(this,h,max,rand);
 	}

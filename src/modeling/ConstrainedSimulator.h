@@ -67,6 +67,7 @@ protected:
 	static Markov *getMarkovProcess(UnitLinkedModel *mod, infect::HistoryLink *p, Random *rand, int *nalloc, double **mytime, bool **mydoit, double ***myS, double ****myQ);
 
 public:
+    virtual inline string className() const override {return "ConstrainedSimulator";}
 	static void sampleEpisodes(UnitLinkedModel *mod, infect::SystemHistory *h, int max, Random *rand);
 	static void sampleHistory(UnitLinkedModel *mod, infect::SystemHistory *hist, infect::HistoryLink *plink, int max, Random *rand);
 	static void initEpisodeHistory(UnitLinkedModel *mod, infect::EpisodeHistory *eh, bool haspostest);

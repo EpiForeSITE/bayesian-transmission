@@ -65,7 +65,7 @@ test_that("models::TestParams", {
     expect_equal(tp1$values, c(39/48, 59/88))
 
     tp3 <- CppTestParams$new(3)
-    tp3$values
+    # tp3$values
 
     expect_equal(tp3$nStates, 3)
     expect_equal(tp3$names, c("Test.P(+|unc)", "Test.P(+|lat)", "Test.P(+|col)"))

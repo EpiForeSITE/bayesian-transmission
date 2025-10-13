@@ -178,6 +178,7 @@ void AbxParams::set(int i, double value, int update, double prival, double prin)
 }
 std::vector<double> AbxParams::getValues() const
 {
+    // cout << "AbxParams::getValues() called.\n";
     std::vector<double> vals;
     vals.push_back(rates[0]);
     if(nstates == 3)

@@ -32,14 +32,25 @@ void Sampler::sampleEpisodes(int max)
 
 void Sampler::initializeEpisodes()
 {
+    std::cout << "Sampler::initializeEpisodes()" << std::flush;
     std::map<int, Patient*> pos = hist->positives();
+    std::cout << "fetching episodes" << std::endl << std::flush;
     for (auto& [ep, eh] : hist->getEpisodes())
     {
-        Patient *ppp = eh->admissionLink()->getEvent()->getPatient();
-        model->initEpisodeHistory(eh, pos[ppp->getId()]);
+        std::cout << "fetching patient "<< std::flush;
+        std::cout << eh << std::endl << std::flush;
+        std::cout << eh->admissionLink() << std::endl << std::flush;
+        std::cout << eh->admissionLink()->getEvent() << std::endl << std::flush;
+        std::cout << eh->admissionLink()->getEvent()->getPatient() << std::endl << std::flush;
+        Patient* ppp = eh->admissionLink()->getEvent()->getPatient();
+
+        std::cout << ppp << std::endl << std::flush;
+        std::cout << "initializingEpisode history for patient " << ppp->getId() << std::endl << std::flush;
+        model->initEpisodeHistory(eh, pos.find(ppp->getId()) != pos.end());
     }
     if (model->isCheating())
     {
+        std::cout << "Model is cheating." << std::endl;
         for (auto& [ep, eh] :  hist->getEpisodes())
         {
             eh->unapply();

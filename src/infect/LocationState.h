@@ -29,7 +29,8 @@ public:
 	virtual void unapply(Event *e) = 0;
 
 
-	virtual void write(ostream &os) const;
+	virtual void write(ostream &os) const override;
+	virtual inline string className() const override {return "LocationState";}
 };
 
 } // namespace infect

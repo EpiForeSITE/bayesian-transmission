@@ -255,6 +255,7 @@ std::vector<std::string> MassActionICP::paramNames() const
 }
 std::vector<double> MassActionICP::getValues() const
 {
+    cout << "MassActionICP::getValues() called.\n";
     std::vector<double> vals;
     vals.push_back(rates[0]);
     if(nstates == 3)

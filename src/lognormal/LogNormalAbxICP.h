@@ -50,17 +50,17 @@ protected:
     /// \param ncolabx Number of colonized patients on antibiotics.
     /// \param ncol Number of colonized patients.
     /// \param tot Total number of patients.
-	virtual double logAcqRate(int onabx, int everabx, int ncolabx, int ncol, int tot, double time) const;
-	double acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot) const;
-	virtual double progRate(int onabx, int ever) const;
-	virtual double logProgRate(int onabx, int ever) const;
-	virtual double clearRate(int onabx, int ever) const;
-	virtual double logClearRate(int onabx, int ever) const;
+	virtual double logAcqRate(bool onabx, bool everabx, int ncolabx, int ncol, int tot, double time) const;
+	double acqRate(double time, bool onabx, bool everabx, double ncolabx, double ncol, double tot) const;
+	virtual double progRate(bool onabx, bool ever) const;
+	virtual double logProgRate(bool onabx, bool ever) const;
+	virtual double clearRate(bool onabx, bool ever) const;
+	virtual double logClearRate(bool onabx, bool ever) const;
 
 public:
 
 	LogNormalAbxICP(int nst, int isDensity, int nmet, int cap=8);
-
+    virtual inline std::string className() const override { return "LogNormalAbxICP"; }
 
 // Implement LogNormalICP.
 
@@ -73,5 +73,13 @@ public:
 	virtual double *acquisitionRates(double time, PatientState *p, LocationState *ls) const override;
     virtual std::vector<std::string> paramNames() const override;
 
+    inline double get_beta_acq_time()      const {return epar[0][0];}
+    inline double get_beta_acq_constant()  const {return epar[0][0];}
+    inline double get_beta_acq_tot_inpat() const {return epar[0][2];}
+    inline double get_beta_acq_log_col()   const {return epar[0][3];}
+    inline double get_beta_acq_col()       const {return epar[0][4];}
+    inline double get_beta_acq_abx_col()   const {return epar[0][5];}
+    inline double get_beta_acq_onabx()     const {return epar[0][6];}
+    inline double get_beta_acq_everabx()   const {return epar[0][7];}
 };
 #endif // ALUN_LOGNORMAL_LOGNORMALABXICP_H

@@ -37,27 +37,28 @@ public:
 	TestParamsAbx(int nst, bool abx);
 	~TestParamsAbx();
 
-	virtual std::vector<std::string> paramNames() const;
+	virtual std::vector<std::string> paramNames() const override;
 	inline void setUseAbx(bool i){useabx = i;}
 	inline bool getUseAbx(){return useabx;}
-	virtual double eventProb(InfectionStatus s, int onabx, EventCode e) const;
+	virtual double eventProb(InfectionStatus s, int onabx, EventCode e) const override;
 
-	virtual double *resultProbs(int onabx, EventCode e) const;
+	virtual double *resultProbs(int onabx, EventCode e) const override;
 
 // Implement Parameters.
 
-	virtual double logProb(infect::HistoryLink *const h) const;
-	virtual void initCounts();
-	virtual void count(infect::HistoryLink * const h);
-	virtual void update(Random *r, bool max);
+	virtual double logProb(infect::HistoryLink *const h) const override;
+	virtual void initCounts() override;
+	virtual void count(infect::HistoryLink * const h) override;
+	virtual void update(Random *r, bool max) override;
+	std::string className() const override { return "TestParamsAbx"; }
 
 // Personal accessors.
 
 	// Set value, update, and Beta priors.
-	virtual void set(int i, int j, double value, int update, double prival, double prin);
-	virtual int nParam() const;
-	virtual void write (ostream &os) const;
-    virtual std::vector<double> getValues() const;
+	virtual void set(unsigned int i,unsigned int j, double value, int update, double prival, double prin);
+	virtual int nParam() const override;
+	virtual void write (ostream &os) const override;
+    virtual std::vector<double> getValues() const override;
 };
 
 } // namespace models

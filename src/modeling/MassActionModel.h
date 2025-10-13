@@ -10,6 +10,7 @@ namespace models {
 class MassActionModel : public BasicModel
 {
 public:
+    virtual inline string className() const override {return "MassActionModel";}
 
 	MassActionModel(int nst, int nmetro, int isdens, int clin, int fw = 0, int ch = 0);
 	~MassActionModel();

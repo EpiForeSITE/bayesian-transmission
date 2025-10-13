@@ -8,14 +8,14 @@
 #include <armadillo>
 
 namespace models {
-
+using arma::uword;
 class TestParams : public Parameters
 {
 protected:
 
 	int nstates;
-	int n;
-	int m;
+	uword n;
+	uword m;
 
 	// nxm matrix with probs[i][j] = P(test result == j | colonization status = i)
 	double** probs;
@@ -36,58 +36,60 @@ public:
 
 	TestParams(int nst);
 	~TestParams();
-	virtual string header() const;
-	virtual int getNStates() const;
+	virtual string header() const override;
+	virtual int getNStates() const override;
 	virtual double eventProb(InfectionStatus s, int onabx, EventCode e) const;
 	virtual double* resultProbs(int onabx, EventCode e) const;
 
 // Implement Parameters.
 
-	virtual double logProb(infect::HistoryLink *h) const;
-	virtual void initCounts();
-	virtual void count(infect::HistoryLink *h);
-	virtual void update(Random *r, bool max);
+	virtual double logProb(infect::HistoryLink *h) const override;
+	virtual void initCounts() override;
+	virtual void count(infect::HistoryLink *h) override;
+	virtual void update(Random *r, bool max) override;
 
 // Personal accessors.
 
 	// Set value, update and Beta prior.
 	virtual void set(int i, double value, int update, double prival, double prin);
-	virtual std::vector<std::string> paramNames() const;
-    virtual std::vector<double> getValues() const;
-	virtual void write (ostream &os) const;
+	virtual std::vector<std::string> paramNames() const override;
+    virtual std::vector<double> getValues() const override;
+    virtual std::vector<double> getLogValues() const;
+	virtual void write (ostream &os) const override;
+	std::string className() const override { return "TestParams"; }
 
 	virtual int nParam() const
 	{
 	    return nstates;
 	}
 
-	void setCount(int i, int j, double value)
+	inline void setCount(unsigned int i, unsigned int j, double value)
 	{
 		if (i < 0 || i >= n || j < 0 || j >= m)
 			throw std::out_of_range("Index out of range in TestParams::setCount");
 		counts[i][j] = value;
 	}
-	arma::mat getCounts() const
+	inline double getCount(unsigned int i,unsigned int j) const
 	{
-	    arma::mat res(n, m);
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < m; j++)
-				res(i, j) = counts[i][j];
+	    if (i < 0 || i >= n || j < 0 || j >= m)
+	        throw std::out_of_range("Index out of range in TestParams::getCount");
+	    return counts[i][j];
+	}
+	std::vector<std::vector<double>> getCounts() const
+	{
+	    std::vector<std::vector<double>> res(n, std::vector<double>(m, 0.0));
+	    for (uword i = 0; i < n; i++)
+			for (uword j = 0; j < m; j++)
+				res[i][j] = getCount(i, j);
 		return res;
 	}
 	void setCounts(arma::mat val)
 	{
 		if (val.n_rows != n || val.n_cols != m)
 			throw std::invalid_argument("Invalid dimensions for counts in TestParams::setCounts");
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < m; j++)
+		for (uword i = 0; i < n; i++)
+			for (uword j = 0; j < m; j++)
 				counts[i][j] = val(i, j);
-	}
-	double getCount(int i, int j) const
-	{
-		if (i < 0 || i >= n || j < 0 || j >= m)
-			throw std::out_of_range("Index out of range in TestParams::getCount");
-		return counts[i][j];
 	}
 };
 

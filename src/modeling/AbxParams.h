@@ -41,6 +41,7 @@ public:
 	virtual void set(int i, double value, int update, double prival, double prin);
     virtual std::vector<double> getValues() const override;
 	virtual void write(ostream &os) const override;
+	virtual inline string className() const override {return "AbxParams";}
 };
 
 } // namsepace models

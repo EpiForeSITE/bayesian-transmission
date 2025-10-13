@@ -39,6 +39,9 @@ public:
 	inline int isForwardEnabled() const {return forwardEnabled;}
 	inline int getNStates() const {return nstates;}
 
+    void count(infect::SystemHistory * hist);
+    void step(Random*, bool);
+
 	// Accessors
 	inline InsituParams* getInsituParams() const {return isp;}
 	inline OutColParams* getOutColParams() const {return ocp;}
@@ -55,6 +58,7 @@ public:
 // Object
 	virtual string header() const override;
     virtual void write (ostream &os) const override;
+    virtual inline string className() const override { return "UnitLinkedModel"; }
     /*
 	virtual void writeHeader(ostream &os)
 	{

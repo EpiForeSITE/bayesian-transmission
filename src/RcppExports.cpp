@@ -33,6 +33,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// MakeCPPModel
+SEXP MakeCPPModel(Rcpp::List modelParameters, bool verbose);
+RcppExport SEXP _bayestransmission_MakeCPPModel(SEXP modelParametersSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type modelParameters(modelParametersSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(MakeCPPModel(modelParameters, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // runMCMC
 SEXP runMCMC(Rcpp::DataFrame data, Rcpp::List MCMCParameters, Rcpp::List modelParameters, bool verbose);
 RcppExport SEXP _bayestransmission_runMCMC(SEXP dataSEXP, SEXP MCMCParametersSEXP, SEXP modelParametersSEXP, SEXP verboseSEXP) {
@@ -97,6 +109,7 @@ RcppExport SEXP _rcpp_module_boot_BayesianInfectiousDiseaseModelingModule();
 static const R_CallMethodDef CallEntries[] = {
     {"_bayestransmission_CodeToEvent", (DL_FUNC) &_bayestransmission_CodeToEvent, 1},
     {"_bayestransmission_EventToCode", (DL_FUNC) &_bayestransmission_EventToCode, 1},
+    {"_bayestransmission_MakeCPPModel", (DL_FUNC) &_bayestransmission_MakeCPPModel, 2},
     {"_bayestransmission_runMCMC", (DL_FUNC) &_bayestransmission_runMCMC, 4},
     {"_bayestransmission_asAbxLocationState", (DL_FUNC) &_bayestransmission_asAbxLocationState, 1},
     {"_bayestransmission_asMap", (DL_FUNC) &_bayestransmission_asMap, 1},

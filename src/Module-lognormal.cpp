@@ -73,6 +73,18 @@ void init_Module_lognormal(){
         .method("logAcquisitionGap", &lognormal::LogNormalAbxICP::logAcquisitionGap)
         .property("names", &lognormal::LogNormalAbxICP::paramNames)
     ;
+    class_<lognormal::LinearAbxICP>("CppLinearAbxICP")
+        .derives<lognormal::LogNormalICP>("CppLogNormalICP")
+        .constructor<int, int, int>()
+        .property("header", &lognormal::LinearAbxICP::header)
+        .method("logProgressionRate", &lognormal::LinearAbxICP::logProgressionRate)
+        .method("logProgressionGap", &lognormal::LinearAbxICP::logProgressionGap)
+        .method("logClearanceRate", &lognormal::LinearAbxICP::logClearanceRate)
+        .method("logClearanceGap", &lognormal::LinearAbxICP::logClearanceGap)
+        .method("logAcquisitionRate", &lognormal::LinearAbxICP::logAcquisitionRate)
+        .method("logAcquisitionGap", &lognormal::LinearAbxICP::logAcquisitionGap)
+        .method("set", &lognormal::LinearAbxICP::set)
+    ;
 
 
     class_<lognormal::LogNormalModel>("CppLogNormalModel")
@@ -88,6 +100,7 @@ void init_Module_lognormal(){
     class_<lognormal::LinearAbxModel>("CppLinearAbxModel")
         .derives<lognormal::LogNormalModel>("CppLogNormalModel")
         .constructor<int, int, int, bool, bool, bool>()
-        .property("InColParams", &lognormal::LinearAbxModel::getInColParams)
+        //.property("InColParams", &lognormal::LinearAbxModel::getInColParams)
+        .property("IncolParams", &lognormal::LinearAbxModel::getInColParams)
     ;
 }

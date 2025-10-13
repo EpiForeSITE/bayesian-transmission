@@ -7,6 +7,7 @@
 class MixedModel : public LogNormalModel
 {
 public:
+    virtual inline string className() const override {return "MixedModel";}
 
 	MixedModel(int nst, int nmetro, int fw = 0, int ch = 0) : LogNormalModel(nst,nmetro,fw,ch)
 	{

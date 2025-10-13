@@ -2,12 +2,10 @@
 
 namespace models {
 
-TestParams::TestParams(int nst)
+TestParams::TestParams(int nst):
+    nstates(nst), n(3), m(2)
+    // counts(3, std::vector<double>(2, 0.0))
 {
-    nstates = nst;
-    n = 3;
-    m = 2;
-
     probs = cleanAlloc(n,m);
     logprobs = cleanAlloc(n,m);
     counts = cleanAlloc(n,m);
@@ -83,13 +81,14 @@ double TestParams::logProb(infect::HistoryLink *h) const
 
 void TestParams::initCounts()
 {
-    for (int i=0; i<n; i++)
-        for (int j=0; j<m; j++)
+    for (unsigned int i=0; i<n; i++)
+        for (unsigned int j=0; j<m; j++)
             counts[i][j] = priors[i][j];
 }
 
 void TestParams::count(infect::HistoryLink *h)
 {
+    cout << "Counting test result for " << h->getEvent()->getType() << " in state " << h->getPState()->infectionStatus() << "\n";
     int i = stateIndex(h->getPState()->infectionStatus());
     int j = testResultIndex(h->getEvent()->getType());
     if (i < 0 || j < 0)
@@ -104,7 +103,7 @@ void TestParams::update(Random *r, bool max)
 
     if (max)
     {
-        for (int i=0; i<n; i++)
+        for (unsigned int i=0; i<n; i++)
         {
             if (doit[i])
             {
@@ -123,11 +122,11 @@ void TestParams::update(Random *r, bool max)
     }
     else
     {
-        for (int i=0; i<n; i++)
+        for (unsigned int i=0; i<n; i++)
             newpos[i] = ( doit[i] ? r->rbeta(counts[i][1],counts[i][0]) : probs[i][1] );
     }
 
-    for (int i=0; i<n; i++)
+    for (unsigned int i=0; i<n; i++)
         set(i,newpos[i]);
 
     delete [] newpos;
@@ -138,6 +137,9 @@ void TestParams::update(Random *r, bool max)
 // Set value, update and Beta prior.
 void TestParams::set(int i, double value, int update, double prival, double prin)
 {
+    // cout << "Setting test parameter " << i << " to " << value
+         // << " with prior " << prival << " and prior observations "
+         // << prin << "\n";
     if (value < 0 || value > 1)
     {
         throw std::runtime_error("Error: can't set probablilty value outside of (0,1)\t" + std::to_string(value));
@@ -157,7 +159,7 @@ void TestParams::set(int i, double value, int update, double prival, double prin
         // exit(1);
     }
 
-    set(i,value);
+    this->set(i,value);
     //set(i,0.5);
 
     doit[i] = (update != 0);
@@ -187,13 +189,22 @@ std::vector<std::string> TestParams::paramNames() const
 }
 std::vector<double> TestParams::getValues() const
 {
+    // cout << "TestParams::getValues() called.\n";
     std::vector<double> res;
     res.push_back(probs[0][1]);
     if(nstates == 3)
         res.push_back(probs[1][1]);
     res.push_back(probs[2][1]);
     return res;
-
+}
+std::vector<double> TestParams::getLogValues() const
+{
+    std::vector<double> res;
+    res.push_back(logprobs[0][1]);
+    if(nstates == 3)
+        res.push_back(logprobs[1][1]);
+    res.push_back(logprobs[2][1]);
+    return res;
 }
 void TestParams::write (ostream &os) const
 {

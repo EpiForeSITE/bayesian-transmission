@@ -40,10 +40,11 @@ protected:
 	virtual void set(int i, double value);
 
 public:
-
+	// Constructor for a single model.
 	MassActionICP(int k, int isdens);
 	~MassActionICP();
 	virtual string header() const override;
+	virtual string className() const override{ return "MassActionICP"; }
 // Implement InColParams.
 
 	virtual double *acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s) const override;

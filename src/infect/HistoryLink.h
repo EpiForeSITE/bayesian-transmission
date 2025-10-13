@@ -277,6 +277,17 @@ public:
 	{
 		return sstate;
 	}
+
+	inline bool hasPatientNext() const { return pnext != 0; }
+	inline bool hasUnitNext() const { return unext != 0; }
+	inline bool hasFacilityNext() const { return fnext != 0; }
+	inline bool hasSystemNext() const { return snext != 0; }
+	inline bool hasPatientPrev() const { return pprev != 0; }
+	inline bool hasUnitPrev() const { return uprev != 0; }
+	inline bool hasFacilityPrev() const { return fprev != 0; }
+	inline bool hasSystemPrev() const { return sprev != 0; }
+	inline bool hasHistoryNext() const { return hnext != 0; }
+	inline bool hasHistoryPrev() const { return hprev != 0; }
 };
 } // namespace infect
 #endif // ALUN_INFECT_HISTORYLINK_H

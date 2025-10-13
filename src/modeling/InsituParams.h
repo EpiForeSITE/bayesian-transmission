@@ -21,6 +21,7 @@ private:
 	virtual double prob(InfectionStatus s) const;
 
 public:
+    virtual inline string className() const override {return "InsituParams";}
 
 	InsituParams(int nst);
 	InsituParams();

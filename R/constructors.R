@@ -202,10 +202,43 @@ SurveillanceTestParams <- function(
     colonized = Param(0, 0),
     uncolonized = Param(0.8, 1),
     latent = Param(0, 0)) {
+  colonized <- check_param(colonized, "colonized")
+  uncolonized <- check_param(uncolonized, "uncolonized")
+  latent <- check_param(latent, "latent")
   list(
-    colonized = colonized,
     uncolonized = uncolonized,
-    latent = latent
+    latent = latent,
+    colonized = colonized
+  )
+}
+
+#' Surveillance Test Parameters with Antibiotics
+#'
+#' Specify the rates of positive tests for each state of the model.
+#'
+#' @param uncolonized_off,uncolonized_on The probability of receiving a positive test when uncolonized, without or with antibiotic use, respectively.
+#' @param colonized_off,colonized_on The probability of receiving a positive test when colonized, without or with antibiotic use, respectively.
+#' @param latent_off,latent_on The probability of receiving a positive test when in latent state, without or with antibiotic use, respectively.
+#' @export
+#' @examples
+#' SurveillanceTestParamsAbx()
+SurveillanceTestParamsAbx <- function(
+    colonized_off = Param(0, 0),
+    colonized_on = Param(0, 0),
+    uncolonized_off = Param(0.8, 1),
+    uncolonized_on = Param(0.8, 1),
+    latent_off = Param(0, 0),
+    latent_on = Param(0, 0)) {
+  colonized_off <- check_param(colonized_off, "colonized")
+  colonized_on <- check_param(colonized_on, "colonized")
+  uncolonized_off <- check_param(uncolonized_off, "uncolonized")
+  uncolonized_on <- check_param(uncolonized_on, "uncolonized")
+  latent_off <- check_param(latent_off, "latent")
+  latent_on <- check_param(latent_on, "latent")
+  list(
+    uncolonized = list(off=uncolonized_off,on=uncolonized_on),
+    latent = list(off=latent_off,on=latent_on),
+    colonized = list(off=colonized_off,on=colonized_on)
   )
 }
 
@@ -298,13 +331,13 @@ LinearAbxAcquisitionParams <- function(
     suss_abx = Param(1, 0),
     suss_ever = Param(1, 0)) {
   list(
-    base = base,
-    time = time,
-    mass = mass,
-    freq = freq,
-    col_abx = col_abx,
-    suss_abx = suss_abx,
-    suss_ever = suss_ever
+    base = check_param(base),
+    time = check_param(time),
+    mass = check_param(mass),
+    freq = check_param(freq),
+    col_abx = check_param(col_abx),
+    suss_abx = check_param(suss_abx),
+    suss_ever = check_param(suss_ever)
   )
 }
 
@@ -458,5 +491,5 @@ LogNormalModelParams <-
 LinearAbxModel <- function(
     ...,
     InUnit = ABXInUnitParams()) {
-  LogNormalModelParams("LinearAbxModel", ..., InUnit = InUnit)
+    LogNormalModelParams("LinearAbxModel", ..., InUnit = InUnit)
 }

@@ -2,41 +2,25 @@
 
 namespace infect {
 
-HistoryLink::HistoryLink(Event *event, int l)
-{
-    e = event;
-    setStates(0, 0, 0, 0);
-    pprev = 0;
-    pnext = 0;
-    uprev = 0;
-    unext = 0;
-    fprev = 0;
-    fnext = 0;
-    sprev = 0;
-    snext = 0;
-    hprev = 0;
-    hnext = 0;
-    linked = l;
-    hidden = 0;
-}
+HistoryLink::HistoryLink(Event *event, int l):
+    pprev(0), pnext(0),
+    uprev(0), unext(0),
+    fprev(0), fnext(0),
+    sprev(0), snext(0),
+    sstate(0), fstate(0), ustate(0), pstate(0),
+    hprev(0), hnext(0),
+    e(event), linked(l), hidden(0)
+{}
 
-HistoryLink::HistoryLink(Event *event, LocationState *s, LocationState *f, LocationState *u, PatientState *p, int l)
-{
-    e = event;
-    setStates(s, f, u, p);
-    pprev = 0;
-    pnext = 0;
-    uprev = 0;
-    unext = 0;
-    fprev = 0;
-    fnext = 0;
-    sprev = 0;
-    snext = 0;
-    hprev = 0;
-    hnext = 0;
-    linked = l;
-    hidden = 0;
-}
+HistoryLink::HistoryLink(Event *event, LocationState *s, LocationState *f, LocationState *u, PatientState *p, int l):
+    pprev(0), pnext(0),
+    uprev(0), unext(0),
+    fprev(0), fnext(0),
+    sprev(0), snext(0),
+    sstate(s), fstate(f), ustate(u), pstate(p),
+    hprev(0), hnext(0),
+    e(event), linked(l), hidden(0)
+{}
 
 HistoryLink::~HistoryLink()
 {

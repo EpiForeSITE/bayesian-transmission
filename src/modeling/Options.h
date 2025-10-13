@@ -25,6 +25,7 @@ public:
 	Options();
 	Options(int nstates, int clinical, int densityModel, int seed, int nburn, int nsims, int nmetro, int allout, int verbose);
 
+	virtual inline string className() const override {return "Options";}
 };
 } // namespace models
 #endif // ALUN_MODELING_OPTIONS_H

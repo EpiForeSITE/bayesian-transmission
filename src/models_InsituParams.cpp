@@ -108,6 +108,7 @@ std::vector<std::string> InsituParams::paramNames() const
 
 std::vector<double> InsituParams::getValues() const
 {
+    // cout << "InsituParams::getValues: nstates = " << nstates << endl;
     std::vector<double> vals;
     vals.push_back(probs[0]);
     if(nstates == 3)

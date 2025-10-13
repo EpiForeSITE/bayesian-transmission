@@ -64,6 +64,8 @@ void init_Module_models(){
         .constructor<int>()
         .method("set", static_cast<TestParams_set>(&TestParams::set))
         .property("nParam", &TestParams::nParam)
+        .property("values", &TestParams::getValues)
+        .property("log_values", &TestParams::getLogValues)
         .property("counts", &TestParams::getCounts)//, &TestParams::setCounts)
         .method("setCount", &TestParams::setCount)
         .method("getCount", &TestParams::getCount)
@@ -109,6 +111,10 @@ void init_Module_models(){
         .method("logLikelihood_P_HL", (LogLikelihood_P_HL)&models::UnitLinkedModel::logLikelihood)
         .method("logLikelihood_P_HL_i", (LogLikelihood_P_HL_i)&models::UnitLinkedModel::logLikelihood)
         .method("logLikelihood_HL_i", (LogLikelihood_HL_i)&models::UnitLinkedModel::logLikelihood)
+        .method("count", &models::UnitLinkedModel::count)
+        .method("step", &models::UnitLinkedModel::step)
+        .method("countUnitStats", &models::UnitLinkedModel::countUnitStats)
+        .property("nstates", &models::UnitLinkedModel::getNStates)
     ;
 
 

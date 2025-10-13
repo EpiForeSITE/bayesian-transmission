@@ -21,7 +21,7 @@ protected:
 
 
 public:
-
+    virtual inline string className() const override {return "LogNormalModel";}
 	LogNormalModel(int nst, int nmetro, int abxmode = 0, bool abxtest = true, bool fw = true, bool ch = false);
 
     LogNormalModel(List *l, int nst, int abxtest, int nmetro, int fw = 0, int ch = 0);

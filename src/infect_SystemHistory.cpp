@@ -281,12 +281,19 @@ List* SystemHistory::getTestLinks()
 
 std::map<int, Patient*> SystemHistory::positives()
 {
+    std::cout << "SystemHistory::positives()" << std::flush;
     std::map<int, Patient*> pos;
     for (HistoryLink *l = getSystemHead(); l != 0; l = l->sNext())
     {
-        if (l->getEvent()->isPositiveTest())
+        // std::cout << "l=" << l << std::endl << std::flush;
+        // std::cout << "l->getEvent()=" << l->getEvent() << std::endl << std::flush;
+        // std::cout << "l->getEvent()->isPositiveTest()=" << l->getEvent()->isPositiveTest() << std::endl << std::flush;
+        if (l->getEvent()->isPositiveTest()){
+            std::cout << "adding patient " << l->getEvent()->getPatient()->getId() << std::endl << std::flush;
             pos[l->getEvent()->getPatient()->getId()] = l->getEvent()->getPatient();
+        }
     }
+    std::cout << "...Done." << std::endl << std::flush;
     return pos;
 }
 

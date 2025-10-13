@@ -18,7 +18,8 @@ public:
     virtual double acqRate(int nsus, int onabx, int everabx, int ncolabx, int ncol, int tot, double time) const;
 
     virtual void set(int i, int j, double value, int update, double prival, double priorn);
-
+    virtual inline string className() const override {return "LinearAbxICP";}
+    virtual std::vector<std::string> paramNames() const override;
 // LogNormalICP Implementation
     virtual double logProgressionRate(double time, PatientState *p, LocationState *s) const override;
     virtual double logProgressionGap(double t0, double t1, LocationState *s) const override;

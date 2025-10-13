@@ -168,6 +168,7 @@ void LogNormalICP::setWithLogitTransform(int i, int j, double value, int update,
 
 void LogNormalICP::setNormal(int i, int j, double value, int update, double prim, double privar, double sig)
 {
+
     par[i][j] = value;
     epar[i][j] = unTransform(i,j);
     doit[i][j] = update;
@@ -324,9 +325,16 @@ double LogNormalICP::logProb(HistoryLink *h) const
     switch(h->getEvent()->getType())
     {
     case progression:
-        return logProgressionRate(h->getEvent()->getTime(),h->pPrev()->getPState(),h->uPrev()->getUState());
+        return logProgressionRate(h->getEvent()->getTime(),
+                                  h->pPrev()->getPState(),
+                                  h->uPrev()->getUState()
+                              );
     case clearance:
-        return logClearanceRate(h->getEvent()->getTime(),h->pPrev()->getPState(),h->uPrev()->getUState());
+        return logClearanceRate(
+                    h->getEvent()->getTime(),
+                    h->pPrev()->getPState(),
+                    h->uPrev()->getUState()
+        );
     case acquisition:
         return logAcquisitionRate(h->getEvent()->getTime(),h->pPrev()->getPState(),h->uPrev()->getUState());
     default:

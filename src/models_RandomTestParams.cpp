@@ -171,6 +171,7 @@ std::vector<std::string> RandomTestParams::paramNames() const
 }
 std::vector<double> RandomTestParams::getValues() const
 {
+    // cout << "RandomTestParams::getValues() called.\n";
     std::vector<double> res(2*nstates);
 
     if (nstates == 3)

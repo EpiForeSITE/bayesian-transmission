@@ -1,7 +1,7 @@
 test_that("Can create RawEventList with data.frame", {
-  expect_s4_class(RawEventList, "C++Class")
+  expect_s4_class(CppRawEventList, "C++Class")
 
-  test <- RawEventList$new(
+  test <- CppRawEventList$new(
     rep(0, 10), # std::vector<int>,    // facilities
     rep(0:1, each = 5), # std::vector<int>,    // units
     1:10, # std::vector<double>, // times
@@ -9,25 +9,25 @@ test_that("Can create RawEventList with data.frame", {
     rep(0:1, 5) # std::vector<int>     // types
   )
 
-  expect_s4_class(test, "Rcpp_RawEventList")
+  expect_s4_class(test, "Rcpp_CppRawEventList")
   expect_equal(test$FirstTime(), 1)
   expect_equal(test$LastTime(), 10)
 })
 test_that("Can Create System class", {
   data(simulated.data, package = "bayestransmission")
 
-  test <- CppTransmissionSystem$new(
+  expect_s4_class(CppSystem, "C++Class")
+
+  test <- CppSystem$new(
     simulated.data$facility,
     simulated.data$unit,
     simulated.data$time,
     simulated.data$patient,
     simulated.data$type
   )
-  expect_s4_class(test, "Rcpp_CppTransmissionSystem")
-  expect_equal(sys$start, min(simulated.data$time))
-  expect_equal(sys$end, max(simulated.data$time))
-
-  # expect_equal(test$log, "")
+  expect_s4_class(test, "Rcpp_CppSystem")
+  expect_equal(test$start, min(simulated.data$time))
+  expect_equal(test$end, max(simulated.data$time))
 })
 test_that("RRandom", {
   RR <- RRandom$new()
@@ -119,36 +119,7 @@ test_that("RRandom", {
   expect_true(a == d)
 })
 
-test_that("InsituParams", {
-  IP <- CppInsituParams$new(3)
-
-  expect_equal(IP$nParam, 3L)
-  expect_length(IP$paramNames, 3L)
-  expect_silent(IP$set(1, 1, 1))
-
-
-  IP2 <- CppInsituParams$new(2)
-
-  expect_equal(IP2$nParam, 2L)
-  expect_length(IP2$paramNames, 2L)
-})
-test_that("CppTestParams", {
-  TP <- CppTestParams$new(3)
-  TP$values
-  TP$paramNames
-  expect_equal(TP$nParam, 3L)
-  expect_length(TP$values, 3L)
-  expect_length(TP$paramNames, 3L)
-  expect_silent(IP$set(1, 1, 1))
-
-
-  TP2 <- CppTestParams$new(2)
-
-  expect_length(TP2$values, 2L)
-  expect_length(TP2$paramNames, 2L)
-})
-
-test_that("CppSystemHistory", {
+test_that("infect::SystemHistory", {
   dm <- CppDummyModel$new(2)
   sys <- CppSystem$new(
     simulated.data$facility,
@@ -187,7 +158,7 @@ test_that("CppSystemHistory", {
   # discharges <- hist$Discharges
 })
 
-test_that("CppRawEvent", {
+test_that("infect::RawEvent", {
   event <- CppRawEvent$new(1, 2, 1.5, 3, EventToCode('abxon'))
   expect_equal(event$facility, 1L)
   expect_equal(event$unit, 2L)
@@ -228,19 +199,6 @@ test_that("CppRawEventList", {
 
 test_that("CppLinearAbxModel", {
 
-  data.in <- simulated.data %>%
-    dplyr::arrange(facility, unit, patient, time)
-
-  sys <- CppSystem$new(
-    data.in$facility,
-    data.in$unit,
-    data.in$time,
-    data.in$patient,
-    data.in$type
-  )
-  expect_equal(sys$log, "")
-
-  # model <- CppDummyModel$new(2)
   model <- CppLinearAbxModel$new(
     nstates = 2,
     nmetro = 10,
@@ -252,21 +210,42 @@ test_that("CppLinearAbxModel", {
   expect_s4_class(model, "Rcpp_CppLinearAbxModel")
   expect_equal(model$AbxMode, "on/off")
 
-  isp <- model$InsituParams
-  expect_s4_class(isp, "Rcpp_CppInsituParams")
-  isp$paramNames
-  isp$values
-
-
-  icp <- model$InColParams
-  expect_s4_class(icp, "Rcpp_CppLogNormalAbxICP")
-
-  icp$timeOrigin <- (sys$end - sys$start)/2
-
+  data.in <- simulated.data %>%
+      dplyr::arrange(facility, unit, patient, time)
+  sys <- CppSystem$new(
+      data.in$facility,
+      data.in$unit,
+      data.in$time,
+      data.in$patient,
+      data.in$type
+  )
+  expect_equal(sys$log, "")
   hist <- CppSystemHistory$new(sys, model, TRUE)
   expect_equal(hist$errlog, "")
 
+  model$count(hist)
 
+  isp <- model$InsituParams
+  expect_s4_class(isp, "Rcpp_CppInsituParams")
+  expect_equal(isp$paramNames, c("Insit.P(unc)", "Insit.P(col)"))
+  expect_equal(sum(isp$values), 1)
+  expect_equal(isp$nStates, 2L)
+
+  isp$counts
+
+  icp <- model$InColParams
+  expect_s4_class(icp, "Rcpp_CppLogNormalAbxICP")
+  expect_equal(icp$nStates, 2)
+
+
+  icp$values
+  icp$names
+
+
+  icp$timeOrigin <- (sys$end - sys$start)/2
+
+
+#Crash Here
   units <- hist$Units
   expect_true(is.list(units))
   expect_s4_class(units[[1]], "Rcpp_CppUnit")

@@ -140,7 +140,7 @@ namespace Rcpp {
     DECLARE_WRAP(lognormal::LogNormalAbxICP);
     // DECLARE_WRAP(lognormal::LogNormalICP);
     // DECLARE_WRAP(lognormal::LogNormalMassAct);
-    // DECLARE_WRAP(lognormal::LogNormalModel);
+    DECLARE_WRAP(lognormal::LogNormalModel);
     // DECLARE_WRAP(lognormal::MixedICP);
     // DECLARE_WRAP(lognormal::MixedModel);
 }

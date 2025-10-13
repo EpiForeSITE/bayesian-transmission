@@ -42,20 +42,20 @@ std::vector<std::string> TestParamsAbx::paramNames() const
 
     if (nstates == 3)
     {
-        res[0] = "ATest.P(+|unc-)";
-        res[1] = "ATest.P(+|lat-)";
-        res[2] = "ATest.P(+|col-)";
-        res[3] = "ATest.P(+|unc+)";
-        res[4] = "ATest.P(+|lat+)";
-        res[5] = "ATest.P(+|col+)";
+        res[0] = "ATest.P(test+|unc,abx-)";
+        res[1] = "ATest.P(test+|lat,abx-)";
+        res[2] = "ATest.P(test+|col,abx-)";
+        res[3] = "ATest.P(test+|unc,abx+)";
+        res[4] = "ATest.P(test+|lat,abx+)";
+        res[5] = "ATest.P(test+|col,abx+)";
     }
 
     if (nstates == 2)
     {
-        res[0] = "ATest.P(+|unc-)";
-        res[1] = "ATest.P(+|col-)";
-        res[2] = "ATest.P(+|unc+)";
-        res[3] = "ATest.P(+|col+)";
+        res[0] = "ATest.P(test+|unc,abx-)";
+        res[1] = "ATest.P(test+|col,abx-)";
+        res[2] = "ATest.P(test+|unc,abx+)";
+        res[3] = "ATest.P(test+|col,abx+)";
     }
 
     return res;
@@ -143,7 +143,7 @@ void TestParamsAbx::update(Random *r, bool max)
 // Personal accessors.
 
 // Set value, update, and Beta priors.
-void TestParamsAbx::set(int i, int j, double value, int update, double prival, double prin)
+void TestParamsAbx::set(unsigned int state, unsigned int abxstatus, double value, int update, double prival, double prin)
 {
     if (value < 0 || value > 1)
     {
@@ -161,12 +161,12 @@ void TestParamsAbx::set(int i, int j, double value, int update, double prival, d
         exit(1);
     }
 
-    set(i,j,value);
+    set(state,abxstatus,value);
 
-    doit[i][j] = (update != 0);
+    doit[state][abxstatus] = (update != 0);
 
-    priors[i][j][0] = (1-prival)*prin;
-    priors[i][j][1] = prival*prin;
+    priors[state][abxstatus][0] = (1-prival)*prin;
+    priors[state][abxstatus][1] = prival*prin;
 }
 
 int TestParamsAbx::nParam() const
@@ -207,24 +207,25 @@ void TestParamsAbx::write (ostream &os) const
 
 std::vector<double> TestParamsAbx::getValues() const
 {
+    // cout << "TestParamsAbx::getValues() called.\n";
     std::vector<double> res(2*nstates);
 
     if (nstates == 3)
     {
-        res[0] = probs[0][0][0];//"ATest.P(+|unc-)";
-        res[1] = probs[0][0][1];//"ATest.P(+|lat-)";
-        res[2] = probs[1][0][0];//"ATest.P(+|col-)";
-        res[3] = probs[1][1][1];//"ATest.P(+|unc+)";
-        res[4] = probs[2][1][0];//"ATest.P(+|lat+)";
-        res[5] = probs[2][1][1];//"ATest.P(+|col+)";
+        res[0] = probs[0][0][1];//"ATest.P(test+|unc,abx-)";
+        res[1] = probs[1][0][1];//"ATest.P(test+|col,abx-)";
+        res[2] = probs[2][0][1];//"ATest.P(test+|lat,abx-)";
+        res[3] = probs[0][1][1];//"ATest.P(test+|unc,abx+)";
+        res[4] = probs[1][1][1];//"ATest.P(test+|lat,abx+)";
+        res[5] = probs[2][1][1];//"ATest.P(test+|col,abx+)";
     }
 
     if (nstates == 2)
     {
-        res[0] = probs[0][0][0];//"ATest.P(+|unc-)";
-        res[1] = probs[0][0][1];//"ATest.P(+|lat-)";
-        res[2] = probs[1][0][0];//"ATest.P(+|col-)";
-        res[3] = probs[1][1][1];//"ATest.P(+|unc+)";
+        res[0] = probs[0][0][1];//"ATest.P(test+|unc,abx-)";
+        res[1] = probs[2][0][1];//"ATest.P(test+|col,abx-)";
+        res[2] = probs[0][1][1];//"ATest.P(test+|unc,abx-)";
+        res[3] = probs[2][1][1];//"ATest.P(test+|col,abx+)";
     }
 
     return res;

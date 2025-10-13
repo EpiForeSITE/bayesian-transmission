@@ -32,6 +32,8 @@ public:
 	virtual int eventIndex(EventCode e) const;
 	virtual int stateIndex(InfectionStatus s) const;
 	virtual int testResultIndex(EventCode e) const;
+
+	virtual inline string className() const override {return "Parameters";}
 };
 
 } // namespace models

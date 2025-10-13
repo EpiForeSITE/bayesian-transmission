@@ -8,7 +8,7 @@ namespace models{
 class DummyModel : public BasicModel
 {
 public:
-
+    virtual inline string className() const override {return "DummyModel";}
 	DummyModel(int ns) : BasicModel(ns,0,1){}
 
 	virtual infect::PatientState *makePatientState(infect::Patient *p);

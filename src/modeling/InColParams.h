@@ -12,22 +12,17 @@ protected:
 	int nstates;
 
 public:
+    virtual inline string className() const override {return "InColParams";}
 
-	InColParams(int nst)
-	{
-		nstates = nst;
-	}
+	InColParams(int nst) : Parameters(), nstates(nst) {}
 
-	virtual int getNStates() const
-	{
-		return nstates;
-	}
+	virtual int getNStates() const override{return nstates;}
 
-	virtual double *acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s) const = 0;
+	virtual double* acquisitionRates(double time, infect::PatientState *p, infect::LocationState *s) const = 0;
 
 	virtual double eventRate(double time, EventCode c, infect::PatientState *p, infect::LocationState *s) const = 0;
 
-	virtual double **rateMatrix(double time, infect::PatientState *p, infect::LocationState *u) const = 0;
+	virtual double** rateMatrix(double time, infect::PatientState *p, infect::LocationState *u) const = 0;
 };
 
 } // namespace models

@@ -14,7 +14,7 @@ private:
 	int index(Object *u) const;
 
 public:
-
+    virtual inline string className() const override {return "MultiUnitAbxICP";}
 	MultiUnitAbxICP(List *u, int nst, int isDensity, int nmet);
 	virtual void setUnit(int i, Object *u, double value, int update, double prival, double priorn, double sig);
 

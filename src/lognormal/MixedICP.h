@@ -7,7 +7,7 @@ class MixedICP: public LogNormalAbxICP
 {
 public:
 	MixedICP(int nst, int isDensity, int nmet, int cap=8);
-
+    virtual inline string className() const override {return "MixedICP";}
 	// Acquisition model mixes constant and mass action terms.
 	// Constant parameter is par[0][0]
 	// Mixing parameter is par[0][1]

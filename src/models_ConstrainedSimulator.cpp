@@ -277,6 +277,8 @@ void ConstrainedSimulator::sampleHistory(UnitLinkedModel *mod, infect::SystemHis
 
 void ConstrainedSimulator::initEpisodeHistory(UnitLinkedModel *mod, infect::EpisodeHistory *eh, bool haspostest)
 {
+    if(eh == 0) throw(std::runtime_error("episode history pointer is invalid."));
+
     if (mod->isCheating())
     {
         cheatInitEpisodeHistory(mod,eh);

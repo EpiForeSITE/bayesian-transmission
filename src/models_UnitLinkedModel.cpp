@@ -140,6 +140,7 @@ void UnitLinkedModel::countUnitStats(infect::HistoryLink *l)
 
     for (infect::HistoryLink *h = l->uNext() ; h != 0; h = h->uNext())
     {
+        cout << "UnitLinkedModel::countUnitStats(infect::HistoryLink *l=" << l << ", infect::HistoryLink *h=" << h << "," << h->getEvent()->getType() << ")\n";
         icp->countGap(prev,h);
         survtsp->countGap(prev,h);
         if (clintsp && clintsp != survtsp)
@@ -368,8 +369,7 @@ void UnitLinkedModel::update(infect::SystemHistory *hist, Random *r)
     update(hist,r,0);
 }
 
-void UnitLinkedModel::update(infect::SystemHistory *hist, Random *r, int max)
-{
+void UnitLinkedModel::count(infect::SystemHistory * hist){
     isp->initCounts();
     survtsp->initCounts();
     if (clintsp && clintsp != survtsp)
@@ -379,17 +379,33 @@ void UnitLinkedModel::update(infect::SystemHistory *hist, Random *r, int max)
     if (abxp != 0)
         abxp->initCounts();
 
-    for (auto& [unit, link] : hist->getUnitHeads())
+    for (auto& [unit, link] : hist->getUnitHeads()){
+        cout << "UnitLinkedModel::count(Unit[" << unit <<"]\n";
         countUnitStats(link);
+    }
+}
 
-    isp->update(r,max);
-    icp->update(r,max);
-    survtsp->update(r,max);
+void UnitLinkedModel::step(Random* r, bool max)
+{
+    // cout << "UnitLinkedModel::step(Random* r=" << r << ", bool max=" << max << ")\n";
+    if (isp)
+        isp->update(r,max);
+    if (ocp)
+        ocp->update(r,max);
+    if (survtsp)
+        survtsp->update(r,max);
     if (clintsp && clintsp != survtsp)
         clintsp->update(r,max);
-    ocp->update(r,max);
+    if (icp)
+        icp->update(r,max);
     if (abxp != 0)
         abxp->update(r,max);
+}
+
+void UnitLinkedModel::update(infect::SystemHistory *hist, Random *r, int max)
+{
+    count(hist);
+    step(r, max);
 }
 
 } // namespace models

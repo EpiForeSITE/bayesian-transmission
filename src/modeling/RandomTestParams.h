@@ -23,6 +23,7 @@ public:
 	~RandomTestParams();
 	virtual string header() const override;
 // Implement Parameters.
+    std::string className() const override { return "RandomTestParams"; }
 
 	inline double logProb(infect::HistoryLink *h) const override
 	{
