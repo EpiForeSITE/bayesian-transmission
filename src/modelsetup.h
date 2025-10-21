@@ -86,6 +86,12 @@ inline void setupInsituParams(
 
 inline void setupInsituParams(InsituParams * isp, Rcpp::List insituParameters)
 {
+    std::ostringstream ss;
+    ss << "DEBUG InsituParams: probs=[" 
+       << as<std::vector<double>>(insituParameters["probs"])[0] << ", "
+       << as<std::vector<double>>(insituParameters["probs"])[1] << ", "
+       << as<std::vector<double>>(insituParameters["probs"])[2] << "]";
+    Rcpp::message(Rcpp::wrap(ss.str()));
     setupInsituParams(isp,
                       as< std::vector<double> >(insituParameters["probs"]),
                       as< std::vector<double> >(insituParameters["priors"]),
@@ -134,6 +140,7 @@ inline void setupClinicalTestParams(
     setParamWRate(ctp, 2, ctpLatentParamWRate);
 }
 
+
 inline void setupClinicalTestParams(RandomTestParams * ctp, Rcpp::List clinicalTestParameters)
 {
     setupClinicalTestParams(ctp,
@@ -155,6 +162,7 @@ inline void setupOutOfUnitParams(OutColParams * ocol, Rcpp::List outColParameter
         setParam(ocol, 2, outColParameters["clearance"]);
     }
 
+
 }
 
 inline void setupLogNormalICPAcquisition(
@@ -173,14 +181,17 @@ inline void setupLinearAbxAcquisitionModel(
         Rcpp::List AcquisitionParams
 )
 {
+    // LinearAbxICP::set() already handles log/logit transformations internally
+    // Do NOT pass dolog=true as it would cause double transformation
     setParam(icp, 0, 0, AcquisitionParams["base"]);
     setParam(icp, 0, 1, AcquisitionParams["time"]);
-    setParam(icp, 0, 2, AcquisitionParams["mass"], true);
-    setParam(icp, 0, 3, AcquisitionParams["freq"], true);
-    setParam(icp, 0, 4, AcquisitionParams["col_abx"], true);
-    setParam(icp, 0, 5, AcquisitionParams["suss_abx"], true);
-    setParam(icp, 0, 6, AcquisitionParams["suss_ever"], true);
+    setParam(icp, 0, 2, AcquisitionParams["mass"]);
+    setParam(icp, 0, 3, AcquisitionParams["freq"]);
+    setParam(icp, 0, 4, AcquisitionParams["col_abx"]);
+    setParam(icp, 0, 5, AcquisitionParams["suss_abx"]);
+    setParam(icp, 0, 6, AcquisitionParams["suss_ever"]);
 }
+
 
 inline void setupAcquisitionParams(
         LogNormalICP * icp,
@@ -218,9 +229,11 @@ inline void setupAbxRateParams(
         AbxParams * abxp,
         Rcpp::List AbxRateParams
 ){
+    // AbxParams uses indices [0, 1, 2] = [uncolonized, latent, colonized]
+    // For 2-state models, index 1 is unused (latent doesn't exist)
     setParam(abxp, 0, AbxRateParams["uncolonized"]);
-    setParam(abxp, 1, AbxRateParams["colonized"]);
-    setParam(abxp, 2, AbxRateParams["latent"]);
+    setParam(abxp, 1, AbxRateParams["latent"]);
+    setParam(abxp, 2, AbxRateParams["colonized"]);
 }
 
 template <typename ModelType>
