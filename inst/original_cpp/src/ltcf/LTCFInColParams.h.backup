@@ -1,0 +1,189 @@
+
+class LTCFInColParams: public LogNormalICP
+{
+public:
+	LTCFInColParams(int nst, int nmet) : LogNormalICP(nst,7,1,1,nmet) 
+	{
+	}
+
+	virtual string header()
+	{
+		stringstream s;
+
+		s <<         "Acq00";
+		s << "\t" << "Acq01";
+		s << "\t" << "Acq10";
+		s << "\t" << "Acq11";
+		s << "\t" << "ColIsol";
+		s << "\t" << "SusIsol";
+		s << "\t" << "SusIsolEver";
+
+                if (nstates == 3)
+                        s << "\t" << "Prog";
+                s << "\t" << "Clear";
+
+		return s.str();
+	}
+
+	virtual double acqRate(int s0, int s1, int si0, int si1, int se0, int se1, int c0, int c1, int ci0, int ci1)
+	{
+		double x0 = (c0 -ci0) + epar[0][4]*ci0;
+		double x1 = (c1 -ci1) + epar[0][4]*ci1;
+
+		double y0 = (s0-se0) + epar[0][6] * ( (se0 - si0) + si0 * epar[0][5] );
+		double y1 = (s1-se1) + epar[0][6] * ( (se1 - si1) + si1 * epar[0][5] );
+
+		return x0*y0*epar[0][0] + x0*y1*epar[0][1] + x1*y0*epar[0][2] + x1*y1*epar[0][3];
+	}
+
+	virtual double acqRate(int nsus, int onisol, int everisol, int ncolisol, int ncol)
+	{
+		// Term for colonized.
+		double x = (ncol-ncolisol) + epar[0][4]*ncolisol;
+
+		// Term for susceptibles.
+		double y = (nsus-everisol) + epar[0][6] * ( (everisol-onisol) + onisol * epar[0][5]);
+
+
+                return x * y * epar[0][2];
+	}
+
+	virtual inline double logAcquisitionRate(double time, PatientState *p, LocationState *ls)
+	{
+		LTCFLocationState *as = (LTCFLocationState *) ls;
+/*
+		int everisol = as->everIsol((Patient *)p->getOwner());
+		int onisol = as->inIsol((Patient *)p->getOwner());
+        	return log(acqRate(1,onisol,everisol,as->getIsolColonized(),as->getColonized()));
+*/
+
+		Patient *pat = (Patient *) p->getOwner();
+		int g = pat->getGroup();
+
+		int s0 = (1-g);
+		int s1 = g;
+		int is0 = (1-g)*as->inIsol(pat);
+		int is1 = g*as->inIsol(pat);
+		int ei0 = (1-g)*as->everIsol(pat);
+		int ei1 = g*as->everIsol(pat);
+
+		int c0 = as->subsetColonized(0);
+		int c1 = as->subsetColonized(1);
+		int ci0 = as->subsetIsolColonized(0);
+		int ci1 = as->subsetIsolColonized(1);
+
+		int s = s0 + s1;
+		int is = is0 + is1;
+		int ei = ei0 + ei1;
+		int c = c0 + c1;
+		int ci = ci0 + ci1;
+
+        	//return log(acqRate(s,is,ei,ci,c));
+        	return log(acqRate(s0,s1,is0,is1,ei0,ei1,c0,c1,ci0,ci1));
+
+
+		
+/*
+		Patient *pat = (Patient *) p->getOwner();
+
+		int g = pat->getGroup();
+		int is = as->inIsol(pat);
+		int ei = as->everIsol(pat);
+
+		int c0 = as->subsetColonized(0);
+		int c1 = as->subsetColonized(1);
+		int ci0 = as->subsetIsolColonized(0);
+		int ci1 = as->subsetIsolColonized(1);
+
+		return log(acqRate((1-g),g,(1-g)*is,g*is,(1-g)*ei,g*ei,c0,c1,ci0,ci1));
+*/
+	}
+
+	virtual inline double logAcquisitionGap(double u, double v, LocationState *ls)
+	{
+		LTCFLocationState *as = (LTCFLocationState *) ls;
+
+/*
+		//int nsus = as->subsetSusceptible(0) + as->subsetSusceptible(1);
+		int nsus = as->getSusceptible();
+		int neve = as->subsetEverIsolSusceptible(0) + as->subsetEverIsolSusceptible(1);
+		int ncur = as->subsetIsolSusceptible(0) + as->subsetIsolSusceptible(1);
+		int ncol = as->subsetColonized(0) + as->subsetColonized(1);
+		int ncax = as->subsetIsolColonized(0) + as->subsetIsolColonized(1);
+
+		return -(v-u) * acqRate(nsus,ncur,neve,ncax,ncol);
+*/
+		
+		double d = 0;
+
+		for (int i=0; i<2; i++)
+		{
+			int nsus = as->subsetSusceptible(i);
+			int neve = as->subsetEverIsolSusceptible(i);
+			int ncur = as->subsetIsolSusceptible(i);
+
+			for (int j=0; j<2; j++)
+			{
+				int ncol = as->subsetColonized(j);
+				int ncax = as->subsetIsolColonized(j);
+				d += -(v-u) * acqRate(nsus,ncur,neve,ncax,ncol);
+			}
+		}
+
+		return d;
+	}
+
+	virtual double *acquisitionRates(double time, PatientState *p, LocationState *ls)
+	{
+		LTCFLocationState *as = (LTCFLocationState *) ls;
+		int onisol = as->inIsol((Patient *)p->getOwner());
+		int everisol = as->everIsol((Patient *)p->getOwner());
+
+		double *P = new double[nstates];
+
+                if (nstates == 2)
+                {
+			P[0] = acqRate(1,onisol,everisol,as->getIsolColonized(),as->getColonized());
+			P[1] = acqRate(1,onisol,everisol,as->getIsolColonized(),1+as->getColonized());
+                }
+
+                if (nstates == 3)
+                {
+			P[0] = acqRate(1,onisol,everisol,as->getIsolColonized(),as->getColonized());
+			P[1] = P[0];
+			P[2] = acqRate(1,onisol,everisol,as->getIsolColonized(),1+as->getColonized());
+                }
+
+                return P;
+	}
+
+	virtual double logProgressionRate(double time, PatientState *p, LocationState *s)
+	{
+		return log(epar[1][0]);
+	}
+
+	virtual double logProgressionGap(double t0, double t1, LocationState *s)
+	{
+		return -(t1-t0) * epar[1][0]  * ((LTCFLocationState *) s)->getLatent();
+	}
+
+	virtual double logClearanceRate(double time, PatientState *p, LocationState *s)
+	{
+		return log(epar[2][0]);
+	}
+
+	virtual double logClearanceGap(double t0, double t1, LocationState *s)
+	{
+		return -(t1-t0) * epar[2][0]  * ((LTCFLocationState *) s)->getColonized();
+	}
+
+	virtual double unTransform(int i, int j)
+	{
+		return exp(par[i][j]);
+	}
+	
+	virtual void set(int i, int j, double value, int update, double prival, double priorn)
+	{
+		setWithLogTransform(i,j,value,update,prival,priorn);
+	}
+};
