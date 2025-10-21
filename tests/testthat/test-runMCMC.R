@@ -38,7 +38,7 @@ test_that("runMCMC Works", {
 
 
   results <- runMCMC(
-    modname = "LinearAbxModel",
+    # modname = "LinearAbxModel",
     data = simulated.data,
     MCMCParameters = list(
       nburn = 2,
@@ -47,7 +47,7 @@ test_that("runMCMC Works", {
       outputfinal = TRUE
     ),
     modelParameters = modelParameters,
-    nstates = 2,
+    # nstates = 2,
     verbose = TRUE
   )
 })

@@ -1,5 +1,7 @@
-FROM ghcr.io/rocker-org/devcontainer/geospatial:4.4
+FROM rocker/tidyverse:4.5.1
 
-RUN install2.r RcppEigen checkmate testthat
+RUN install2.r RcppEigen RcppArmadillo checkmate testthat
+
+RUN apt-get update && apt-get install gdb valgrind -y --no-install-recommends 
 
 CMD ["bash"]
