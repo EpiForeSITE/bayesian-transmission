@@ -196,10 +196,19 @@ std::vector<double> RandomTestParams::getValues() const
 
 void RandomTestParams::write (ostream &os) const
 {
-    TestParams::write(os);
-    os << "\t";
-
+    // Write RandomTest probabilities (not parent TestParams probabilities!)
     char *buffer = new char[100];
+    sprintf(buffer,"%12.10f\t",probs[0][1]);
+    os << buffer;
+    if (nstates == 3)
+    {
+        sprintf(buffer,"%12.10f\t",probs[1][1]);
+        os << buffer;
+    }
+    sprintf(buffer,"%12.10f\t",probs[2][1]);
+    os << buffer;
+    
+    // Write RandomTest rates
     sprintf(buffer,"%12.10f\t",rates[0]);
     os << buffer;
     if (nstates == 3)
