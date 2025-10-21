@@ -391,6 +391,7 @@ ABXInUnitParams <- function(
   )
 }
 
+ABXInUnitParameters <- ABXInUnitParams
 
 #' Model Parameters for a Log Normal Model
 #'

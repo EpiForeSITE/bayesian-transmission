@@ -1,4 +1,5 @@
 #include "modeling/modeling.h"
+#include <cmath>
 
 namespace models {
 
@@ -31,8 +32,14 @@ double UnitLinkedModel::logLikelihood(infect::SystemHistory *hist)
             cout << "infect::HistoryLink *l = " << l
                  << "; logLikelihood(l) = " << ll << std::endl;
             utot += ll;
+
+            // if (!std::isfinite(ll))
+            // {
+            //     throw std::runtime_error("ll is not finite!");
+            // }
         }
         xtot += utot;
+    
     }
     return xtot;
 }
