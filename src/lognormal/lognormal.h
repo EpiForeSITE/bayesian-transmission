@@ -24,9 +24,10 @@
 		#include "MultiUnitAbxICP.h"
 		#include "MixedICP.h"
 
-		#include "LogNormalModel.h"
-		#include "MixedModel.h"
+	#include "LogNormalModel.h"
+	#include "MixedModel.h"
 
 #include "LinearAbxModel.h"
+#include "LinearAbxModel2.h"
 	}
 #endif

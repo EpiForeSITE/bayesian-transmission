@@ -47,6 +47,32 @@ runMCMC <- function(data, MCMCParameters, modelParameters, verbose = FALSE) {
     .Call(`_bayestransmission_runMCMC`, data, MCMCParameters, modelParameters, verbose)
 }
 
+#' Create a new model object
+#'
+#' Creates and initializes a model object based on the provided parameters.
+#' This allows direct creation and inspection of model objects without running MCMC.
+#' Returns a list with all model parameter values for verification.
+#'
+#' @param modelParameters List of model parameters, including:
+#'   * `modname` Name of the model (e.g., "LogNormalModel", "LinearAbxModel", "LinearAbxModel2", "MixedModel")
+#'   * `nstates` Number of states in the model
+#'   * `nmetro` Number of metropolis steps
+#'   * `forward` Forward parameter
+#'   * `cheat` Cheat parameter
+#' @param verbose Print progress messages (default: false)
+#'
+#' @return A list containing the initialized model parameters:
+#'   * `Insitu` - In situ parameters
+#'   * `SurveillanceTest` - Surveillance test parameters
+#'   * `ClinicalTest` - Clinical test parameters
+#'   * `OutCol` - Out of unit colonization parameters
+#'   * `InCol` - In unit colonization parameters
+#'   * `Abx` - Antibiotic parameters
+#' @export
+newModelExport <- function(modelParameters, verbose = FALSE) {
+    .Call(`_bayestransmission_newModelExport`, modelParameters, verbose)
+}
+
 asAbxLocationState <- function(x) {
     .Call(`_bayestransmission_asAbxLocationState`, x)
 }

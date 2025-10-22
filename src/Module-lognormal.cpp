@@ -89,4 +89,9 @@ void init_Module_lognormal(){
         .constructor<int, int, int, int>()
         .property("InColParams", &lognormal::LinearAbxModel::getInColParams)
     ;
+
+    class_<lognormal::LinearAbxModel2>("CppLinearAbxModel2")
+        .derives<lognormal::LogNormalModel>("CppLogNormalModel")
+        .constructor<int, int, int, int>()
+    ;
 }

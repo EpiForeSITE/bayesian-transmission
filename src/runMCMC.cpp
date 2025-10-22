@@ -37,10 +37,16 @@ lognormal::LogNormalModel* newModel(
         );
         modelsetup<LinearAbxModel>((LinearAbxModel*)model, modelParameters, verbose);
     } else
-    // if (modname == "LinearAbxModel2")
-    // {
-    //     model = new lognormal::LinearAbxModel2(nstates,nmetro,forward,cheat);
-    // } else
+    if (modname == "LinearAbxModel2")
+    {
+        model = new LinearAbxModel2(
+            nstates,
+            modelParameters["nmetro"],
+            modelParameters["forward"],
+            modelParameters["cheat"]
+        );
+        modelsetup<LinearAbxModel2>((LinearAbxModel2*)model, modelParameters, verbose);
+    } else
     // if (modname == "MultiUnitLinearAbxModel")
     // {
     //     model = new lognormal::MultiUnitLinearAbxModel(nstates,l,nmetro,forward,cheat);
@@ -304,4 +310,42 @@ SEXP runMCMC(
 
     return ret;
 
+}
+
+//' Create a new model object
+//'
+//' Creates and initializes a model object based on the provided parameters.
+//' This allows direct creation and inspection of model objects without running MCMC.
+//' Returns a list with all model parameter values for verification.
+//'
+//' @param modelParameters List of model parameters, including:
+//'   * `modname` Name of the model (e.g., "LogNormalModel", "LinearAbxModel", "LinearAbxModel2", "MixedModel")
+//'   * `nstates` Number of states in the model
+//'   * `nmetro` Number of metropolis steps
+//'   * `forward` Forward parameter
+//'   * `cheat` Cheat parameter
+//' @param verbose Print progress messages (default: false)
+//'
+//' @return A list containing the initialized model parameters:
+//'   * `Insitu` - In situ parameters
+//'   * `SurveillanceTest` - Surveillance test parameters
+//'   * `ClinicalTest` - Clinical test parameters
+//'   * `OutCol` - Out of unit colonization parameters
+//'   * `InCol` - In unit colonization parameters
+//'   * `Abx` - Antibiotic parameters
+//' @export
+// [[Rcpp::export]]
+SEXP newModelExport(
+    Rcpp::List modelParameters,
+    bool verbose = false
+) {
+    lognormal::LogNormalModel *model = newModel(modelParameters, verbose);
+    
+    // Use the existing model2R function to wrap the model parameters
+    SEXP result = model2R(model);
+    
+    // Clean up the model object
+    delete model;
+    
+    return result;
 }

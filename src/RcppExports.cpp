@@ -47,6 +47,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// newModelExport
+SEXP newModelExport(Rcpp::List modelParameters, bool verbose);
+RcppExport SEXP _bayestransmission_newModelExport(SEXP modelParametersSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type modelParameters(modelParametersSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(newModelExport(modelParameters, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // asAbxLocationState
 SEXP asAbxLocationState(SEXP x);
 RcppExport SEXP _bayestransmission_asAbxLocationState(SEXP xSEXP) {
@@ -98,6 +110,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bayestransmission_CodeToEvent", (DL_FUNC) &_bayestransmission_CodeToEvent, 1},
     {"_bayestransmission_EventToCode", (DL_FUNC) &_bayestransmission_EventToCode, 1},
     {"_bayestransmission_runMCMC", (DL_FUNC) &_bayestransmission_runMCMC, 4},
+    {"_bayestransmission_newModelExport", (DL_FUNC) &_bayestransmission_newModelExport, 2},
     {"_bayestransmission_asAbxLocationState", (DL_FUNC) &_bayestransmission_asAbxLocationState, 1},
     {"_bayestransmission_asMap", (DL_FUNC) &_bayestransmission_asMap, 1},
     {"_bayestransmission_asHistoryLink", (DL_FUNC) &_bayestransmission_asHistoryLink, 1},
