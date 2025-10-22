@@ -6,3 +6,60 @@
 docs
 inst/doc
 *.o
+
+# Compiled binaries and libraries
+*.so
+*.dll
+*.a
+inst/original_cpp/src/bin/
+inst/original_cpp/src/*/[!M]* # Ignore executables in subdirectories
+inst/original_cpp/src/util/test
+inst/original_cpp/src/util/libutil.a
+
+# Debug and test output files
+*.log
+debug*.txt
+*_output.txt
+*_stdout.txt
+*_stderr.txt
+test_output.*
+r_init_*.txt
+r_test_*.txt
+cpp_*_output.txt
+
+# Temporary test scripts (keep tests/ directory)
+/test_*.R
+/extract_*.R
+/extract_*.sh
+/extract_*.py
+/compare_*.py
+/*_test.sh
+
+# Temporary markdown documentation (keep final docs)
+/*_comparison.md
+!final_parameter_comparison.md
+/*_investigation.md
+/*_analysis.md
+/*_status.md
+/*_progress.md
+/*_summary.md
+/initialization_summary.md
+/parameter_*.txt
+
+# Backup files
+*.backup
+*~
+.*.swp
+
+# IDE and editor files
+.vscode/
+.idea/
+*.code-workspace
+
+# Docker files (if not part of project)
+docker-compose.yaml
+.devcontainer.backup/
+
+# Output and compilation artifacts
+compile.txt
+output.txt
