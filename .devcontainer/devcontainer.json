@@ -1,17 +1,52 @@
 {
-    "build": {
-        "dockerfile": "Containerfile"
+  "name": "R Debug Environment",
+  "image": "wch1/r-debug:latest",
+  
+  // Set environment variables
+  "containerEnv": {
+    "LANG": "en_US.UTF-8",
+    "ASAN_OPTIONS": "detect_leaks=0:detect_odr_violation=0",
+    "UBSAN_OPTIONS": "print_stacktrace=1",
+    "RJAVA_JVM_STACK_WORKAROUND": "0",
+    "RGL_USE_NULL": "true",
+    "R_DONT_USE_TK": "true"
     },
-    "remoteUser": "root",
+
+  // Mount the workspace
+  "workspaceFolder": "/home/bt",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/bt,type=bind",
+
+  // Features to add
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  // VS Code extensions to install
     "customizations": {
         "vscode": {
             "extensions": [
+        "REditorSupport.r",
+        "RDebugger.r-debugger",
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
                 "quarto.quarto",
                 "ms-vscode.makefile-tools"
-            ]
+
+      ],
+      "settings": {
+        "r.rterm.linux": "/usr/local/RD/bin/R",
+        "r.rpath.linux": "/usr/local/RD/bin/R",
+        "r.bracketedPaste": true,
+        "r.sessionWatcher": true
+      }
         }
     },
-    "mounts": [
-        "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached,readonly"
-    ]
+
+  // Keep the container running
+  "overrideCommand": true,
+  "shutdownAction": "stopContainer",
+
+  // Post-create command to set up the environment
+  "postCreateCommand": "echo 'Dev container ready!'"
 }
