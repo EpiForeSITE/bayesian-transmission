@@ -29,7 +29,7 @@ public:
 
 	inline int getGroup() const
 	{
-		return group;
+		return group+thou;
 	}
 
 	void write(ostream &os) const override;
