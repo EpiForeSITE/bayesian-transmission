@@ -263,13 +263,13 @@ double UnitLinkedModel::logLikelihood(infect::Patient *pat, infect::HistoryLink 
 
 double UnitLinkedModel::logLikelihood(infect::HistoryLink *h)
 {
-    cout << "UnitLinkedModel::logLikelihood(infect::HistoryLink *h=" << h << ")\n";
+    // cout << "UnitLinkedModel::logLikelihood(infect::HistoryLink *h=" << h << ")\n";
     return logLikelihood(h,1);
 }
 
 double UnitLinkedModel::logLikelihood(infect::HistoryLink *h, int dogap)
 {
-    cout << "UnitLinkedModel::logLikelihood(infect::HistoryLink *h=" << h << ", int dogap=" << dogap << ")\n";
+    // cout << "UnitLinkedModel::logLikelihood(infect::HistoryLink *h=" << h << ", int dogap=" << dogap << ")\n";
     switch(h->getEvent()->getType())
     {
     case start:

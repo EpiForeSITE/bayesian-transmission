@@ -189,6 +189,35 @@ SEXP runMCMC(
     Sampler *mc = new Sampler(hist,model,random);
 
     if (verbose)
+    {
+        Rcpp::Rcout << "\n=== INITIAL PARAMETERS ===" << std::endl;
+        std::ostringstream ss;
+        
+        // Output parameter components
+        model->getInsituParams()->write(ss);
+        ss << "\t";
+        model->getSurveillanceTestParams()->write(ss);
+        ss << "\t";
+        if (model->getClinicalTestParams() != model->getSurveillanceTestParams())
+        {
+            model->getClinicalTestParams()->write(ss);
+            ss << "\t";
+        }
+        model->getOutColParams()->write(ss);
+        ss << "\t";
+        model->getInColParams()->write(ss);
+        ss << "\t";
+        if (model->getAbxParams() != 0)
+        {
+            model->getAbxParams()->write(ss);
+            ss << "\t";
+        }
+        
+        Rcpp::Rcout << ss.str() << "\t\tLogLike=" << model->logLikelihood(hist) << std::endl;
+        Rcpp::Rcout << "=== END INITIAL PARAMETERS ===\n" << std::endl;
+    }
+
+    if (verbose)
         Rcpp::message(Rcpp::wrap(string("burning in MCMC.\n")));
     unsigned int nburn = MCMCParameters["nburn"];
     for (unsigned int i=0; i<nburn; i++)
