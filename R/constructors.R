@@ -173,8 +173,8 @@ ClinicalTestParams <- RandomTestParams
 #' @examples
 #' OutOfUnitInfectionParams()
 OutOfUnitInfectionParams <- function(
-    acquisition = Param(0),
-    clearance = Param(0),
+    acquisition = Param(0.05),
+    clearance = Param(0.01),
     progression = Param(0)) {
   acquisition <- check_param(acquisition)
   clearance <- check_param(clearance)
@@ -423,7 +423,7 @@ LogNormalModelParams <-
            SurveillanceTest = SurveillanceTestParams(),
            ClinicalTest = ClinicalTestParams(),
            OutOfUnitInfection = OutOfUnitInfectionParams(),
-           InUnit = InUnitParameters(),
+           InUnit = InUnitParams(),  # Fixed: was InUnitParameters()
            Abx = AbxParams(),
            AbxRate = AbxRateParams()) {
     assertthat::assert_that(
@@ -455,6 +455,6 @@ LogNormalModelParams <-
 #' @export
 LinearAbxModel <- function(
     ...,
-    InUnit = ABXInUnitParameters()) {
+    InUnit = ABXInUnitParams()) {  # Fixed: was ABXInUnitParameters()
   LogNormalModelParams("LinearAbxModel", ..., InUnit = InUnit)
 }
