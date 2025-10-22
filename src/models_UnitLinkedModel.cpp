@@ -28,8 +28,8 @@ double UnitLinkedModel::logLikelihood(infect::SystemHistory *hist)
         double utot = 0;
         for (infect::HistoryLink *l = (infect::HistoryLink *) h->nextValue(); l != 0; l=l->uNext()){
             auto ll = logLikelihood(l);
-            cout << "infect::HistoryLink *l = " << l
-                 << "; logLikelihood(l) = " << ll << std::endl;
+            // cout << "infect::HistoryLink *l = " << l
+            //      << "; logLikelihood(l) = " << ll << std::endl;
             utot += ll;
         }
         xtot += utot;
@@ -210,13 +210,13 @@ void UnitLinkedModel::countUnitStats(infect::HistoryLink *l)
 
 double UnitLinkedModel::logLikelihood(infect::EpisodeHistory *h)
 {
-    cout << "UnitLinkedModel::logLikelihood(infect::EpisodeHistory *h=" << h << ")\n";
+    // cout << "UnitLinkedModel::logLikelihood(infect::EpisodeHistory *h=" << h << ")\n";
     return logLikelihood(h,0);
 }
 
 double UnitLinkedModel::logLikelihood(infect::EpisodeHistory *h, int opt)
 {
-    cout << "UnitLinkedModel::logLikelihood(infect::EpisodeHistory *h=" << h << ", int opt=" << opt << ")\n";
+    // cout << "UnitLinkedModel::logLikelihood(infect::EpisodeHistory *h=" << h << ", int opt=" << opt << ")\n";
     double x = 0;
     for (infect::HistoryLink *l = h->admissionLink(); ; l = l->uNext())
     {
@@ -285,16 +285,16 @@ double UnitLinkedModel::logLikelihood(infect::HistoryLink *h, int dogap)
     if (dogap)
     {
         x += icp->logProbGap(prev,h);
-        cout << x << "    ";
+        // cout << x << "    ";
         x += survtsp->logProbGap(prev,h);
-        cout << x << "    ";
+        // cout << x << "    ";
         if (clintsp && clintsp != survtsp){
             x += clintsp->logProbGap(prev,h);
         }
-        cout << x << "    ";
+        // cout << x << "    ";
         if (abxp != 0)
             x += abxp->logProbGap(prev,h);
-        cout << x << "    ";
+        // cout << x << "    ";
     }
 
     if (h->isHidden())
@@ -305,7 +305,7 @@ double UnitLinkedModel::logLikelihood(infect::HistoryLink *h, int dogap)
     case insitu0:
     case insitu1:
     case insitu2:
-        cout << "  insitu  ";
+        // cout << "  insitu  ";
         x += isp->logProb(h);
         break;
 
@@ -313,32 +313,32 @@ double UnitLinkedModel::logLikelihood(infect::HistoryLink *h, int dogap)
     case admission0:
     case admission1:
     case admission2:
-        cout << "  admission  ";
+        // cout << "  admission  ";
         x += ocp->logProb(h);
         break;
 
     case acquisition:
     case progression:
     case clearance:
-        cout << "  transmission  ";
+        // cout << "  transmission  ";
         x += icp->logProb(h);
         break;
 
     case negsurvtest:
     case possurvtest:
-        cout << "  survtest  ";
+        // cout << "  survtest  ";
         x += survtsp->logProb(h);
         break;
 
     case negclintest:
     case posclintest:
-        cout << "  clintest  ";
+        // cout << "  clintest  ";
         if (clintsp)
             x += clintsp->logProb(h);
         break;
 
     case abxon:
-        cout << "  abxon  ";
+        // cout << "  abxon  ";
         if (abxp != 0)
             x += abxp->logProb(h);
         break;
@@ -351,7 +351,7 @@ double UnitLinkedModel::logLikelihood(infect::HistoryLink *h, int dogap)
     case stop:
     case isolon:
     case isoloff:
-        cout << "  other  ";
+        // cout << "  other  ";
         break;
 
     default:
@@ -359,7 +359,7 @@ double UnitLinkedModel::logLikelihood(infect::HistoryLink *h, int dogap)
     break;
     }
 
-    cout << x << std::endl;
+    // cout << x << std::endl;
     return x;
 }
 

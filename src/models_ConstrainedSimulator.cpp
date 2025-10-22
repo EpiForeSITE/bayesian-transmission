@@ -173,7 +173,7 @@ Markov* ConstrainedSimulator::getMarkovProcess(UnitLinkedModel *mod, infect::His
 void ConstrainedSimulator::sampleEpisodes(UnitLinkedModel *mod, infect::SystemHistory *h, int max, Random *rand)
 {
     for (Map *p = h->getPatientHeads(); p->hasNext(); ){
-        cout << "Sampling patient " << p->hash() << endl;
+        // cout << "Sampling patient " << p->hash() << endl;
         sampleHistory(mod,h,(infect::HistoryLink *)p->nextValue(),max,rand);
     }
 }
@@ -181,7 +181,7 @@ void ConstrainedSimulator::sampleEpisodes(UnitLinkedModel *mod, infect::SystemHi
 void ConstrainedSimulator::sampleHistory(UnitLinkedModel *mod, infect::SystemHistory *hist, infect::HistoryLink *plink, int max, Random *rand)
 {
 
-    cout << "sampleHistory()..";
+    // cout << "sampleHistory()..";
     infect::Patient *pat = plink->getEvent()->getPatient();
     int neps = 0;
     infect::EpisodeHistory **eh = hist->getPatientHistory(pat,&neps);
@@ -199,11 +199,11 @@ void ConstrainedSimulator::sampleHistory(UnitLinkedModel *mod, infect::SystemHis
     double **nt = new double*[neps];
 
     oldloglike = mod->logLikelihood(pat,plink);
-    cout << oldloglike << std::endl;
+    // cout << oldloglike << std::endl;
 
     for (int i=0; i<neps; i++)
     {
-        cout << i << ",";
+        // cout << i << ",";
         eh[i]->unapply();
         eh[i]->installProposal();
         getProposal(mod,eh[i],&(on[i]),&(ot[i]),&(os[i]));
@@ -219,12 +219,12 @@ void ConstrainedSimulator::sampleHistory(UnitLinkedModel *mod, infect::SystemHis
     Markov *mark = getMarkovProcess(mod,plink,rand,&nalloc,&mytime,&mydoit,&myS,&myQ);
 
     oldpropprob = mark->logProcessProb(neps,on,ot,os);
-    cout << "\noldpropprob=" << oldpropprob << std::endl;
+    // cout << "\noldpropprob=" << oldpropprob << std::endl;
     if(std::isnan(oldpropprob))
         throw std::runtime_error("oldpropprob is nan");
 
     newpropprob = mark->simulateProcess(neps,nn,nt,ns);
-    cout << "\nnewpropprob=" << newpropprob << std::endl;
+    // cout << "\nnewpropprob=" << newpropprob << std::endl;
     if(std::isnan(newpropprob))
         throw std::runtime_error("newpropprob is nan");
 
