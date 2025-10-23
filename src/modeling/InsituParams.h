@@ -68,6 +68,23 @@ public:
                       double r, bool ur);
     static void skipLine(istream &is);
     virtual void read(istream &is);
+
+	// Accessors for counts array (for testing)
+	virtual std::vector<double> getCounts() const
+	{
+		std::vector<double> res(nstates);
+		for (int i = 0; i < nstates; i++)
+			res[i] = counts[i];
+		return res;
+	}
+
+	virtual void setCounts(std::vector<double> newCounts)
+	{
+		if ((int)newCounts.size() != nstates)
+			throw std::runtime_error("counts vector size must match nstates");
+		for (int i = 0; i < nstates; i++)
+			counts[i] = newCounts[i];
+	}
 };
 
 

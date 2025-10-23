@@ -53,10 +53,17 @@ InsituParams::InsituParams(std::vector<double> probs, std::vector<double> priors
     this->priors = new double[nstates];
     this->doit = new bool[3];
 
+    // Check if probabilities sum to one and normalize if not
+    double sum = 0.0;
     for (int i = 0; i < 3; i++)
     {
-        this->probs[i] = probs[i];
-        this->logprobs[i] = log(probs[i]);
+        sum += probs[i];
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        this->probs[i] = probs[i] / sum;
+        this->logprobs[i] = log(this->probs[i]);
         this->priors[i] = priors[i];
         this->doit[i] = doit[i];
     }

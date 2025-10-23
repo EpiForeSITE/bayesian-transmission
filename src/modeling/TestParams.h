@@ -60,6 +60,21 @@ public:
 	    return nstates;
 	}
 
+	// Accessors for counts matrix (for testing)
+	virtual double getCount(int i, int j) const
+	{
+		if (i < 0 || i >= n || j < 0 || j >= m)
+			throw std::out_of_range("Index out of range");
+		return counts[i][j];
+	}
+
+	virtual void setCount(int i, int j, double value)
+	{
+		if (i < 0 || i >= n || j < 0 || j >= m)
+			throw std::out_of_range("Index out of range");
+		counts[i][j] = value;
+	}
+
 };
 
 } // namespace models
