@@ -131,11 +131,30 @@ SEXP runMCMC(
 
     if(verbose) Rcpp::Rcout << "Setting up System...";
 
+    // Validate data is sorted by patient, then time
+    std::vector<int> patients = as<std::vector<int>>(data[3]);
+    std::vector<double> times = as<std::vector<double>>(data[2]);
+    
+    for (size_t i = 1; i < patients.size(); i++) {
+        if (patients[i] < patients[i-1]) {
+            Rcpp::stop("Data must be sorted by patient ID, then time. "
+                      "Row %d has patient %d, but previous row had patient %d. "
+                      "Please sort your data: data[order(data$patient, data$time), ]",
+                      i+1, patients[i], patients[i-1]);
+        }
+        if (patients[i] == patients[i-1] && times[i] < times[i-1]) {
+            Rcpp::stop("Data must be sorted by patient ID, then time. "
+                      "For patient %d, row %d has time %.4f which is before row %d time %.4f. "
+                      "Please sort your data: data[order(data$patient, data$time), ]",
+                      patients[i], i+1, times[i], i, times[i-1]);
+        }
+    }
+
     System *sys = new System(
         as<std::vector<int>>(data[0]),//facility
         as<std::vector<int>>(data[1]),//unit
-        as<std::vector<double>>(data[2]),//"time"
-        as<std::vector<int>>(data[3]),//"patient"
+        times,//"time"
+        patients,//"patient"
         as<std::vector<int>>(data[4])//"event type"
     );
     if (verbose) Rcpp::Rcout << "Done" << std::endl;
@@ -219,7 +238,12 @@ SEXP runMCMC(
             ss << "\t";
         }
         
-        Rcpp::Rcout << ss.str() << "\t\tLogLike=" << model->logLikelihood(hist) << std::endl;
+        double initialLogLike = model->logLikelihood(hist);
+        if (std::isinf(initialLogLike) || std::isnan(initialLogLike)) {
+            Rcpp::Rcerr << "\nWARNING: Initial log likelihood is " << initialLogLike << "\n";
+            Rcpp::Rcerr << "This suggests a problem with model initialization or data.\n";
+        }
+        Rcpp::Rcout << ss.str() << "\t\tLogLike=" << initialLogLike << std::endl;
         Rcpp::Rcout << "=== END INITIAL PARAMETERS ===\n" << std::endl;
     }
 

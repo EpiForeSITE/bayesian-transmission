@@ -157,13 +157,26 @@ void LogNormalICP::setWithLogitTransform(int i, int j, double value, int update,
     // Assume that the transformed variable has a Gaussian distribution with this mean and variance.
     // Except, use the raw transform as the Gaussian mean!
 
+    // Clamp value to avoid infinity from logit at 0 or 1
+    // Use a small epsilon to keep values strictly in (0, 1)
+    const double eps = 1e-10;
+    double value_safe = value;
+    if (value_safe <= eps) value_safe = eps;
+    if (value_safe >= 1.0 - eps) value_safe = 1.0 - eps;
+
+    // Clamp prival to avoid NaN from digamma/trigamma at 0
+    // Must be strictly in (0, 1)
+    double prival_safe = prival;
+    if (prival_safe <= eps) prival_safe = eps;
+    if (prival_safe >= 1.0 - eps) prival_safe = 1.0 - eps;
+
     double prin = priorn > 1 ? priorn : 1;
-    double a = prival*prin;
-    double b = (1-prival)*prin;
+    double a = prival_safe*prin;
+    double b = (1-prival_safe)*prin;
 
     double mu = digamma(a) - digamma(b);
     double s2 = trigamma(a) + trigamma(b);
-    setNormal(i,j,logit(value),update,mu,s2,sig);
+    setNormal(i,j,logit(value_safe),update,mu,s2,sig);
 }
 
 void LogNormalICP::setNormal(int i, int j, double value, int update, double prim, double privar, double sig)

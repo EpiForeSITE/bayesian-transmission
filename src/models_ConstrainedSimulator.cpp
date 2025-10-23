@@ -218,10 +218,43 @@ void ConstrainedSimulator::sampleHistory(UnitLinkedModel *mod, infect::SystemHis
 
     Markov *mark = getMarkovProcess(mod,plink,rand,&nalloc,&mytime,&mydoit,&myS,&myQ);
 
+    // Check for invalid rate matrices
+    bool hasInvalidQ = false;
+    for (int i = 0; i < nalloc && i < 10; i++) {
+        if (myQ && myQ[i]) {
+            for (int j = 0; j < mod->getNStates(); j++) {
+                for (int k = 0; k < mod->getNStates(); k++) {
+                    if (std::isnan(myQ[i][j][k]) || std::isinf(myQ[i][j][k])) {
+                        cerr << "WARN: myQ[" << i << "][" << j << "][" << k << "] = " << myQ[i][j][k] << "\n";
+                        hasInvalidQ = true;
+                    }
+                }
+            }
+        }
+    }
+    if (hasInvalidQ) {
+        cerr << "WARNING: Found invalid values in Q matrices\n";
+    }
+
     oldpropprob = mark->logProcessProb(neps,on,ot,os);
     // cout << "\noldpropprob=" << oldpropprob << std::endl;
-    if(std::isnan(oldpropprob))
+    if(std::isnan(oldpropprob)) {
+        cerr << "\n=== DEBUG: oldpropprob is NaN ===\n";
+        cerr << "neps=" << neps << "\n";
+        cerr << "nalloc=" << nalloc << "\n";
+        for (int i = 0; i < nalloc && i < 5; i++) {
+            cerr << "mytime[" << i << "]=" << mytime[i] << "\n";
+            cerr << "mydoit[" << i << "]=" << mydoit[i] << "\n";
+            if (myS && myS[i]) {
+                cerr << "myS[" << i << "]=[";
+                for (int j = 0; j < mod->getNStates() && j < 5; j++) {
+                    cerr << myS[i][j] << " ";
+                }
+                cerr << "]\n";
+            }
+        }
         throw std::runtime_error("oldpropprob is nan");
+    }
 
     newpropprob = mark->simulateProcess(neps,nn,nt,ns);
     // cout << "\nnewpropprob=" << newpropprob << std::endl;

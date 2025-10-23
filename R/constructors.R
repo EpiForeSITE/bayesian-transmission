@@ -98,15 +98,48 @@ check_paramwrate <- function(x, name = deparse(substitute(x))) {
 #' @param probs The probability of the individual being in each state.
 #' @param priors The prior probability of the individual being in each state.
 #' @param doit A flag indicating if the rate(s) should be updated in the MCMC.
+#' @param nstates The number of states (2 or 3). If NULL, inferred from probs length.
+#'                For 2-state models, uses [uncolonized, latent=0, colonized].
+#'                For 3-state models, uses [uncolonized, latent, colonized].
 #'
 #' @returns A list of parameters for in situ testing.
 #' @export
 #'
 #' @examples
 #' InsituParams()
-InsituParams <- function(probs = c(0.5, 0.5, 0), priors = probs * doit, doit = probs != 0) {
+#' InsituParams(nstates = 2)  # [0.9, 0.0, 0.1]
+#' InsituParams(nstates = 3)  # [0.98, 0.01, 0.01]
+InsituParams <- function(probs = NULL, priors = NULL, doit = NULL, nstates = NULL) {
+  # Determine defaults based on nstates
+  if (is.null(probs)) {
+    if (is.null(nstates)) {
+      # Default to 2-state model defaults (matches original C++ for 2-state)
+      probs <- c(0.9, 0.0, 0.1)
+    } else if (nstates == 2) {
+      probs <- c(0.9, 0.0, 0.1)  # uncolonized, latent=0, colonized
+    } else if (nstates == 3) {
+      probs <- c(0.98, 0.01, 0.01)  # uncolonized, latent, colonized
+    } else {
+      stop("nstates must be 2 or 3")
+    }
+  }
+  
   stopifnot(2 <= length(probs) && length(probs) <= 3)
   if (length(probs) == 2) probs <- c(probs, 0)
+  
+  if (is.null(doit)) {
+    # For 2-state: update uncolonized and colonized, not latent
+    # For 3-state: update all three
+    if (is.null(nstates)) {
+      nstates <- if (probs[2] == 0) 2 else 3
+    }
+    doit <- if (nstates == 2) c(TRUE, FALSE, TRUE) else c(TRUE, TRUE, TRUE)
+  }
+  
+  if (is.null(priors)) {
+    priors <- probs * doit + (1 - doit) * 1  # Use 1 for fixed parameters
+  }
+  
   list(
     probs = probs,
     priors = priors,
@@ -288,10 +321,10 @@ AbxRateParams <- function(
 #' @examples
 #' LinearAbxAcquisitionParams()
 LinearAbxAcquisitionParams <- function(
-    base = Param(0.01),
+    base = Param(0.001),
     time = Param(1, 0),
-    mass = Param(1),
-    freq = Param(1),
+    mass = Param(1.0, 1),
+    freq = Param(1.0, 1),
     col_abx = Param(1, 0),
     suss_abx = Param(1, 0),
     suss_ever = Param(1, 0)) {
@@ -419,7 +452,7 @@ LogNormalModelParams <-
            nmetro = 1L,
            forward = TRUE,
            cheat = FALSE,
-           Insitu = InsituParams(),
+           Insitu = NULL,
            SurveillanceTest = SurveillanceTestParams(),
            ClinicalTest = ClinicalTestParams(),
            OutOfUnitInfection = OutOfUnitInfectionParams(),
@@ -433,6 +466,11 @@ LogNormalModelParams <-
       assertthat::is.flag(forward),
       assertthat::is.flag(cheat)
     )
+
+    # Create default Insitu params based on nstates if not provided
+    if (is.null(Insitu)) {
+      Insitu <- InsituParams(nstates = nstates)
+    }
 
     list(
       modname = modname,
