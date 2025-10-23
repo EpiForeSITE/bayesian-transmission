@@ -211,8 +211,11 @@ void InsituParams::set(double u, double l, double c)
     probs[0] = u/tot;
     probs[1] = l/tot;
     probs[2] = c/tot;
+    // Clamp probabilities to avoid log(0) = -inf
+    // For 2-state models, latent probability will be 0, but we still need a finite logprobs[1]
+    const double eps = 1e-300;  // Very small but still > 0
     for (int i=0; i<3; i++)
-        logprobs[i] = log(probs[i]);
+        logprobs[i] = log(std::max(probs[i], eps));
 }
 
 void InsituParams::write(ostream &os) const
