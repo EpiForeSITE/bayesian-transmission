@@ -35,7 +35,6 @@ test_that("models::TestParams", {
     expect_equal(tp1$names, c("Test.P(+|unc)", "Test.P(+|col)"))
     expect_equal(tp1$values, c(0, 0.8))
 
-
     tp1$set(0L, 0.1, 1, 0.001, 1)
     expect_equal(tp1$values, c(0.1, 0.8))
     tp1$set(2L, 0.9, 1, 0.8, 1)

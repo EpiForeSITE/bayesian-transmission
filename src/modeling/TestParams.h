@@ -45,7 +45,8 @@ public:
 	virtual double logProb(infect::HistoryLink *h);
 	virtual void initCounts();
 	virtual void count(infect::HistoryLink *h);
-	virtual void update(Random *r, bool max);
+	virtual void update(Random *r, bool max = false);
+	virtual void update_max(Random *r);
 
 // Personal accessors.
 

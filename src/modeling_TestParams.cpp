@@ -133,6 +133,11 @@ void TestParams::update(Random *r, bool max)
     delete [] newpos;
 }
 
+void TestParams::update_max(Random *r)
+{
+    update(r, true);
+}
+
 // Personal accessors.
 
 // Set value, update and Beta prior.

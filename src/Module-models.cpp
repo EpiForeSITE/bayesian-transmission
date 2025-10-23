@@ -45,7 +45,8 @@ void init_Module_models(){
         .property("nStates", &models::TestParams::getNStates)
         .property("values", &models::TestParams::getValues)
         .method("set", static_cast<void (models::TestParams::*)(int, double, int, double, double)>(&models::TestParams::set))
-        .method("update_max", static_cast<void (models::TestParams::*)(Random*, bool)>(&models::TestParams::update))
+        .method("update", static_cast<void (models::TestParams::*)(Random*, bool)>(&models::TestParams::update))
+        .method("update_max", &models::TestParams::update_max)
         .method("getCount", &models::TestParams::getCount)
         .method("setCount", &models::TestParams::setCount)
     ;
