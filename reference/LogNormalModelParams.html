@@ -43,20 +43,20 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">LogNormalModelParams</span><span class="op">(</span></span>
 <span>  <span class="va">modname</span>,</span>
-<span>  nstates <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  nmetro <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  nstates <span class="op">=</span> <span class="fl">2L</span>,</span>
+<span>  nmetro <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  forward <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cheat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  Insitu <span class="op">=</span> <span class="fu"><a href="InsituParams.html">InsituParams</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  SurveilenceTest <span class="op">=</span> <span class="fu"><a href="SurveillanceTestParams.html">SurveillanceTestParams</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  Insitu <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  SurveillanceTest <span class="op">=</span> <span class="fu"><a href="SurveillanceTestParams.html">SurveillanceTestParams</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  ClinicalTest <span class="op">=</span> <span class="fu"><a href="RandomTestParams.html">ClinicalTestParams</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  OutOfUnitInfection <span class="op">=</span> <span class="fu"><a href="OutOfUnitInfectionParams.html">OutOfUnitInfectionParams</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  InUnit <span class="op">=</span> <span class="fu">LogNormalInUnitAcquisition</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  InUnit <span class="op">=</span> <span class="fu"><a href="InUnitParams.html">InUnitParams</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  Abx <span class="op">=</span> <span class="fu"><a href="AbxParams.html">AbxParams</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  AbxRate <span class="op">=</span> <span class="fu"><a href="AbxRateParams.html">AbxRateParams</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">LinearAbxModel</span><span class="op">(</span><span class="va">...</span>, InUnit <span class="op">=</span> <span class="fu">LogNormalABXInUnitParameters</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">LinearAbxModel</span><span class="op">(</span><span class="va">...</span>, InUnit <span class="op">=</span> <span class="fu"><a href="InUnitParams.html">ABXInUnitParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -72,7 +72,7 @@
 
 
 <dt id="arg-nmetro">nmetro<a class="anchor" aria-label="anchor" href="#arg-nmetro"></a></dt>
-<dd><p>TODO</p></dd>
+<dd><p>The number of Metropolis-Hastings steps to take between outputs.</p></dd>
 
 
 <dt id="arg-forward">forward<a class="anchor" aria-label="anchor" href="#arg-forward"></a></dt>
@@ -87,7 +87,7 @@
 <dd><p>In Situ Parameters</p></dd>
 
 
-<dt id="arg-surveilencetest">SurveilenceTest<a class="anchor" aria-label="anchor" href="#arg-surveilencetest"></a></dt>
+<dt id="arg-surveillancetest">SurveillanceTest<a class="anchor" aria-label="anchor" href="#arg-surveillancetest"></a></dt>
 <dd><p>Surveillance Testing Parameters</p></dd>
 
 
@@ -113,21 +113,31 @@ for the acquisition, progression and clearance of the disease.</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A list of parameters for the model.</p>
+    </div>
+    <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
 
 <ul><li><p><code>LinearAbxModel()</code>: Linear Antibiotic Model Alias</p></li>
 </ul></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">LogNormalModelParams</span><span class="op">(</span><span class="st">"LogNormalModel"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in AcquisitionParams():</span> could not find function "AcquisitionParams"</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Andrew Redd.</p>
+  <p>Developed by Andrew Redd, CDC’s Center for Forecasting and Outbreak Analytics.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

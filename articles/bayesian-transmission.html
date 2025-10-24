@@ -65,17 +65,559 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://epiforesite.github.io/bayesian-transmission/">bayestransmission</a></span><span class="op">)</span></span></code></pre></div>
-  </main>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>This package provides a Bayesian framework for transmission modeling
+on an individual patient level. Modeling is conducted through Markov
+Chain Monte Carlo (MCMC) methods.This document will explain the basic
+usage of the package, specification of parameters, and the output of the
+model.</p>
+</div>
+<div class="section level2">
+<h2 id="data-structure">Data Structure<a class="anchor" aria-label="anchor" href="#data-structure"></a>
+</h2>
+<p>The algorithms expect a longitudinal data set with the following
+columns: * <code>facility</code>: The facility where the event occurred.
+* <code>unit</code>: The unit within the facility where the event
+occurred. * <code>time</code>: The time at which the event occurred. *
+<code>patient</code>: The patient involved in the event. *
+<code>type</code>: The type of event.</p>
+<p>The package includes a simulated dataset,
+<code>simulated.data</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pillar</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">simulated.data</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 8,360</span></span>
+<span><span class="co">#&gt; Columns: 5</span></span>
+<span><span class="co">#&gt; $ facility <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1…</span></span>
+<span><span class="co">#&gt; $ unit     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1…</span></span>
+<span><span class="co">#&gt; $ time     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.060978<span style="color: #949494;">, </span>0.061978<span style="color: #949494;">, </span>1.560978<span style="color: #949494;">, </span>2.883323<span style="color: #949494;">, </span>2.884323<span style="color: #949494;">, </span>1.422631<span style="color: #949494;">, </span>1…</span></span>
+<span><span class="co">#&gt; $ patient  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>10<span style="color: #949494;">, </span>10<span style="color: #949494;">, </span>10<span style="color: #949494;">, </span>10<span style="color: #949494;">, </span>19<span style="color: #949494;">, </span>19<span style="color: #949494;">, </span>19<span style="color: #949494;">, </span>23<span style="color: #949494;">, </span>23<span style="color: #949494;">, </span>23<span style="color: #949494;">, </span>28<span style="color: #949494;">, </span>28…</span></span>
+<span><span class="co">#&gt; $ type     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 0<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>10<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>3<span style="color: #949494;">, </span>0<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>3<span style="color: #949494;">, </span>0<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>3<span style="color: #949494;">, </span>0<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>3<span style="color: #949494;">, </span>0<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>3<span style="color: #949494;">, </span>0<span style="color: #949494;">, </span>…</span></span></code></pre></div>
+<p>There are 12 different types of events that can be specified in the
+<code>type</code> column. These are, expected numerical codes shown in
+parentheses:</p>
+<ul>
+<li>Admission (0) and Discharge (3)</li>
+<li>Surveillance Testing Results
+<ul>
+<li>Negative Test (1)</li>
+<li>Positive Test (2)</li>
+</ul>
+</li>
+<li>Clinical Testing Results
+<ul>
+<li>Negative Test (4)</li>
+<li>Positive Test (5)</li>
+</ul>
+</li>
+<li>Generic Testing
+<ul>
+<li>Negative Test (7)</li>
+<li>Positive Test (8)</li>
+</ul>
+</li>
+<li>Antibiotic Use
+<ul>
+<li>single dose (9)</li>
+<li>Start (10)</li>
+<li>Stop (11)</li>
+</ul>
+</li>
+<li>Isolation Procedures
+<ul>
+<li>Start (6)</li>
+<li>Stop (7)</li>
+</ul>
+</li>
+</ul>
+<p>Not all events need to be used in every data set, but the model
+selected should reflect the data that is available. Care should be taken
+to correctly code the data. The <code>EventToCode</code> and
+<code>CodeToEvent</code> functions can be used to convert between.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="../reference/CodeToEvent.html">CodeToEvent</a></span><span class="op">(</span><span class="va">simulated.data</span><span class="op">$</span><span class="va">type</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;      abxoff       abxon   admission   discharge negsurvtest possurvtest </span></span>
+<span><span class="co">#&gt;         297         725        2183        2183        2749         223</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="model-specifiction">Model Specifiction<a class="anchor" aria-label="anchor" href="#model-specifiction"></a>
+</h2>
+<div class="section level3">
+<h3 id="model-choice">Model Choice<a class="anchor" aria-label="anchor" href="#model-choice"></a>
+</h3>
+<p>Since the model is implemented in C++ for speed and efficiency, only
+the specified models can be used. The currently implemented models
+are:</p>
+<ul>
+<li>
+<code>"LinearAbxModel"</code>, A Linear model with antibiotic use as
+a covariate.</li>
+<li>
+<code>"MixedModel"</code>, and</li>
+<li><code>"LogNormalModel"</code></li>
+</ul>
+<p>Model specification and all parameters are controlled through
+constructor functions of the same name, or generically through the
+<code><a href="../reference/LogNormalModelParams.html">LogNormalModelParams()</a></code> function.</p>
+<p>For all models there is the choice of either a 2 state (susceptible
+and colonized) or 3 state (susceptible, colonized, and recovered or
+latent) model. Number of states is set through the <code>nstates</code>
+parameter, and the number of states in the model overrides what may be
+specified in any individual component.</p>
+</div>
+<div class="section level3">
+<h3 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a>
+</h3>
+<p>The remainder of the parameters are grouped into the following
+categories:</p>
+<ul>
+<li>
+<code>Abx</code>, Antibiotic use,</li>
+<li>
+<code>AbxRate</code>, Antibiotic rates,</li>
+<li>
+<code>InUnit</code>, In unit infection rates,</li>
+<li>
+<code>OutOfUnitInfection</code>, Out of unit infection rates,</li>
+<li>
+<code>Insitu</code>, In situ parameters,</li>
+<li>Testing:
+<ul>
+<li>
+<code>SurveilenceTest</code>, Surveillance testing,</li>
+<li>
+<code>ClinicalTest</code>, Clinical testing.</li>
+</ul>
+</li>
+</ul>
+<p>Unless otherwise specified the parameters are all distributed gamma
+with specified shape and rate parameters. Each parameter can also be
+left as fixed or be sampled at each iteration of the MCMC.</p>
+<div class="section level4">
+<h4 id="specifying-parameters">Specifying parameters<a class="anchor" aria-label="anchor" href="#specifying-parameters"></a>
+</h4>
+<p>Parameters for the model may be specified by the <code><a href="../reference/Param.html">Param()</a></code>
+function. This function takes up to four arguments:</p>
+<pre><code>1. `init`, is the initial value of the parameter.
+2. `weight`, is the weight of the prior distribution in updates.
+3. `update`, a flag of if the parameter should be sampled in the MCMC algorithm. 
+    `FALSE` indicates that the parameter should be fixed, and is by default `TRUE` when `weight` is greater than zero.
+4. `prior`, the mean of the prior distribution.  Taken with the weight will fully parameterize the distribution.</code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Fully specified parameter.</span></span>
+<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0</span>, weight <span class="op">=</span> <span class="fl">1</span>, update <span class="op">=</span> <span class="cn">TRUE</span>, prior <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="co"># Fixed parameter</span></span>
+<span><span class="co"># Weight = 0 implies update=FALSE and prior is ignored.</span></span>
+<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="co"># Update parameter that starts at zero.</span></span>
+<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, weight <span class="op">=</span><span class="fl">1</span>, update<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># Parameters specified at zero implies fixed.</span></span>
+<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="abx-antibiotic-use">
+<code>Abx</code> Antibiotic use<a class="anchor" aria-label="anchor" href="#abx-antibiotic-use"></a>
+</h3>
+<p>Antibiotic use is specified by the <code>Abx</code> parameter. This
+parameter is a list constructed with the <code><a href="../reference/AbxParams.html">AbxParams()</a></code>
+function with the following components:</p>
+<ul>
+<li>
+<code>onoff</code>, If antibiotics are being used or not. The two
+following parameters are only used if <code>onoff</code> is
+<code>TRUE</code>.</li>
+<li>
+<code>delay</code>, the delay for the antibiotic to take
+effect.</li>
+<li>
+<code>life</code>, the duration where the antibiotic to be
+effective.</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">abx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AbxParams.html">AbxParams</a></span><span class="op">(</span>onoff <span class="op">=</span> <span class="cn">TRUE</span>, delay <span class="op">=</span> <span class="fl">0.3</span>, life <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p>Currently, all antibiotics are assumed to be equally effective and
+have the same duration of effectiveness.</p>
+</div>
+<div class="section level3">
+<h3 id="abxrate-antibiotic-rates">
+<code>AbxRate</code> Antibiotic rates<a class="anchor" aria-label="anchor" href="#abxrate-antibiotic-rates"></a>
+</h3>
+<p>The <code>AbxRate</code> parameter control the antibiotic
+administration rates.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">abxrate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AbxRateParams.html">AbxRateParams</a></span><span class="op">(</span></span>
+<span>  <span class="co"># Uncolonized patients do use antibiotics but at a low rate.</span></span>
+<span>  uncolonized <span class="op">=</span> <span class="fl">0.05</span>,  </span>
+<span>  <span class="co"># Colonized patients use antibiotics at a high rate.</span></span>
+<span>  colonized <span class="op">=</span> <span class="fl">0.7</span>      </span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Here since both parameters are non-zero both will be updated. A rate
+of zero for either would indicate that group would never be on
+antibiotics.</p>
+</div>
+<div class="section level3">
+<h3 id="inunit-in-unit-infection-rate">
+<code>InUnit</code> In unit infection rate<a class="anchor" aria-label="anchor" href="#inunit-in-unit-infection-rate"></a>
+</h3>
+<p>Transmission within unit is the main defining characteristic that
+differentiates models. For example the linear antibiotic model,
+<code><a href="../reference/LogNormalModelParams.html">LinearAbxModel()</a></code>, is differentiated from the log normal
+model, <code><a href="../reference/LogNormalModelParams.html">LogNormalModelParams()</a></code> by the use of a
+<code><a href="../reference/InUnitParams.html">ABXInUnitParams()</a></code> for the <code>InUnit</code> argument
+rather than the <code>LogNormalInUnitAcquisition()</code> which does not
+take into account antibiotic use. All in unit transmission is defined in
+terms of acquisition, progression, and clearance.</p>
+<div class="section level4">
+<h4 id="aqcuisition-model">Aqcuisition Model<a class="anchor" aria-label="anchor" href="#aqcuisition-model"></a>
+</h4>
+<p>In the base log normal antibiotic model,
+<code>LogNormalABXInUnitParameters()</code> log acquisition probability
+is a linear function.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">q</mi><mrow><mo stretchy="true" form="prefix" mathvariant="normal">(</mo><mi mathvariant="normal">t</mi><mo stretchy="true" form="postfix" mathvariant="normal">)</mo></mrow></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mi>t</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>−</mo><msub><mi>t</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mi>c</mi></msub><msub><mi>N</mi><mi>o</mi></msub><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">z</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">d</mi><mrow><mo stretchy="true" form="prefix" mathvariant="normal">(</mo><mi mathvariant="normal">t</mi><mo stretchy="true" form="postfix" mathvariant="normal">)</mo></mrow></mrow><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>a</mi><mrow><mi>c</mi><mi>a</mi></mrow></msub><msub><mi>N</mi><mrow><mi>c</mi><mi>a</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mi>A</mi></msub><msub><mi>A</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mi>E</mi></msub><msub><mi>E</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+\log(P(\mathrm{Acq(t)})) = \beta_0 + \beta_t(t-t_0) + 
+    \beta_c N_og(\mathrm{Colonized(t)})a_{ca}N_{ca}(t) + \beta_A A_i(t) + \beta_E E_i(t)
+</annotation></semantics></math> Where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mo>⋆</mo></msub><annotation encoding="application/x-tex">\beta_\star</annotation></semantics></math>
+represents the coefficient corresponding to the amounts,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N_c(t)</annotation></semantics></math>
+represent the total number of colonized patients at time
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mrow><mi>c</mi><mi>a</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N_{ca}(t)</annotation></semantics></math>
+the number of colonized on antibiotics, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>A</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">A_i(t)</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">E_i(t)</annotation></semantics></math>
+represents if patient
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+is currently or ever on antibiotics.</p>
+<p>The linear antibiotic (<code>LinearAbxAcquisitionParams</code>) takes
+a more complicated form for the acquisition model. <span class="math display">$$
+P(\mathrm{Acq(t)}) =
+  \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
+  \left\{e^{\beta_0}
+         \left[
+            \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 -
+e^{\beta_\mathrm{freq}})\right)
+            e^{\beta_\mathrm{mass}}\left(
+                (N_c(t) - N_{ca}(t)) +
+e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
+            \right)
+          + 1 - e^{\beta_\mathrm{mass}}
+        \right]
+  \right\}\\
+  \left[
+    N_S(t) - N_E(t) +
+e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right)
++A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
+  \right]
+$$</span></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">acquisition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LinearAbxAcquisitionParams.html">LinearAbxAcquisitionParams</a></span><span class="op">(</span></span>
+<span>    base <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span>,     <span class="co">#&lt; Base acquisition rate (Updated)</span></span>
+<span>    time <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,     <span class="co">#&lt; Time effect (Fixed)</span></span>
+<span>    mass <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,        <span class="co">#&lt; Mass Mixing (Updated)</span></span>
+<span>    freq <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,        <span class="co">#&lt; Frequency/Density effect (Updated)</span></span>
+<span>    col_abx <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,  <span class="co">#&lt; Colonized on antibiotics (Fixed)</span></span>
+<span>    suss_abx <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>, <span class="co">#&lt; Susceptible on antibiotics (Fixed)</span></span>
+<span>    suss_ever <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span> <span class="co">#&lt; Ever on antibiotics (Fixed)  </span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="progression-model">Progression Model<a class="anchor" aria-label="anchor" href="#progression-model"></a>
+</h4>
+<p>In the 3 state model there is a latent state and the progression
+model controls how patient transition out of the latent state. The base
+rate can be affected by currently being on antiboitics or ever being on
+antbiotcs.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>δ</mi><mn>0</mn></msub><mo>+</mo><msub><mi>δ</mi><mi>A</mi></msub><msub><mi>A</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>δ</mi><mi>E</mi></msub><msub><mi>E</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+\log(P(\mathrm{progression})) = \delta_0+\delta_AA_i(t) + \delta_EE_i(t)
+</annotation></semantics></math> the linear antibiotic model is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>e</mi><msub><mi>δ</mi><mn>0</mn></msub></msup><mrow><mo stretchy="true" form="prefix">[</mo><mn>1</mn><mo>−</mo><msub><mi>E</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msup><mi>e</mi><msub><mi>δ</mi><mn>2</mn></msub></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>E</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><msub><mi>A</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msup><mi>e</mi><msub><mi>δ</mi><mn>1</mn></msub></msup><msub><mi>A</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+P(\mathrm{progression}) = e^{\delta_0}\left[1-E_i(t)+e^{\delta_2}\left(E_i(t)-A_i(t)+e^{\delta_1}A_i(t)\right)\right]
+</annotation></semantics></math></p>
+<p>Where here we use
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>δ</mi><annotation encoding="application/x-tex">\delta</annotation></semantics></math>
+for the coefficients, but the notation is the same.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">progression</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ProgressionParams.html">ProgressionParams</a></span><span class="op">(</span></span>
+<span>    rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span>,     <span class="co">#&lt; Base progression rate (Updated)</span></span>
+<span>    abx  <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,     <span class="co">#&lt; Currently on antibiotics (Fixed)</span></span>
+<span>    ever <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>      <span class="co">#&lt; Ever on antibiotics (Fixed)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="clearance-model">Clearance Model<a class="anchor" aria-label="anchor" href="#clearance-model"></a>
+</h4>
+<p>The clearance model is the same as the progression model in both the
+log normal and the linear cases, the coefficients however are
+independent.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">clearance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ClearanceParams.html">ClearanceParams</a></span><span class="op">(</span></span>
+<span>    rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span>,     <span class="co">#&lt; Base clearance rate (Updated)</span></span>
+<span>    abx  <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,     <span class="co">#&lt; Currently on antibiotics (Fixed)</span></span>
+<span>    ever <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>      <span class="co">#&lt; Ever on antibiotics (Fixed)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">inunit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InUnitParams.html">ABXInUnitParams</a></span><span class="op">(</span></span>
+<span>  acquisition <span class="op">=</span> <span class="va">acquisition</span>,</span>
+<span>  progression <span class="op">=</span> <span class="va">progression</span>,</span>
+<span>  clearance   <span class="op">=</span> <span class="va">clearance</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="out-of-unit-importation">Out of Unit Importation<a class="anchor" aria-label="anchor" href="#out-of-unit-importation"></a>
+</h3>
+<p>The out of unit parameters control the rate at which admissions come
+in, and which state they enter in.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">e</mi></mrow><mi>i</mi></msub><mo>→</mo><msub><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">e</mi></mrow><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">|</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>P</mi><mi>j</mi></msub><mo>−</mo><msub><mi>Q</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><msup><mi>e</mi><mrow><mo>−</mo><mi>t</mi><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>r</mi><mi>i</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">
+\log(P(\mathrm{state}_i \rightarrow \mathrm{state}_j)|t) = P_j - Q_{i,j} e^{-t \sum_i r_i}
+</annotation></semantics></math></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">outcol</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutOfUnitInfectionParams.html">OutOfUnitInfectionParams</a></span><span class="op">(</span></span>
+<span>  acquisition <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  clearance <span class="op">=</span> <span class="fl">0.5</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="in-situ">In Situ<a class="anchor" aria-label="anchor" href="#in-situ"></a>
+</h3>
+<p>I’m not sure what these parameters do. It’s a set of gamma
+distributed parameters one for each state. The updates and probabilities
+are not time dependent.</p>
+<p>When updating the rates for each state are sampled from a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mi>a</mi><mi>m</mi><mi>m</mi><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>N</mi><mi>i</mi></msub><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">gamma(N_i, 1)</annotation></semantics></math>
+distribution. Then all three are normalized to sum to 1.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">insitu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InsituParams.html">InsituParams</a></span><span class="op">(</span></span>
+<span>  <span class="co"># Starting 90/10 split uncolonized to colonized  </span></span>
+<span>  probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>uncolonized <span class="op">=</span> <span class="fl">0.90</span>, <span class="co">#&lt; names are unnecessary.</span></span>
+<span>              colonized <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="testing">Testing<a class="anchor" aria-label="anchor" href="#testing"></a>
+</h3>
+<p>There are two types of testing, surveillance, which is conducted
+routinely at regular intervals such as on admission then every 3 days
+after, and clinical, where the testing is precipitated by staff, and
+thus the timing is informative.</p>
+<div class="section level4">
+<h4 id="surveillance-testing">Surveillance Testing<a class="anchor" aria-label="anchor" href="#surveillance-testing"></a>
+</h4>
+<p>The timing of surveillance testing is assumed to not be informative.
+Therefore, surveillance testing is only parameterized in terms of
+probability of a positive test given the underlying status. Surveillance
+test parameters are updated with a sample from a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mi>e</mi><mi>t</mi><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>N</mi><mrow><mi>s</mi><mo>,</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>N</mi><mrow><mi>s</mi><mo>,</mo><mn>0</mn></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Beta(N_{s,1}, N_{s,0})</annotation></semantics></math>
+distribution where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mrow><mi>s</mi><mo>,</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">N_{s,1}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mrow><mi>s</mi><mo>,</mo><mn>0</mn></mrow></msub><annotation encoding="application/x-tex">N_{s,0}</annotation></semantics></math>
+are the number of positive and negative tests respectively for state
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">surv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SurveillanceTestParams.html">SurveillanceTestParams</a></span><span class="op">(</span></span>
+<span>    <span class="co"># Probability of a positive test when uncolonized</span></span>
+<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>    <span class="co"># Probability of a positive test when colonized</span></span>
+<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.9</span>, <span class="fl">1</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="clinical-testing">Clinical Testing<a class="anchor" aria-label="anchor" href="#clinical-testing"></a>
+</h4>
+<p>Since clinical testing time is informative, clinical testing is
+assumed to be at random within infection stage. The rate of testing
+within each stage is sampled from a gamma distribution.
+Sensitivity/Specificity are handled the same as surveillance testing and
+the likelihood is multiplicative between rate and effectiveness.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">clin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RandomTestParams.html">ClinicalTestParams</a></span><span class="op">(</span></span>
+<span>    <span class="co"># Rate of testing when uncolonized</span></span>
+<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="co"># Rate of testing when colonized</span></span>
+<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="all-together">All Together<a class="anchor" aria-label="anchor" href="#all-together"></a>
+</h4>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LogNormalModelParams.html">LinearAbxModel</a></span><span class="op">(</span></span>
+<span>  nstates <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  Insitu <span class="op">=</span> <span class="va">insitu</span>,</span>
+<span>  SurveillanceTest <span class="op">=</span> <span class="va">surv</span>,</span>
+<span>  ClinicalTest <span class="op">=</span> <span class="va">clin</span>,</span>
+<span>  OutOfUnitInfection <span class="op">=</span> <span class="va">outcol</span>,</span>
+<span>  InUnit <span class="op">=</span> <span class="va">inunit</span>,</span>
+<span>  Abx <span class="op">=</span> <span class="va">abx</span>,</span>
+<span>  AbxRate <span class="op">=</span> <span class="va">abxrate</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="running-the-model">Running the Model<a class="anchor" aria-label="anchor" href="#running-the-model"></a>
+</h2>
+<p>The model is run through the <code><a href="../reference/runMCMC.html">runMCMC()</a></code> function. This
+function takes the following arguments:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runMCMC.html">runMCMC</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">simulated.data</span>,</span>
+<span>  MCMCParameters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    nburn <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    nsims <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>    outputparam <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    outputfinal <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  modelParameters <span class="op">=</span> <span class="va">params</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Initializing Variables</span></span>
+<span><span class="co">#&gt; Creating RNG...Done</span></span>
+<span><span class="co">#&gt; Setting up System...Done</span></span>
+<span><span class="co">#&gt; Creating model...</span></span>
+<span><span class="co">#&gt; (In LinearAbxModel specialization)</span></span>
+<span><span class="co">#&gt;   * Setting up Abx...Done</span></span>
+<span><span class="co">#&gt;   * Setting up Insitu...</span></span>
+<span><span class="co">#&gt; DEBUG InsituParams: probs=[0.9, 0.1, 0]</span></span>
+<span><span class="co">#&gt; Done</span></span>
+<span><span class="co">#&gt;   * Setting up Surveillance Test...Done</span></span>
+<span><span class="co">#&gt;   * Setting up Clinical Test...Done</span></span>
+<span><span class="co">#&gt;   * Setting up Out of Unit...Done</span></span>
+<span><span class="co">#&gt;   * Setting up In Unit...Done</span></span>
+<span><span class="co">#&gt;   * Setting up Abx Rates...Done</span></span>
+<span><span class="co">#&gt; Done</span></span>
+<span><span class="co">#&gt; Set time origin</span></span>
+<span><span class="co">#&gt; Building history structure...Done</span></span>
+<span><span class="co">#&gt; Finding tests for WAIC.</span></span>
+<span><span class="co">#&gt; Building sampler.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; === INITIAL PARAMETERS ===</span></span>
+<span><span class="co">#&gt; 0.9000000000 0.0000000000    0.0000000000    0.8000000000    0.0000000000    0.8000000000    0.0000000000    0.0000000000    1.0000000000    0.0000000000    0.1000000000    0.5000000000    0.0100000000    1.0000000000    0.9999999999    0.9999999999    1.0000000000    1.0000000000    1.0000000000    0.0100000000    1.0000000000    1.0000000000    0.0500000000    0.7000000000            LogLike=-inf</span></span>
+<span><span class="co">#&gt; === END INITIAL PARAMETERS ===</span></span>
+<span><span class="co">#&gt; burning in MCMC.</span></span>
+<span><span class="co">#&gt; Running MCMC.</span></span>
+<span><span class="co">#&gt; 0:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 1:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 2:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 3:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 4:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 5:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 6:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 7:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 8:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 9:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 10:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 11:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 12:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 13:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 14:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 15:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 16:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 17:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 18:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 19:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 20:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 21:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 22:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 23:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 24:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 25:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 26:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 27:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 28:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 29:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 30:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 31:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 32:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 33:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 34:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 35:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 36:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 37:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 38:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 39:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 40:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 41:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 42:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 43:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 44:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 45:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 46:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 47:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 48:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 49:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 50:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 51:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 52:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 53:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 54:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 55:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 56:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 57:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 58:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 59:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 60:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 61:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 62:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 63:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 64:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 65:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 66:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 67:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 68:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 69:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 70:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 71:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 72:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 73:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 74:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 75:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 76:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 77:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 78:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 79:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 80:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 81:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 82:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 83:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 84:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 85:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 86:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 87:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 88:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 89:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 90:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 91:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 92:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 93:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 94:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 95:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 96:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 97:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 98:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; 99:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span><span class="co">#&gt; MCMC done.</span></span>
+<span><span class="co">#&gt; WAIC 1 2 =   -9.47241    9.48992</span></span>
+<span><span class="co">#&gt; Writing complete form of final state.</span></span></code></pre></div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Andrew Redd.</p>
+  <p>Developed by Andrew Redd, CDC’s Center for Forecasting and Outbreak Analytics.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
