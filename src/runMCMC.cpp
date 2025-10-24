@@ -330,7 +330,12 @@ SEXP runMCMC(
     delete sys;
     delete model;
     delete random;
-    delete AbxCoding::sysabx;
+    // Don't delete static members - they are shared across all invocations
+    // Instead, clear them for the next run
+    if (AbxCoding::sysabx != 0)
+        AbxCoding::sysabx->clear();
+    if (AbxCoding::syseverabx != 0)
+        AbxCoding::syseverabx->clear();
 
     return ret;
 
