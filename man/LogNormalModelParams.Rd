@@ -11,16 +11,16 @@ LogNormalModelParams(
   nmetro = 1L,
   forward = TRUE,
   cheat = FALSE,
-  Insitu = InsituParams(),
+  Insitu = NULL,
   SurveillanceTest = SurveillanceTestParams(),
   ClinicalTest = ClinicalTestParams(),
   OutOfUnitInfection = OutOfUnitInfectionParams(),
-  InUnit = InUnitParameters(),
+  InUnit = InUnitParams(),
   Abx = AbxParams(),
   AbxRate = AbxRateParams()
 )
 
-LinearAbxModel(..., InUnit = ABXInUnitParameters())
+LinearAbxModel(..., InUnit = ABXInUnitParams())
 }
 \arguments{
 \item{modname}{The name of the model used. Usually specified by specification functions.}
@@ -60,5 +60,5 @@ Model Parameters for a Log Normal Model
 
 }}
 \examples{
-LogNormalModelParams()
+LogNormalModelParams("LogNormalModel")
 }

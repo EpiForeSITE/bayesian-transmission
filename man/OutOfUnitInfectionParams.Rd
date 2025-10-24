@@ -5,8 +5,8 @@
 \title{Out of Unit Infection Parameters}
 \usage{
 OutOfUnitInfectionParams(
-  acquisition = Param(0),
-  clearance = Param(0),
+  acquisition = Param(0.05),
+  clearance = Param(0.01),
   progression = Param(0)
 )
 }

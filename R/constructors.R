@@ -65,7 +65,7 @@ check_param <- function(param, name = deparse(substitute(param))) {
 #' @export
 #'
 #' @examples
-#' ParamWRate(Param(0.5, 0), rate = Param(1, 0)
+#' ParamWRate(Param(0.5, 0), rate = Param(1, 0))
 ParamWRate <- function(param = Param(), rate = Param()) {
   if (!inherits(param, "Param") || !inherits(rate, "Param")) {
     if (rlang::is_scalar_double(param)) {
@@ -191,6 +191,7 @@ RandomTestParams <- function(
   )
 }
 #' @describeIn RandomTestParams Clinical Test Parameters Alias
+#' @export
 ClinicalTestParams <- RandomTestParams
 
 
@@ -392,7 +393,11 @@ ClearanceParams <- function(
 #'
 #' @export
 #' @examples
-#' InUnitParameters()
+#' InUnitParams(
+#'   acquisition = LinearAbxAcquisitionParams(),
+#'   progression = ProgressionParams(),
+#'   clearance = ClearanceParams()
+#' )
 InUnitParams <- function(
     acquisition = AcquisitionParams(),
     progression = ProgressionParams(),
@@ -412,7 +417,11 @@ InUnitParams <- function(
 #' @describeIn InUnitParams In Unit Parameters with Antibiotics.
 #' @export
 #' @examples
-#' ABXInUnitParameters()
+#' ABXInUnitParams(
+#'   acquisition = LinearAbxAcquisitionParams(),
+#'   progression = ProgressionParams(),
+#'   clearance = ClearanceParams()
+#' )
 ABXInUnitParams <- function(
     acquisition = LinearAbxAcquisitionParams(),
     progression = ProgressionParams(),
@@ -445,7 +454,7 @@ ABXInUnitParams <- function(
 #' @export
 #'
 #' @examples
-#' LogNormalModelParams()
+#' LogNormalModelParams("LogNormalModel")
 LogNormalModelParams <-
   function(modname,
            nstates = 2L,

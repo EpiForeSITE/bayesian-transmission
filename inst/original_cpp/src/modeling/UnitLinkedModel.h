@@ -41,12 +41,27 @@ public:
 	virtual double logLikelihood(SystemHistory *hist)
 	{
 		double xtot = 0;
+		int unit_count = 0;
+		int postest_count = 0;
 		for (Map *h = hist->getUnitHeads(); h->hasNext(); )
 		{
 			double utot = 0;
-			for (HistoryLink *l = (HistoryLink *) h->nextValue(); l != 0; l=l->uNext())
-				utot += logLikelihood(l);
+			int link_count = 0;
+			for (HistoryLink *l = (HistoryLink *) h->nextValue(); l != 0; l=l->uNext()) {
+				double ll = logLikelihood(l);
+				// Debug: show first few possurvtest events
+				if (l->getEvent()->getType() == 2 && postest_count < 5) { // possurvtest
+					std::cerr << "ORIGINAL possurvtest #" << postest_count 
+					          << ": logLike=" << ll 
+					          << " time=" << l->getEvent()->getTime()
+					          << " patient=" << l->getEvent()->getPatient()->getId() << std::endl;
+					postest_count++;
+				}
+				utot += ll;
+				link_count++;
+			}
 			xtot += utot;
+			unit_count++;
 		}
 		return xtot;
 	}

@@ -5,10 +5,10 @@
 \title{Linear Antibiotic Acquisition Parameters}
 \usage{
 LinearAbxAcquisitionParams(
-  base = Param(0.01),
+  base = Param(0.001),
   time = Param(1, 0),
-  mass = Param(1),
-  freq = Param(1),
+  mass = Param(1, 1),
+  freq = Param(1, 1),
   col_abx = Param(1, 0),
   suss_abx = Param(1, 0),
   suss_ever = Param(1, 0)

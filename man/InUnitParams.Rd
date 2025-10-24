@@ -33,6 +33,14 @@ In Unit Parameters
 
 }}
 \examples{
-InUnitParameters()
-ABXInUnitParameters()
+InUnitParams(
+  acquisition = LinearAbxAcquisitionParams(),
+  progression = ProgressionParams(),
+  clearance = ClearanceParams()
+)
+ABXInUnitParams(
+  acquisition = LinearAbxAcquisitionParams(),
+  progression = ProgressionParams(),
+  clearance = ClearanceParams()
+)
 }
