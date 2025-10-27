@@ -25,11 +25,9 @@ EventToCode <- function(x) {
 
 #' Run Bayesian Transmission MCMC
 #'
-#' @param modname Name of the model to run.
 #' @param data Data frame with columns, in order: facility, unit, time, patient, and event type.
 #' @param MCMCParameters List of MCMC parameters.
 #' @param modelParameters List of model parameters, see <LogNormalModelParams>.
-#' @param nstates Number of states in the model.
 #' @param verbose Print progress messages.
 #'
 #' @return A list with the following elements:

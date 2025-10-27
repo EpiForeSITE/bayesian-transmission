@@ -14,10 +14,6 @@ runMCMC(data, MCMCParameters, modelParameters, verbose = FALSE)
 \item{modelParameters}{List of model parameters, see \if{html}{\out{<LogNormalModelParams>}}.}
 
 \item{verbose}{Print progress messages.}
-
-\item{modname}{Name of the model to run.}
-
-\item{nstates}{Number of states in the model.}
 }
 \value{
 A list with the following elements:
