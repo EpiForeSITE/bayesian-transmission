@@ -8,3 +8,15 @@
 ^\.github$
 ^\.devcontainer$
 ^Makefile$
+^inst/original_cpp/.*Makefile$
+^inst/original_cpp/src/.*/Makefile$
+^\.vscode$
+^inst/original_cpp/.*\.RData$
+^inst/original_cpp/.*\.Rhistory$
+^.*_SUMMARY\.md$
+^CHANGES_SUMMARY\.md$
+^demo_newModelExport\.R$
+^export_data_for_cpp\.R$
+^final_parameter_comparison\.md$
+^test_.*\.R$
+^original_cpp_with_r_data\.txt$
