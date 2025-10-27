@@ -47,6 +47,8 @@ for the acquisition, progression and clearance of the disease.}
 \item{Abx}{Antibiotic Parameters}
 
 \item{AbxRate}{Antibiotic Rate Parameters}
+
+\item{...}{Additional arguments passed to LogNormalModelParams}
 }
 \value{
 A list of parameters for the model.

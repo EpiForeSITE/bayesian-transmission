@@ -499,6 +499,7 @@ LogNormalModelParams <-
 
 
 #' @describeIn LogNormalModelParams Linear Antibiotic Model Alias
+#' @param ... Additional arguments passed to LogNormalModelParams
 #' @export
 LinearAbxModel <- function(
     ...,
