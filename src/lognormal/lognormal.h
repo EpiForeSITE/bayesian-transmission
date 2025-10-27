@@ -9,6 +9,7 @@
 	#include <sstream>
 	#include <exception>
     #include <stdexcept>
+    #include <Rcpp.h>
 
     using namespace std;
 

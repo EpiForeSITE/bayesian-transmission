@@ -9,3 +9,10 @@
 #' * `type`: The type of event.
 #'
 "simulated.data"
+
+#' Simulated Transmission Data (Sorted)
+#'
+#' This is a sorted version of the simulated transmission data. The data is sorted by time, then by patient.
+#' See \code{\link{simulated.data}} for column descriptions.
+#'
+"simulated.data_sorted"
