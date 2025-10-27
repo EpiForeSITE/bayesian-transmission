@@ -18,7 +18,8 @@ Imports:
     dplyr,
     methods,
     Rcpp (>= 1.0.12),
-    RcppArmadillo
+    RcppArmadillo,
+    rlang
 Config/testthat/edition: 3
 Depends:
     R (>= 4.2.0)
