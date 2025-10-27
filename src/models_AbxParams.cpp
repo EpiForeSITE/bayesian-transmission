@@ -185,14 +185,14 @@ std::vector<double> AbxParams::getValues() const
 void AbxParams::write(ostream &os) const
 {
     char *buffer = new char[100];
-    sprintf(buffer,"%12.10f\t",rates[0]);
+    snprintf(buffer, 100, "%12.10f\t",rates[0]);
     os << buffer;
     if (nstates == 3)
     {
-        sprintf(buffer,"%12.10f\t",rates[1]);
+        snprintf(buffer, 100, "%12.10f\t",rates[1]);
         os << buffer;
     }
-    sprintf(buffer,"%12.10f",rates[2]);
+    snprintf(buffer, 100, "%12.10f",rates[2]);
     os << buffer;
     delete[] buffer;
 }

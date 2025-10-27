@@ -176,26 +176,26 @@ void TestParamsAbx::write (ostream &os) const
 {
     char *buffer = new char[100];
 
-    sprintf(buffer,"%12.10f\t",probs[0][0][1]);
+    snprintf(buffer, 100, "%12.10f\t",probs[0][0][1]);
     os << buffer;
     if (nstates == 3)
     {
-        sprintf(buffer,"%12.10f\t",probs[1][0][1]);
+        snprintf(buffer, 100, "%12.10f\t",probs[1][0][1]);
         os << buffer;
     }
-    sprintf(buffer,"%12.10f",probs[2][0][1]);
+    snprintf(buffer, 100, "%12.10f",probs[2][0][1]);
     os << buffer;
 
     if (useabx)
     {
-        sprintf(buffer,"\t%12.10f\t",probs[0][1][1]);
+        snprintf(buffer, 100, "\t%12.10f\t",probs[0][1][1]);
         os << buffer;
         if (nstates == 3)
         {
-            sprintf(buffer,"%12.10f\t",probs[1][1][1]);
+            snprintf(buffer, 100, "%12.10f\t",probs[1][1][1]);
             os << buffer;
         }
-        sprintf(buffer,"%12.10f",probs[2][1][1]);
+        snprintf(buffer, 100, "%12.10f",probs[2][1][1]);
         os << buffer;
     }
 

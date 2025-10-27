@@ -198,25 +198,25 @@ void RandomTestParams::write (ostream &os) const
 {
     // Write RandomTest probabilities (not parent TestParams probabilities!)
     char *buffer = new char[100];
-    sprintf(buffer,"%12.10f\t",probs[0][1]);
+    snprintf(buffer, 100, "%12.10f\t",probs[0][1]);
     os << buffer;
     if (nstates == 3)
     {
-        sprintf(buffer,"%12.10f\t",probs[1][1]);
+        snprintf(buffer, 100, "%12.10f\t",probs[1][1]);
         os << buffer;
     }
-    sprintf(buffer,"%12.10f\t",probs[2][1]);
+    snprintf(buffer, 100, "%12.10f\t",probs[2][1]);
     os << buffer;
     
     // Write RandomTest rates
-    sprintf(buffer,"%12.10f\t",rates[0]);
+    snprintf(buffer, 100, "%12.10f\t",rates[0]);
     os << buffer;
     if (nstates == 3)
     {
-        sprintf(buffer,"%12.10f\t",rates[1]);
+        snprintf(buffer, 100, "%12.10f\t",rates[1]);
         os << buffer;
     }
-    sprintf(buffer,"%12.10f",rates[2]);
+    snprintf(buffer, 100, "%12.10f",rates[2]);
     os << buffer;
     delete [] buffer;
 }

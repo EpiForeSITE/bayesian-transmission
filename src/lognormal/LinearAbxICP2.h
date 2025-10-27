@@ -28,28 +28,6 @@ public:
 
     virtual double unTransform(int i, int j) override;
 
-    void debugPrintParams()
-    {
-        std::cout << "\n=== LinearAbxICP2 Parameters (R Package) ===\n";
-        std::cout << "Acquisition params (epar[0]): ";
-        for (int j = 0; j < n[0]; j++) {
-            std::cout << epar[0][j];
-            if (j < n[0]-1) std::cout << ", ";
-        }
-        std::cout << "\n";
-        std::cout << "Progression params (epar[1]): ";
-        for (int j = 0; j < n[1]; j++) {
-            std::cout << epar[1][j];
-            if (j < n[1]-1) std::cout << ", ";
-        }
-        std::cout << "\n";
-        std::cout << "Clearance params (epar[2]): ";
-        for (int j = 0; j < n[2]; j++) {
-            std::cout << epar[2][j];
-            if (j < n[2]-1) std::cout << ", ";
-        }
-        std::cout << "\n==========================================\n\n";
-    }
 };
 
 #endif // ALUN_LOGNORMAL_LINEARABXICP2_H

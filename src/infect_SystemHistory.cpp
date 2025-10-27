@@ -1,4 +1,5 @@
 #include "infect/infect.h"
+#include <Rcpp.h>
 
 namespace infect {
 
@@ -155,6 +156,11 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
         {
             Episode *ep = (Episode *) episodes->next();
 
+            // Debug: track episodes for specific patients
+            if (patient->getId() == 120 || patient->getId() == 103) {
+                Rcpp::Rcerr << "DEBUG Episode for patient=" << patient->getId() << std::endl;
+            }
+
             // Make list of new links and connect the patient pointers.
 
             for (SortedList *t = ep->getEvents(); t->hasNext(); )
@@ -162,6 +168,12 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
                 Event *e = (Event *) t->next();
 
                 HistoryLink *x = makeHistoryLink(m,e);
+                
+                // Debug: track events for specific patients
+                if (patient->getId() == 120 || patient->getId() == 103) {
+                    Rcpp::Rcerr << "  Event: time=" << e->getTime() 
+                                << " type=" << e->getType() << std::endl;
+                }
 
                 if (prev == 0)
                 {
@@ -274,7 +286,7 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
             else
             {
                 if (verbose)
-                    cout << "Removing un needed event \t" << l->getEvent() << "\n";
+                    Rcpp::Rcerr << "Removing un needed event \t" << l->getEvent() << "\n";
 
                 HistoryLink *ll = l;
                 l = l->sNext();
@@ -377,7 +389,7 @@ void SystemHistory::write2(ostream &os, int opt)
         for (uheads->init(); uheads->hasNext(); )
         {
             count->put(uheads->next(), new Integer(0));
-            cerr << count << "\n";
+            // cerr << count << "\n";
         }
 
         for (HistoryLink *l = shead; l != 0; l = l->sNext())

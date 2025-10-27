@@ -247,7 +247,7 @@ void LogNormalICP::write (ostream &os)
 
         for (int j=0; j<n[i]; j++)
         {
-            sprintf(buffer,"%12.10f",epar[i][j]);
+            snprintf(buffer, 100, "%12.10f",epar[i][j]);
             os << buffer;
             if (j != n[i]-1)
                 os << "\t";

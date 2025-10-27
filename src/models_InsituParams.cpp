@@ -221,16 +221,16 @@ void InsituParams::set(double u, double l, double c)
 void InsituParams::write(ostream &os) const
 {
     char *buffer = new char[100];
-    sprintf(buffer,"%12.10f\t",probs[0]);
+    snprintf(buffer, 100, "%12.10f\t",probs[0]);
     os << buffer;
 
     if (nstates == 3)
     {
-        sprintf(buffer,"%12.10f\t",probs[1]);
+        snprintf(buffer, 100, "%12.10f\t",probs[1]);
         os << buffer;
     }
 
-    sprintf(buffer,"%12.10f",probs[2]);
+    snprintf(buffer, 100, "%12.10f",probs[2]);
     os << buffer;
 
     delete [] buffer;

@@ -461,7 +461,7 @@ void OutColParams::write(ostream &os) const
     char *buffer = new char[100];
     for (int i=0; i<nstates; i++)
     {
-        sprintf(buffer,"%12.10f",rates[i]);
+        snprintf(buffer, 100, "%12.10f",rates[i]);
         os << buffer;
         if (i < nstates-1)
             os << "\t";
