@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>bayesian-transmission</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">bayesian-transmission</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(bayestransmission)</span></code></pre></div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This package provides a Bayesian framework for transmission modeling on an individual patient level. Modeling is conducted through Markov Chain Monte Carlo (MCMC) methods.This document will explain the basic usage of the package, specification of parameters, and the output of the model.</p>
+</div>
+<div id="data-structure" class="section level1">
+<h1>Data Structure</h1>
+<p>The algorithms expect a longitudinal data set with the following columns: * <code>facility</code>: The facility where the event occurred. * <code>unit</code>: The unit within the facility where the event occurred. * <code>time</code>: The time at which the event occurred. * <code>patient</code>: The patient involved in the event. * <code>type</code>: The type of event.</p>
+<p>The package includes a simulated dataset, <code>simulated.data</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>pillar<span class="op">::</span><span class="kw">glimpse</span>(simulated.data)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="co">#&gt; Rows: 8,360</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="co">#&gt; Columns: 5</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="co">#&gt; $ facility &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="co">#&gt; $ unit     &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="co">#&gt; $ time     &lt;dbl&gt; 0.060978, 0.061978, 1.560978, 2.883323, 2.884323, 1.422631, 1…</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="co">#&gt; $ patient  &lt;int&gt; 1, 1, 1, 1, 1, 10, 10, 10, 10, 19, 19, 19, 23, 23, 23, 28, 28…</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="co">#&gt; $ type     &lt;int&gt; 0, 1, 10, 1, 3, 0, 1, 1, 3, 0, 1, 3, 0, 1, 3, 0, 1, 1, 3, 0, …</span></span></code></pre></div>
+<p>There are 12 different types of events that can be specified in the <code>type</code> column. These are, expected numerical codes shown in parentheses:</p>
+<ul>
+<li>Admission (0) and Discharge (3)</li>
+<li>Surveillance Testing Results
+<ul>
+<li>Negative Test (1)</li>
+<li>Positive Test (2)</li>
+</ul></li>
+<li>Clinical Testing Results
+<ul>
+<li>Negative Test (4)</li>
+<li>Positive Test (5)</li>
+</ul></li>
+<li>Generic Testing
+<ul>
+<li>Negative Test (7)</li>
+<li>Positive Test (8)</li>
+</ul></li>
+<li>Antibiotic Use
+<ul>
+<li>single dose (9)</li>
+<li>Start (10)</li>
+<li>Stop (11)</li>
+</ul></li>
+<li>Isolation Procedures
+<ul>
+<li>Start (6)</li>
+<li>Stop (7)</li>
+</ul></li>
+</ul>
+<p>Not all events need to be used in every data set, but the model selected should reflect the data that is available. Care should be taken to correctly code the data. The <code>EventToCode</code> and <code>CodeToEvent</code> functions can be used to convert between.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">table</span>(<span class="kw">CodeToEvent</span>(simulated.data<span class="op">$</span>type))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="co">#&gt;      abxoff       abxon   admission   discharge negsurvtest possurvtest </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="co">#&gt;         297         725        2183        2183        2749         223</span></span></code></pre></div>
+</div>
+<div id="model-specifiction" class="section level1">
+<h1>Model Specifiction</h1>
+<div id="model-choice" class="section level2">
+<h2>Model Choice</h2>
+<p>Since the model is implemented in C++ for speed and efficiency, only the specified models can be used. The currently implemented models are:</p>
+<ul>
+<li><code>&quot;LinearAbxModel&quot;</code>, A Linear model with antibiotic use as a covariate.</li>
+<li><code>&quot;MixedModel&quot;</code>, and</li>
+<li><code>&quot;LogNormalModel&quot;</code></li>
+</ul>
+<p>Model specification and all parameters are controlled through constructor functions of the same name, or generically through the <code>LogNormalModelParams()</code> function.</p>
+<p>For all models there is the choice of either a 2 state (susceptible and colonized) or 3 state (susceptible, colonized, and recovered or latent) model. Number of states is set through the <code>nstates</code> parameter, and the number of states in the model overrides what may be specified in any individual component.</p>
+</div>
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<p>The remainder of the parameters are grouped into the following categories:</p>
+<ul>
+<li><code>Abx</code>, Antibiotic use,</li>
+<li><code>AbxRate</code>, Antibiotic rates,</li>
+<li><code>InUnit</code>, In unit infection rates,</li>
+<li><code>OutOfUnitInfection</code>, Out of unit infection rates,</li>
+<li><code>Insitu</code>, In situ parameters,</li>
+<li>Testing:
+<ul>
+<li><code>SurveilenceTest</code>, Surveillance testing,</li>
+<li><code>ClinicalTest</code>, Clinical testing.</li>
+</ul></li>
+</ul>
+<p>Unless otherwise specified the parameters are all distributed gamma with specified shape and rate parameters. Each parameter can also be left as fixed or be sampled at each iteration of the MCMC.</p>
+<div id="specifying-parameters" class="section level3">
+<h3>Specifying parameters</h3>
+<p>Parameters for the model may be specified by the <code>Param()</code> function. This function takes up to four arguments:</p>
+<pre><code>1. `init`, is the initial value of the parameter.
+2. `weight`, is the weight of the prior distribution in updates.
+3. `update`, a flag of if the parameter should be sampled in the MCMC algorithm. 
+    `FALSE` indicates that the parameter should be fixed, and is by default `TRUE` when `weight` is greater than zero.
+4. `prior`, the mean of the prior distribution.  Taken with the weight will fully parameterize the distribution.</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># Fully specified parameter.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">Param</span>(<span class="dt">init =</span> <span class="dv">0</span>, <span class="dt">weight =</span> <span class="dv">1</span>, <span class="dt">update =</span> <span class="ot">TRUE</span>, <span class="dt">prior =</span> <span class="fl">0.5</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="co"># Fixed parameter</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="co"># Weight = 0 implies update=FALSE and prior is ignored.</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="kw">Param</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="co"># Update parameter that starts at zero.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a><span class="kw">Param</span>(<span class="dv">0</span>, <span class="dt">weight =</span><span class="dv">1</span>, <span class="dt">update=</span><span class="ot">TRUE</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a><span class="co"># Parameters specified at zero implies fixed.</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="kw">Param</span>(<span class="dv">0</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="abx-antibiotic-use" class="section level2">
+<h2><code>Abx</code> Antibiotic use</h2>
+<p>Antibiotic use is specified by the <code>Abx</code> parameter. This parameter is a list constructed with the <code>AbxParams()</code> function with the following components:</p>
+<ul>
+<li><code>onoff</code>, If antibiotics are being used or not. The two following parameters are only used if <code>onoff</code> is <code>TRUE</code>.</li>
+<li><code>delay</code>, the delay for the antibiotic to take effect.</li>
+<li><code>life</code>, the duration where the antibiotic to be effective.</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>abx &lt;-<span class="st"> </span><span class="kw">AbxParams</span>(<span class="dt">onoff =</span> <span class="ot">TRUE</span>, <span class="dt">delay =</span> <span class="fl">0.3</span>, <span class="dt">life =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>Currently, all antibiotics are assumed to be equally effective and have the same duration of effectiveness.</p>
+</div>
+<div id="abxrate-antibiotic-rates" class="section level2">
+<h2><code>AbxRate</code> Antibiotic rates</h2>
+<p>The <code>AbxRate</code> parameter control the antibiotic administration rates.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>abxrate &lt;-<span class="st"> </span><span class="kw">AbxRateParams</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>  <span class="co"># Uncolonized patients do use antibiotics but at a low rate.</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>  <span class="dt">uncolonized =</span> <span class="fl">0.05</span>,  </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>  <span class="co"># Colonized patients use antibiotics at a high rate.</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>  <span class="dt">colonized =</span> <span class="fl">0.7</span>      </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>)</span></code></pre></div>
+<p>Here since both parameters are non-zero both will be updated. A rate of zero for either would indicate that group would never be on antibiotics.</p>
+</div>
+<div id="inunit-in-unit-infection-rate" class="section level2">
+<h2><code>InUnit</code> In unit infection rate</h2>
+<p>Transmission within unit is the main defining characteristic that differentiates models. For example the linear antibiotic model, <code>LinearAbxModel()</code>, is differentiated from the log normal model, <code>LogNormalModelParams()</code> by the use of a <code>ABXInUnitParams()</code> for the <code>InUnit</code> argument rather than the <code>LogNormalInUnitAcquisition()</code> which does not take into account antibiotic use. All in unit transmission is defined in terms of acquisition, progression, and clearance.</p>
+<div id="aqcuisition-model" class="section level3">
+<h3>Aqcuisition Model</h3>
+<p>In the base log normal antibiotic model, <code>LogNormalABXInUnitParameters()</code> log acquisition probability is a linear function.</p>
+<p><span class="math display">\[
+\log(P(\mathrm{Acq(t)})) = \beta_0 + \beta_t(t-t_0) + 
+    \beta_c N_og(\mathrm{Colonized(t)})a_{ca}N_{ca}(t) + \beta_A A_i(t) + \beta_E E_i(t)
+\]</span> Where <span class="math inline">\(\beta_\star\)</span> represents the coefficient corresponding to the amounts, <span class="math inline">\(N_c(t)\)</span> represent the total number of colonized patients at time <span class="math inline">\(t\)</span>, <span class="math inline">\(N_{ca}(t)\)</span> the number of colonized on antibiotics, and <span class="math inline">\(A_i(t)\)</span> and <span class="math inline">\(E_i(t)\)</span> represents if patient <span class="math inline">\(i\)</span> is currently or ever on antibiotics.</p>
+<p>The linear antibiotic (<code>LinearAbxAcquisitionParams</code>) takes a more complicated form for the acquisition model. <span class="math display">\[
+P(\mathrm{Acq(t)}) =
+  \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
+  \left\{e^{\beta_0}
+         \left[
+            \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})\right)
+            e^{\beta_\mathrm{mass}}\left(
+                (N_c(t) - N_{ca}(t)) + e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
+            \right)
+          + 1 - e^{\beta_\mathrm{mass}}
+        \right]
+  \right\}\\
+  \left[
+    N_S(t) - N_E(t) + e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right) +A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
+  \right]
+\]</span></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>acquisition &lt;-<span class="st"> </span><span class="kw">LinearAbxAcquisitionParams</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>    <span class="dt">base =</span> <span class="kw">Param</span>(<span class="fl">0.01</span>),     <span class="co">#&lt; Base acquisition rate (Updated)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>    <span class="dt">time =</span> <span class="kw">Param</span>(<span class="dv">1</span>, <span class="dv">0</span>),     <span class="co">#&lt; Time effect (Fixed)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a>    <span class="dt">mass =</span> <span class="kw">Param</span>(<span class="dv">1</span>),        <span class="co">#&lt; Mass Mixing (Updated)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>    <span class="dt">freq =</span> <span class="kw">Param</span>(<span class="dv">1</span>),        <span class="co">#&lt; Frequency/Density effect (Updated)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>    <span class="dt">col_abx =</span> <span class="kw">Param</span>(<span class="dv">1</span>, <span class="dv">0</span>),  <span class="co">#&lt; Colonized on antibiotics (Fixed)</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a>    <span class="dt">suss_abx =</span> <span class="kw">Param</span>(<span class="dv">1</span>, <span class="dv">0</span>), <span class="co">#&lt; Susceptible on antibiotics (Fixed)</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>    <span class="dt">suss_ever =</span> <span class="kw">Param</span>(<span class="dv">1</span>, <span class="dv">0</span>) <span class="co">#&lt; Ever on antibiotics (Fixed)  </span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a>)</span></code></pre></div>
+</div>
+<div id="progression-model" class="section level3">
+<h3>Progression Model</h3>
+<p>In the 3 state model there is a latent state and the progression model controls how patient transition out of the latent state. The base rate can be affected by currently being on antiboitics or ever being on antbiotcs.</p>
+<p><span class="math display">\[
+\log(P(\mathrm{progression})) = \delta_0+\delta_AA_i(t) + \delta_EE_i(t)
+\]</span> the linear antibiotic model is:</p>
+<p><span class="math display">\[
+P(\mathrm{progression}) = e^{\delta_0}\left[1-E_i(t)+e^{\delta_2}\left(E_i(t)-A_i(t)+e^{\delta_1}A_i(t)\right)\right]
+\]</span></p>
+<p>Where here we use <span class="math inline">\(\delta\)</span> for the coefficients, but the notation is the same.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>progression &lt;-<span class="st"> </span><span class="kw">ProgressionParams</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>    <span class="dt">rate =</span> <span class="kw">Param</span>(<span class="fl">0.01</span>),     <span class="co">#&lt; Base progression rate (Updated)</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>    <span class="dt">abx  =</span> <span class="kw">Param</span>(<span class="dv">1</span>, <span class="dv">0</span>),     <span class="co">#&lt; Currently on antibiotics (Fixed)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>    <span class="dt">ever =</span> <span class="kw">Param</span>(<span class="dv">1</span>, <span class="dv">0</span>)      <span class="co">#&lt; Ever on antibiotics (Fixed)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>)</span></code></pre></div>
+</div>
+<div id="clearance-model" class="section level3">
+<h3>Clearance Model</h3>
+<p>The clearance model is the same as the progression model in both the log normal and the linear cases, the coefficients however are independent.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>clearance &lt;-<span class="st"> </span><span class="kw">ClearanceParams</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>    <span class="dt">rate =</span> <span class="kw">Param</span>(<span class="fl">0.01</span>),     <span class="co">#&lt; Base clearance rate (Updated)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>    <span class="dt">abx  =</span> <span class="kw">Param</span>(<span class="dv">1</span>, <span class="dv">0</span>),     <span class="co">#&lt; Currently on antibiotics (Fixed)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>    <span class="dt">ever =</span> <span class="kw">Param</span>(<span class="dv">1</span>, <span class="dv">0</span>)      <span class="co">#&lt; Ever on antibiotics (Fixed)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>inunit &lt;-<span class="st"> </span><span class="kw">ABXInUnitParams</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>  <span class="dt">acquisition =</span> acquisition,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>  <span class="dt">progression =</span> progression,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>  <span class="dt">clearance   =</span> clearance</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="out-of-unit-importation" class="section level2">
+<h2>Out of Unit Importation</h2>
+<p>The out of unit parameters control the rate at which admissions come in, and which state they enter in.</p>
+<p><span class="math display">\[
+\log(P(\mathrm{state}_i \rightarrow \mathrm{state}_j)|t) = P_j - Q_{i,j} e^{-t \sum_i r_i}
+\]</span></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>outcol &lt;-<span class="st"> </span><span class="kw">OutOfUnitInfectionParams</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>  <span class="dt">acquisition =</span> <span class="fl">0.1</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>  <span class="dt">clearance =</span> <span class="fl">0.5</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a>)</span></code></pre></div>
+</div>
+<div id="in-situ" class="section level2">
+<h2>In Situ</h2>
+<p>I’m not sure what these parameters do. It’s a set of gamma distributed parameters one for each state. The updates and probabilities are not time dependent.</p>
+<p>When updating the rates for each state are sampled from a <span class="math inline">\(gamma(N_i, 1)\)</span> distribution. Then all three are normalized to sum to 1.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>insitu &lt;-<span class="st"> </span><span class="kw">InsituParams</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>  <span class="co"># Starting 90/10 split uncolonized to colonized  </span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>  <span class="dt">probs =</span> <span class="kw">c</span>(<span class="dt">uncolonized =</span> <span class="fl">0.90</span>, <span class="co">#&lt; names are unnecessary.</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>              <span class="dt">colonized =</span> <span class="fl">0.10</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>)</span></code></pre></div>
+</div>
+<div id="testing" class="section level2">
+<h2>Testing</h2>
+<p>There are two types of testing, surveillance, which is conducted routinely at regular intervals such as on admission then every 3 days after, and clinical, where the testing is precipitated by staff, and thus the timing is informative.</p>
+<div id="surveillance-testing" class="section level3">
+<h3>Surveillance Testing</h3>
+<p>The timing of surveillance testing is assumed to not be informative. Therefore, surveillance testing is only parameterized in terms of probability of a positive test given the underlying status. Surveillance test parameters are updated with a sample from a <span class="math inline">\(Beta(N_{s,1}, N_{s,0})\)</span> distribution where <span class="math inline">\(N_{s,1}\)</span> and <span class="math inline">\(N_{s,0}\)</span> are the number of positive and negative tests respectively for state <span class="math inline">\(s\)</span>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>surv &lt;-<span class="st"> </span><span class="kw">SurveillanceTestParams</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>    <span class="co"># Probability of a positive test when uncolonized</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>    <span class="dt">uncolonized =</span> <span class="kw">Param</span>(<span class="dv">0</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a>    <span class="co"># Probability of a positive test when colonized</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>    <span class="dt">colonized =</span> <span class="kw">Param</span>(<span class="fl">0.9</span>, <span class="dv">1</span>, <span class="ot">TRUE</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>)</span></code></pre></div>
+</div>
+<div id="clinical-testing" class="section level3">
+<h3>Clinical Testing</h3>
+<p>Since clinical testing time is informative, clinical testing is assumed to be at random within infection stage. The rate of testing within each stage is sampled from a gamma distribution. Sensitivity/Specificity are handled the same as surveillance testing and the likelihood is multiplicative between rate and effectiveness.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>clin &lt;-<span class="st"> </span><span class="kw">ClinicalTestParams</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>    <span class="co"># Rate of testing when uncolonized</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>    <span class="dt">uncolonized =</span> <span class="kw">ParamWRate</span>(<span class="kw">Param</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">rate =</span> <span class="kw">Param</span>(<span class="dv">1</span>)),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>    <span class="co"># Rate of testing when colonized</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>    <span class="dt">colonized =</span> <span class="kw">ParamWRate</span>(<span class="kw">Param</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">rate =</span> <span class="kw">Param</span>(<span class="dv">1</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a>)</span></code></pre></div>
+</div>
+<div id="all-together" class="section level3">
+<h3>All Together</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>params &lt;-<span class="st"> </span><span class="kw">LinearAbxModel</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>  <span class="dt">nstates =</span> <span class="dv">2</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>  <span class="dt">Insitu =</span> insitu,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>  <span class="dt">SurveillanceTest =</span> surv,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a>  <span class="dt">ClinicalTest =</span> clin,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a>  <span class="dt">OutOfUnitInfection =</span> outcol,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>  <span class="dt">InUnit =</span> inunit,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a>  <span class="dt">Abx =</span> abx,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true"></a>  <span class="dt">AbxRate =</span> abxrate</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true"></a>)</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="running-the-model" class="section level1">
+<h1>Running the Model</h1>
+<p>The model is run through the <code>runMCMC()</code> function. This function takes the following arguments:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>results &lt;-<span class="st"> </span><span class="kw">runMCMC</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>  <span class="dt">data =</span> simulated.data,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>  <span class="dt">MCMCParameters =</span> <span class="kw">list</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a>    <span class="dt">nburn =</span> <span class="dv">0</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>    <span class="dt">nsims =</span> <span class="dv">100</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a>    <span class="dt">outputparam =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a>    <span class="dt">outputfinal =</span> <span class="ot">TRUE</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true"></a>  ),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true"></a>  <span class="dt">modelParameters =</span> params,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true"></a>  <span class="dt">verbose =</span> <span class="ot">TRUE</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true"></a>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true"></a><span class="co">#&gt; Initializing Variables</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true"></a><span class="co">#&gt; Creating RNG...Done</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true"></a><span class="co">#&gt; Setting up System...Done</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true"></a><span class="co">#&gt; Creating model...</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true"></a><span class="co">#&gt; (In LinearAbxModel specialization)</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true"></a><span class="co">#&gt;   * Setting up Abx...Done</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true"></a><span class="co">#&gt;   * Setting up Insitu...</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true"></a><span class="co">#&gt; DEBUG InsituParams: probs=[0.9, 0.1, 0]</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true"></a><span class="co">#&gt; Done</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true"></a><span class="co">#&gt;   * Setting up Surveillance Test...Done</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true"></a><span class="co">#&gt;   * Setting up Clinical Test...Done</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true"></a><span class="co">#&gt;   * Setting up Out of Unit...Done</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true"></a><span class="co">#&gt;   * Setting up In Unit...Done</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true"></a><span class="co">#&gt;   * Setting up Abx Rates...Done</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true"></a><span class="co">#&gt; Done</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true"></a><span class="co">#&gt; Set time origin</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true"></a><span class="co">#&gt; Building history structure...Done</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true"></a><span class="co">#&gt; Finding tests for WAIC.</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true"></a><span class="co">#&gt; Building sampler.</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true"></a><span class="co">#&gt; === INITIAL PARAMETERS ===</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true"></a><span class="co">#&gt; 0.9000000000 0.0000000000    0.0000000000    0.8000000000    0.0000000000    0.8000000000    0.0000000000    0.0000000000    1.0000000000    0.0000000000    0.1000000000    0.5000000000    0.0100000000    1.0000000000    0.9999999999    0.9999999999    1.0000000000    1.0000000000    1.0000000000    0.0100000000    1.0000000000    1.0000000000    0.0500000000    0.7000000000            LogLike=-inf</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true"></a><span class="co">#&gt; === </span><span class="re">END</span><span class="co"> INITIAL PARAMETERS ===</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true"></a><span class="co">#&gt; burning in MCMC.</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true"></a><span class="co">#&gt; Running MCMC.</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true"></a><span class="co">#&gt; 0:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true"></a><span class="co">#&gt; 1:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true"></a><span class="co">#&gt; 2:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true"></a><span class="co">#&gt; 3:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true"></a><span class="co">#&gt; 4:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true"></a><span class="co">#&gt; 5:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true"></a><span class="co">#&gt; 6:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true"></a><span class="co">#&gt; 7:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true"></a><span class="co">#&gt; 8:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true"></a><span class="co">#&gt; 9:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true"></a><span class="co">#&gt; 10:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true"></a><span class="co">#&gt; 11:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true"></a><span class="co">#&gt; 12:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true"></a><span class="co">#&gt; 13:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true"></a><span class="co">#&gt; 14:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true"></a><span class="co">#&gt; 15:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true"></a><span class="co">#&gt; 16:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true"></a><span class="co">#&gt; 17:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true"></a><span class="co">#&gt; 18:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true"></a><span class="co">#&gt; 19:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true"></a><span class="co">#&gt; 20:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true"></a><span class="co">#&gt; 21:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true"></a><span class="co">#&gt; 22:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true"></a><span class="co">#&gt; 23:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true"></a><span class="co">#&gt; 24:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true"></a><span class="co">#&gt; 25:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true"></a><span class="co">#&gt; 26:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true"></a><span class="co">#&gt; 27:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true"></a><span class="co">#&gt; 28:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true"></a><span class="co">#&gt; 29:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true"></a><span class="co">#&gt; 30:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true"></a><span class="co">#&gt; 31:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true"></a><span class="co">#&gt; 32:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true"></a><span class="co">#&gt; 33:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true"></a><span class="co">#&gt; 34:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true"></a><span class="co">#&gt; 35:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true"></a><span class="co">#&gt; 36:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true"></a><span class="co">#&gt; 37:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-75"><a href="#cb17-75" aria-hidden="true"></a><span class="co">#&gt; 38:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-76"><a href="#cb17-76" aria-hidden="true"></a><span class="co">#&gt; 39:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true"></a><span class="co">#&gt; 40:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true"></a><span class="co">#&gt; 41:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true"></a><span class="co">#&gt; 42:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true"></a><span class="co">#&gt; 43:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true"></a><span class="co">#&gt; 44:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true"></a><span class="co">#&gt; 45:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true"></a><span class="co">#&gt; 46:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true"></a><span class="co">#&gt; 47:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true"></a><span class="co">#&gt; 48:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true"></a><span class="co">#&gt; 49:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true"></a><span class="co">#&gt; 50:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true"></a><span class="co">#&gt; 51:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true"></a><span class="co">#&gt; 52:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true"></a><span class="co">#&gt; 53:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true"></a><span class="co">#&gt; 54:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true"></a><span class="co">#&gt; 55:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true"></a><span class="co">#&gt; 56:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true"></a><span class="co">#&gt; 57:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true"></a><span class="co">#&gt; 58:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true"></a><span class="co">#&gt; 59:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true"></a><span class="co">#&gt; 60:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true"></a><span class="co">#&gt; 61:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true"></a><span class="co">#&gt; 62:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true"></a><span class="co">#&gt; 63:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true"></a><span class="co">#&gt; 64:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true"></a><span class="co">#&gt; 65:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-103"><a href="#cb17-103" aria-hidden="true"></a><span class="co">#&gt; 66:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-104"><a href="#cb17-104" aria-hidden="true"></a><span class="co">#&gt; 67:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-105"><a href="#cb17-105" aria-hidden="true"></a><span class="co">#&gt; 68:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-106"><a href="#cb17-106" aria-hidden="true"></a><span class="co">#&gt; 69:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-107"><a href="#cb17-107" aria-hidden="true"></a><span class="co">#&gt; 70:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true"></a><span class="co">#&gt; 71:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-109"><a href="#cb17-109" aria-hidden="true"></a><span class="co">#&gt; 72:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-110"><a href="#cb17-110" aria-hidden="true"></a><span class="co">#&gt; 73:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-111"><a href="#cb17-111" aria-hidden="true"></a><span class="co">#&gt; 74:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-112"><a href="#cb17-112" aria-hidden="true"></a><span class="co">#&gt; 75:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-113"><a href="#cb17-113" aria-hidden="true"></a><span class="co">#&gt; 76:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-114"><a href="#cb17-114" aria-hidden="true"></a><span class="co">#&gt; 77:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-115"><a href="#cb17-115" aria-hidden="true"></a><span class="co">#&gt; 78:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-116"><a href="#cb17-116" aria-hidden="true"></a><span class="co">#&gt; 79:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-117"><a href="#cb17-117" aria-hidden="true"></a><span class="co">#&gt; 80:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-118"><a href="#cb17-118" aria-hidden="true"></a><span class="co">#&gt; 81:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-119"><a href="#cb17-119" aria-hidden="true"></a><span class="co">#&gt; 82:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-120"><a href="#cb17-120" aria-hidden="true"></a><span class="co">#&gt; 83:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-121"><a href="#cb17-121" aria-hidden="true"></a><span class="co">#&gt; 84:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-122"><a href="#cb17-122" aria-hidden="true"></a><span class="co">#&gt; 85:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-123"><a href="#cb17-123" aria-hidden="true"></a><span class="co">#&gt; 86:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-124"><a href="#cb17-124" aria-hidden="true"></a><span class="co">#&gt; 87:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-125"><a href="#cb17-125" aria-hidden="true"></a><span class="co">#&gt; 88:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-126"><a href="#cb17-126" aria-hidden="true"></a><span class="co">#&gt; 89:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-127"><a href="#cb17-127" aria-hidden="true"></a><span class="co">#&gt; 90:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-128"><a href="#cb17-128" aria-hidden="true"></a><span class="co">#&gt; 91:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-129"><a href="#cb17-129" aria-hidden="true"></a><span class="co">#&gt; 92:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-130"><a href="#cb17-130" aria-hidden="true"></a><span class="co">#&gt; 93:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-131"><a href="#cb17-131" aria-hidden="true"></a><span class="co">#&gt; 94:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-132"><a href="#cb17-132" aria-hidden="true"></a><span class="co">#&gt; 95:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-133"><a href="#cb17-133" aria-hidden="true"></a><span class="co">#&gt; 96:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-134"><a href="#cb17-134" aria-hidden="true"></a><span class="co">#&gt; 97:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-135"><a href="#cb17-135" aria-hidden="true"></a><span class="co">#&gt; 98:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-136"><a href="#cb17-136" aria-hidden="true"></a><span class="co">#&gt; 99:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
+<span id="cb17-137"><a href="#cb17-137" aria-hidden="true"></a><span class="co">#&gt; MCMC done.</span></span>
+<span id="cb17-138"><a href="#cb17-138" aria-hidden="true"></a><span class="co">#&gt; WAIC 1 2 =   -9.50277    9.51895</span></span>
+<span id="cb17-139"><a href="#cb17-139" aria-hidden="true"></a><span class="co">#&gt; Writing complete form of final state.</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

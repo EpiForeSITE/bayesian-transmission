@@ -15,7 +15,7 @@ bool State::ownerWantsEvent(Event *e)
     if (getOwner() == 0)
         return 1;
 
-    cerr << "Unknown owner type: " << getOwner() << "\n";
+    // cerr << "Unknown owner type: " << getOwner() << "\n";
     return 0;
 }
 

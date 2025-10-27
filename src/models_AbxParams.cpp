@@ -156,18 +156,15 @@ void AbxParams::set(int i, double value, int update, double prival, double prin)
 {
     if (value < 0)
     {
-        cerr << "Can't set rate value negative\t." << value << "\n";
-        exit(1);
+        Rcpp::stop("Can't set rate value negative: " + std::to_string(value));
     }
     if (prival < 0)
     {
-        cerr << "Can't set rate prior value negative\t." << prival << "\n";
-        exit(1);
+        Rcpp::stop("Can't set rate prior value negative: " + std::to_string(prival));
     }
     if (prin < 0)
     {
-        cerr << "Can't set prior observation count negative\t." << prin << "\n";
-        exit(1);
+        Rcpp::stop("Can't set prior observation count negative: " + std::to_string(prin));
     }
 
     rates[i] = value;

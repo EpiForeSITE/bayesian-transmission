@@ -14,8 +14,8 @@ InsituParams(probs = NULL, priors = NULL, doit = NULL, nstates = NULL)
 \item{doit}{A flag indicating if the rate(s) should be updated in the MCMC.}
 
 \item{nstates}{The number of states (2 or 3). If NULL, inferred from probs length.
-For 2-state models, uses \link{uncolonized, latent=0, colonized}.
-For 3-state models, uses \link{uncolonized, latent, colonized}.}
+For 2-state models, uses \code{c(uncolonized, latent=0, colonized)}.
+For 3-state models, uses \code{c(uncolonized, latent, colonized)}.}
 }
 \value{
 A list of parameters for in situ testing.
@@ -25,6 +25,6 @@ InSitu Parameters
 }
 \examples{
 InsituParams()
-InsituParams(nstates = 2)  # [0.9, 0.0, 0.1]
-InsituParams(nstates = 3)  # [0.98, 0.01, 0.01]
+InsituParams(nstates = 2)  # c(0.9, 0.0, 0.1)
+InsituParams(nstates = 3)  # c(0.98, 0.01, 0.01)
 }

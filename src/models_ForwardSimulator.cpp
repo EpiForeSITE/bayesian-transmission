@@ -6,7 +6,7 @@ void ForwardSimulator::forwardSimulate(UnitLinkedModel *mod, infect::SystemHisto
 {
     if (!mod->isForwardEnabled())
     {
-        cerr << "Model is not forward enabled. Cannot simulate.\n";
+        Rcpp::warning("Model is not forward enabled. Cannot simulate.");
         return;
     }
 
@@ -62,7 +62,7 @@ void ForwardSimulator::forwardSimulate(UnitLinkedModel *mod, infect::SystemHisto
                     break;
 
             if (pl == 0)
-                cerr << "SHOULDN'T GET HERE IN SIMULATE\n";
+                Rcpp::stop("SHOULDN'T GET HERE IN SIMULATE");
 
             infect::Unit *u = (infect::Unit *) pl->getEvent()->getUnit();
             infect::HistoryLink *ul = l;
@@ -259,15 +259,14 @@ double ForwardSimulator::randTimeToEvent(UnitLinkedModel *mod, double atime, inf
         break;
 
     default:
-        cerr << "CAN'T GET HERE\n";
+        Rcpp::stop("CAN'T GET HERE");
     return 0;
     break;
     }
 
     if (time < atime)
     {
-        cerr << "PROBLEM WITH REXP\n";
-        exit(1);
+        Rcpp::stop("PROBLEM WITH REXP");
     }
 
     return time ;

@@ -147,18 +147,15 @@ void TestParamsAbx::set(int i, int j, double value, int update, double prival, d
 {
     if (value < 0 || value > 1)
     {
-        cerr << "Can't set probability value outside (0,1)\t" << value << "\n";
-        exit(1);
+        Rcpp::stop("Can't set probability value outside (0,1): " + std::to_string(value));
     }
     if (prival < 0 || prival > 1)
     {
-        cerr << "Can't set probability prior value outside (0,1)\t" << prival << "\n";
-        exit(1);
+        Rcpp::stop("Can't set probability prior value outside (0,1): " + std::to_string(prival));
     }
     if (prin < 0)
     {
-        cerr << "Can't set prior observation count negative\t" << prin << "\n";
-        exit(1);
+        Rcpp::stop("Can't set prior observation count negative: " + std::to_string(prin));
     }
 
     set(i,j,value);

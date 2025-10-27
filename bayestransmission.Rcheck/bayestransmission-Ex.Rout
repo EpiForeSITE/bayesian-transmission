@@ -1,0 +1,1804 @@
+
+R version 4.5.1 (2025-06-13) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "bayestransmission"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('bayestransmission')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("AbxParams")
+> ### * AbxParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: AbxParams
+> ### Title: Antibiotic Parameters
+> ### Aliases: AbxParams
+> 
+> ### ** Examples
+> 
+> AbxParams()
+$onoff
+[1] FALSE
+
+$delay
+[1] 0
+
+$life
+[1] 1
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("AbxRateParams")
+> ### * AbxRateParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: AbxRateParams
+> ### Title: Antibiotic Administration Rate Parameters
+> ### Aliases: AbxRateParams
+> 
+> ### ** Examples
+> 
+> AbxRateParams()
+$uncolonized
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$colonized
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$latent
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("ClearanceParams")
+> ### * ClearanceParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: ClearanceParams
+> ### Title: Clearance Parameters
+> ### Aliases: ClearanceParams
+> 
+> ### ** Examples
+> 
+> ClearanceParams()
+$rate
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$ever_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("CodeToEvent")
+> ### * CodeToEvent
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: CodeToEvent
+> ### Title: Convert coded events to string events
+> ### Aliases: CodeToEvent
+> 
+> ### ** Examples
+> 
+> CodeToEvent(c(-1:19, 21:23, 31:33, -999))
+ [1] "nullevent"        "admission"        "negsurvtest"      "possurvtest"     
+ [5] "discharge"        "negclintest"      "posclintest"      "insitu"          
+ [9] "postest"          "negtest"          "abxdose"          "abxon"           
+[13] "abxoff"           "isolon"           "isoloff"          "admission0"      
+[17] "admission1"       "admission2"       "insitu0"          "insitu1"         
+[21] "insitu2"          "start"            "marker"           "stop"            
+[25] "acquisition"      "progression"      "clearance"        "EVENT_TYPE_ERROR"
+> 
+> 
+> 
+> cleanEx()
+> nameEx("InUnitParams")
+> ### * InUnitParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: InUnitParams
+> ### Title: In Unit Parameters
+> ### Aliases: InUnitParams ABXInUnitParams
+> 
+> ### ** Examples
+> 
+> InUnitParams(
++   acquisition = LinearAbxAcquisitionParams(),
++   progression = ProgressionParams(),
++   clearance = ClearanceParams()
++ )
+$acquisition
+$acquisition$base
+$init
+[1] 0.001
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.001
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$time
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$mass
+$init
+[1] 1
+
+$update
+[1] TRUE
+
+$prior
+[1] 1
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$freq
+$init
+[1] 1
+
+$update
+[1] TRUE
+
+$prior
+[1] 1
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$col_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$suss_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$suss_ever
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$progression
+$progression$rate
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$progression$abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$progression$ever_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$clearance
+$clearance$rate
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$clearance$abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$clearance$ever_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+> ABXInUnitParams(
++   acquisition = LinearAbxAcquisitionParams(),
++   progression = ProgressionParams(),
++   clearance = ClearanceParams()
++ )
+$acquisition
+$acquisition$base
+$init
+[1] 0.001
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.001
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$time
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$mass
+$init
+[1] 1
+
+$update
+[1] TRUE
+
+$prior
+[1] 1
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$freq
+$init
+[1] 1
+
+$update
+[1] TRUE
+
+$prior
+[1] 1
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$col_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$suss_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$acquisition$suss_ever
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$progression
+$progression$rate
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$progression$abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$progression$ever_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$clearance
+$clearance$rate
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$clearance$abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$clearance$ever_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("InsituParams")
+> ### * InsituParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: InsituParams
+> ### Title: InSitu Parameters
+> ### Aliases: InsituParams
+> 
+> ### ** Examples
+> 
+> InsituParams()
+$probs
+[1] 0.9 0.0 0.1
+
+$priors
+[1] 0.9 1.0 0.1
+
+$doit
+[1]  TRUE FALSE  TRUE
+
+> InsituParams(nstates = 2)  # [0.9, 0.0, 0.1]
+$probs
+[1] 0.9 0.0 0.1
+
+$priors
+[1] 0.9 1.0 0.1
+
+$doit
+[1]  TRUE FALSE  TRUE
+
+> InsituParams(nstates = 3)  # [0.98, 0.01, 0.01]
+$probs
+[1] 0.98 0.01 0.01
+
+$priors
+[1] 0.98 0.01 0.01
+
+$doit
+[1] TRUE TRUE TRUE
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("LinearAbxAcquisitionParams")
+> ### * LinearAbxAcquisitionParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: LinearAbxAcquisitionParams
+> ### Title: Linear Antibiotic Acquisition Parameters
+> ### Aliases: LinearAbxAcquisitionParams
+> 
+> ### ** Examples
+> 
+> LinearAbxAcquisitionParams()
+$base
+$init
+[1] 0.001
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.001
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$time
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$mass
+$init
+[1] 1
+
+$update
+[1] TRUE
+
+$prior
+[1] 1
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$freq
+$init
+[1] 1
+
+$update
+[1] TRUE
+
+$prior
+[1] 1
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$col_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$suss_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$suss_ever
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("LogNormalModelParams")
+> ### * LogNormalModelParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: LogNormalModelParams
+> ### Title: Model Parameters for a Log Normal Model
+> ### Aliases: LogNormalModelParams LinearAbxModel
+> 
+> ### ** Examples
+> 
+> LogNormalModelParams("LogNormalModel")
+$modname
+[1] "LogNormalModel"
+
+$nstates
+[1] 2
+
+$nmetro
+[1] 1
+
+$forward
+[1] TRUE
+
+$cheat
+[1] FALSE
+
+$Insitu
+$Insitu$probs
+[1] 0.9 0.0 0.1
+
+$Insitu$priors
+[1] 0.9 1.0 0.1
+
+$Insitu$doit
+[1]  TRUE FALSE  TRUE
+
+
+$SurveillanceTest
+$SurveillanceTest$colonized
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$SurveillanceTest$uncolonized
+$init
+[1] 0.8
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.8
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$SurveillanceTest$latent
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$ClinicalTest
+$ClinicalTest$uncolonized
+$ClinicalTest$uncolonized$param
+$init
+[1] 0.5
+
+$update
+[1] FALSE
+
+$prior
+[1] 0.5
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$ClinicalTest$uncolonized$rate
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$ClinicalTest$colonized
+$ClinicalTest$colonized$param
+$init
+[1] 0.5
+
+$update
+[1] FALSE
+
+$prior
+[1] 0.5
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$ClinicalTest$colonized$rate
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$ClinicalTest$latent
+$ClinicalTest$latent$param
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$ClinicalTest$latent$rate
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+
+$OutCol
+$OutCol$acquisition
+$init
+[1] 0.05
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.05
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$OutCol$clearance
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$OutCol$progression
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$InCol
+$InCol$acquisition
+$InCol$acquisition$base
+$init
+[1] 0.001
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.001
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$InCol$acquisition$time
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$InCol$acquisition$mass
+$init
+[1] 1
+
+$update
+[1] TRUE
+
+$prior
+[1] 1
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$InCol$acquisition$freq
+$init
+[1] 1
+
+$update
+[1] TRUE
+
+$prior
+[1] 1
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$InCol$acquisition$col_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$InCol$acquisition$suss_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$InCol$acquisition$suss_ever
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$InCol$progression
+$InCol$progression$rate
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$InCol$progression$abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$InCol$progression$ever_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$InCol$clearance
+$InCol$clearance$rate
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$InCol$clearance$abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$InCol$clearance$ever_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+
+$Abx
+$Abx$onoff
+[1] FALSE
+
+$Abx$delay
+[1] 0
+
+$Abx$life
+[1] 1
+
+
+$AbxRate
+$AbxRate$uncolonized
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$AbxRate$colonized
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$AbxRate$latent
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("OutOfUnitInfectionParams")
+> ### * OutOfUnitInfectionParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: OutOfUnitInfectionParams
+> ### Title: Out of Unit Infection Parameters
+> ### Aliases: OutOfUnitInfectionParams
+> 
+> ### ** Examples
+> 
+> OutOfUnitInfectionParams()
+$acquisition
+$init
+[1] 0.05
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.05
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$clearance
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$progression
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("Param")
+> ### * Param
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Param
+> ### Title: Construct a parameter with a prior, weight and an update flag.
+> ### Aliases: Param
+> 
+> ### ** Examples
+> 
+> # Fully specified parameter.
+> Param(init = 0, weight = 1, update = TRUE, prior = 0.5)
+$init
+[1] 0
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.5
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+> # Fixed parameter
+> # Weight = 0 implies update=FALSE and prior is ignored.
+> Param(0, 0)
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+> # Update parameter that starts at zero.
+> Param(0, weight =1, update=TRUE)
+$init
+[1] 0
+
+$update
+[1] TRUE
+
+$prior
+[1] 0
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+> # Parameters specified at zero implies fixed.
+> Param(0)
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+> 
+> 
+> 
+> cleanEx()
+> nameEx("ParamWRate")
+> ### * ParamWRate
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: ParamWRate
+> ### Title: Specify a random testing parameter with a rate.
+> ### Aliases: ParamWRate
+> 
+> ### ** Examples
+> 
+> ParamWRate(Param(0.5, 0), rate = Param(1, 0))
+$param
+$init
+[1] 0.5
+
+$update
+[1] FALSE
+
+$prior
+[1] 0.5
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$rate
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("ProgressionParams")
+> ### * ProgressionParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: ProgressionParams
+> ### Title: Progression Parameters
+> ### Aliases: ProgressionParams
+> 
+> ### ** Examples
+> 
+> ProgressionParams()
+$rate
+$init
+[1] 0.01
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.01
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$ever_abx
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("RandomTestParams")
+> ### * RandomTestParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: RandomTestParams
+> ### Title: Random Testing Parameter Set
+> ### Aliases: RandomTestParams ClinicalTestParams
+> 
+> ### ** Examples
+> 
+> RandomTestParams()
+$uncolonized
+$uncolonized$param
+$init
+[1] 0.5
+
+$update
+[1] FALSE
+
+$prior
+[1] 0.5
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$uncolonized$rate
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$colonized
+$colonized$param
+$init
+[1] 0.5
+
+$update
+[1] FALSE
+
+$prior
+[1] 0.5
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$colonized$rate
+$init
+[1] 1
+
+$update
+[1] FALSE
+
+$prior
+[1] 1
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+$latent
+$latent$param
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$latent$rate
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("SurveillanceTestParams")
+> ### * SurveillanceTestParams
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: SurveillanceTestParams
+> ### Title: Surveillance Test Parameters
+> ### Aliases: SurveillanceTestParams
+> 
+> ### ** Examples
+> 
+> SurveillanceTestParams()
+$colonized
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+$uncolonized
+$init
+[1] 0.8
+
+$update
+[1] TRUE
+
+$prior
+[1] 0.8
+
+$weight
+[1] 1
+
+attr(,"class")
+[1] "Param"
+
+$latent
+$init
+[1] 0
+
+$update
+[1] FALSE
+
+$prior
+[1] 0
+
+$weight
+[1] 0
+
+attr(,"class")
+[1] "Param"
+
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  2.151 0.112 3.83 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

@@ -187,8 +187,7 @@ void LogNormalICP::setNormal(int i, int j, double value, int update, double prim
     primean[i][j] = prim;
     if (privar < 0)
     {
-        cerr << "Error: Cannot set prior variance to be negative\n";
-        exit(1);
+        Rcpp::stop("Error: Cannot set prior variance to be negative");
     }
     pristdev[i][j] = sqrt(privar);
     sigmaprop[i][j] = sig;

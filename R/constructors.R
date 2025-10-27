@@ -99,16 +99,16 @@ check_paramwrate <- function(x, name = deparse(substitute(x))) {
 #' @param priors The prior probability of the individual being in each state.
 #' @param doit A flag indicating if the rate(s) should be updated in the MCMC.
 #' @param nstates The number of states (2 or 3). If NULL, inferred from probs length.
-#'                For 2-state models, uses [uncolonized, latent=0, colonized].
-#'                For 3-state models, uses [uncolonized, latent, colonized].
+#'                For 2-state models, uses `c(uncolonized, latent=0, colonized)`.
+#'                For 3-state models, uses `c(uncolonized, latent, colonized)`.
 #'
 #' @returns A list of parameters for in situ testing.
 #' @export
 #'
 #' @examples
 #' InsituParams()
-#' InsituParams(nstates = 2)  # [0.9, 0.0, 0.1]
-#' InsituParams(nstates = 3)  # [0.98, 0.01, 0.01]
+#' InsituParams(nstates = 2)  # c(0.9, 0.0, 0.1)
+#' InsituParams(nstates = 3)  # c(0.98, 0.01, 0.01)
 InsituParams <- function(probs = NULL, priors = NULL, doit = NULL, nstates = NULL) {
   # Determine defaults based on nstates
   if (is.null(probs)) {

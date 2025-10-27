@@ -1,0 +1,22 @@
+AbxParams               Antibiotic Parameters
+AbxRateParams           Antibiotic Administration Rate Parameters
+ClearanceParams         Clearance Parameters
+CodeToEvent             Convert coded events to string events
+EventToCode             Convert string events to coded events
+InUnitParams            In Unit Parameters
+InsituParams            InSitu Parameters
+LinearAbxAcquisitionParams
+                        Linear Antibiotic Acquisition Parameters
+LogNormalModelParams    Model Parameters for a Log Normal Model
+OutOfUnitInfectionParams
+                        Out of Unit Infection Parameters
+Param                   Construct a parameter with a prior, weight and
+                        an update flag.
+ParamWRate              Specify a random testing parameter with a rate.
+ProgressionParams       Progression Parameters
+RandomTestParams        Random Testing Parameter Set
+SurveillanceTestParams
+                        Surveillance Test Parameters
+newModelExport          Create a new model object
+runMCMC                 Run Bayesian Transmission MCMC
+simulated.data          Simulated Transmission Data
