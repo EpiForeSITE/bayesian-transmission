@@ -4,7 +4,6 @@
 
 #include "LocationState.h"
 #include "PatientState.h"
-#include <Rcpp.h>
 
 class HistoryLink : public Object
 {
@@ -62,7 +61,7 @@ public:
 		for ( ; snxt != 0 && snxt->sprev != 0 && snxt->sprev->getEvent()->getTime() >= getEvent()->getTime(); snxt = snxt->sprev);
 
 		if (snxt == 0)
-			Rcpp::Rcerr << "System run off \n";
+			cerr << "System run off \n";
 
 		insertBeforeS(snxt);
 
@@ -70,17 +69,17 @@ public:
 
 		for (xx = snxt ; xx != 0 && xx->getEvent()->getFacility() != getEvent()->getFacility(); xx = xx->snext);
 		if (xx == 0)
-			Rcpp::Rcerr << "Facility run off \n";
+			cerr << "Facility run off \n";
 		insertBeforeF(xx);
 
 		for (xx = snxt ; xx != 0 && xx->getEvent()->getUnit() != getEvent()->getUnit(); xx = xx->snext);
 		if (xx == 0)
-			Rcpp::Rcerr << "Unit run off \n";
+			cerr << "Unit run off \n";
 		insertBeforeU(xx);
 
 		for (xx = snxt ; xx != 0 && xx->getEvent()->getPatient() != getEvent()->getPatient(); xx = xx->snext);
 		if (xx == 0)
-			Rcpp::Rcerr << "Patient run off \n";
+			cerr << "Patient run off \n";
 		insertBeforeP(xx);
 	}
 
