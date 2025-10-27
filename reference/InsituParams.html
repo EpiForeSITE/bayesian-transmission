@@ -62,8 +62,8 @@
 
 <dt id="arg-nstates">nstates<a class="anchor" aria-label="anchor" href="#arg-nstates"></a></dt>
 <dd><p>The number of states (2 or 3). If NULL, inferred from probs length.
-For 2-state models, uses uncolonized, latent=0, colonized.
-For 3-state models, uses uncolonized, latent, colonized.</p></dd>
+For 2-state models, uses <code>c(uncolonized, latent=0, colonized)</code>.
+For 3-state models, uses <code>c(uncolonized, latent, colonized)</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -83,7 +83,7 @@ For 3-state models, uses uncolonized, latent, colonized.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $doit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span><span class="fu">InsituParams</span><span class="op">(</span>nstates <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>  <span class="co"># [0.9, 0.0, 0.1]</span></span></span>
+<span class="r-in"><span><span class="fu">InsituParams</span><span class="op">(</span>nstates <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>  <span class="co"># c(0.9, 0.0, 0.1)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $probs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9 0.0 0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -93,7 +93,7 @@ For 3-state models, uses uncolonized, latent, colonized.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $doit</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span><span class="fu">InsituParams</span><span class="op">(</span>nstates <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>  <span class="co"># [0.98, 0.01, 0.01]</span></span></span>
+<span class="r-in"><span><span class="fu">InsituParams</span><span class="op">(</span>nstates <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>  <span class="co"># c(0.98, 0.01, 0.01)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $probs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.98 0.01 0.01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
