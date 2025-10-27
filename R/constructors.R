@@ -399,7 +399,7 @@ ClearanceParams <- function(
 #'   clearance = ClearanceParams()
 #' )
 InUnitParams <- function(
-    acquisition = AcquisitionParams(),
+    acquisition = LinearAbxAcquisitionParams(),
     progression = ProgressionParams(),
     clearance = ClearanceParams()) {
   assertthat::assert_that(

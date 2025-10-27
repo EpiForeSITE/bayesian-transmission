@@ -6,7 +6,7 @@
 \title{In Unit Parameters}
 \usage{
 InUnitParams(
-  acquisition = AcquisitionParams(),
+  acquisition = LinearAbxAcquisitionParams(),
   progression = ProgressionParams(),
   clearance = ClearanceParams()
 )
