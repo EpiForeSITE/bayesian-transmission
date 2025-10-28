@@ -63,3 +63,4 @@ docker-compose.yaml
 # Output and compilation artifacts
 compile.txt
 output.txt
+*.Rcheck
