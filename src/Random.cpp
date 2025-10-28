@@ -107,10 +107,10 @@ double Random::logdexp(double x, double lambda)
 /**
  Random number generators.
  */
-double Random::runif()
-{
-    return std::rand() / (double) RAND_MAX;
-}
+// double Random::runif()
+// {
+//     return std::rand() / (double) RAND_MAX;
+// }
 
 double Random::runif(double a, double b)
 {

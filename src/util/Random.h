@@ -13,19 +13,17 @@ private:
 	double chengFeast(double a);
 
 public:
-	Random(int seed)
-	{
-		std::srand(seed);
-	}
-
-	Random()
-	{
-		std::srand(1);
-	}
+	// Protected constructor - derived classes must implement their own
+	// This class has been made virtual for the R Package implementation.
+	Random() {}
+	Random(int seed) {}
+	
+	// Virtual destructor is important for abstract base classes
+	virtual ~Random() {}
 
 	static double log2pi;
 
-	void setSeed(int seed);
+	// void setSeed(int seed);
 
 /**
 	Probability density functions.
@@ -41,7 +39,7 @@ public:
 /**
 	Random number generators.
 */
-	virtual double runif();
+	virtual double runif()=0;
 	virtual double runif(double a, double b);
 	virtual double rexp();
 	virtual double rexp(double l);
