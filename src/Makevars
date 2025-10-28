@@ -1,3 +1,18 @@
 PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 LAPACK_LIBS = -llapack
 BLAS_LIBS = -lblas
+
+# Include subdirectories for headers
+PKG_CPPFLAGS = -I. -I./infect -I./lognormal -I./modeling -I./util
+
+# Specify source files including those in subdirectories
+SOURCES_CPP = $(wildcard *.cpp) \
+              $(wildcard infect/*.cpp) \
+              $(wildcard lognormal/*.cpp) \
+              $(wildcard modeling/*.cpp) \
+              $(wildcard util/*.cpp)
+
+SOURCES_CC = $(wildcard *.cc) \
+             $(wildcard util/*.cc)
+          
+OBJECTS = $(SOURCES_CPP:.cpp=.o) $(SOURCES_CC:.cc=.o)
