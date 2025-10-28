@@ -48,5 +48,5 @@
   "shutdownAction": "stopContainer",
 
   // Post-create command to set up the environment
-  "postCreateCommand": "bash -c 'sudo apt-get update && sudo apt-get install -y libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libwebp-dev && Rscript -e \"install.packages(c(\\\"devtools\\\", \\\"RcppEigen\\\", \\\"checkmate\\\", \\\"testthat\\\"), repos=\\\"https://cloud.r-project.org\\\")\" && echo \"Dev container ready with devtools!\"'"
+  "postCreateCommand": "bash -c 'sudo apt-get update && sudo apt-get install -y libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libwebp-dev qpdf && Rscript -e \"install.packages(c(\\\"devtools\\\", \\\"RcppEigen\\\", \\\"checkmate\\\", \\\"testthat\\\"), repos=\\\"https://cloud.r-project.org\\\")\" && echo \"Dev container ready with devtools!\"'"
 }
