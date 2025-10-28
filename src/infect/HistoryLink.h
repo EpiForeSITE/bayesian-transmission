@@ -60,26 +60,26 @@ public:
 		for ( ; snxt != 0 && snxt->getEvent()->getTime() < getEvent()->getTime(); snxt = snxt->snext);
 		for ( ; snxt != 0 && snxt->sprev != 0 && snxt->sprev->getEvent()->getTime() >= getEvent()->getTime(); snxt = snxt->sprev);
 
-		if (snxt == 0)
-			cerr << "System run off \n";
+		// if (snxt == 0)
+		// 	cerr << "System run off \n";
 
 		insertBeforeS(snxt);
 
 		HistoryLink* xx = 0;
 
 		for (xx = snxt ; xx != 0 && xx->getEvent()->getFacility() != getEvent()->getFacility(); xx = xx->snext);
-		if (xx == 0)
-			cerr << "Facility run off \n";
+		// if (xx == 0)
+		// 	cerr << "Facility run off \n";
 		insertBeforeF(xx);
 
 		for (xx = snxt ; xx != 0 && xx->getEvent()->getUnit() != getEvent()->getUnit(); xx = xx->snext);
-		if (xx == 0)
-			cerr << "Unit run off \n";
+		// if (xx == 0)
+		// 	cerr << "Unit run off \n";
 		insertBeforeU(xx);
 
 		for (xx = snxt ; xx != 0 && xx->getEvent()->getPatient() != getEvent()->getPatient(); xx = xx->snext);
-		if (xx == 0)
-			cerr << "Patient run off \n";
+		// if (xx == 0)
+		// 	cerr << "Patient run off \n";
 		insertBeforeP(xx);
 	}
 

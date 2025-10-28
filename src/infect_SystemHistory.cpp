@@ -156,11 +156,6 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
         {
             Episode *ep = (Episode *) episodes->next();
 
-            // Debug: track episodes for specific patients
-            if (patient->getId() == 120 || patient->getId() == 103) {
-                Rcpp::Rcerr << "DEBUG Episode for patient=" << patient->getId() << std::endl;
-            }
-
             // Make list of new links and connect the patient pointers.
 
             for (SortedList *t = ep->getEvents(); t->hasNext(); )
@@ -169,12 +164,6 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
 
                 HistoryLink *x = makeHistoryLink(m,e);
                 
-                // Debug: track events for specific patients
-                if (patient->getId() == 120 || patient->getId() == 103) {
-                    Rcpp::Rcerr << "  Event: time=" << e->getTime() 
-                                << " type=" << e->getType() << std::endl;
-                }
-
                 if (prev == 0)
                 {
                     pheads->put(patient,x);
@@ -389,7 +378,6 @@ void SystemHistory::write2(ostream &os, int opt)
         for (uheads->init(); uheads->hasNext(); )
         {
             count->put(uheads->next(), new Integer(0));
-            // cerr << count << "\n";
         }
 
         for (HistoryLink *l = shead; l != 0; l = l->sNext())
