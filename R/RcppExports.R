@@ -71,6 +71,45 @@ newModelExport <- function(modelParameters, verbose = FALSE) {
     .Call(`_bayestransmission_newModelExport`, modelParameters, verbose)
 }
 
+#' Get Individual HistoryLink Log Likelihoods (Diagnostic Function)
+#'
+#' This function creates a model and system history, then returns the log likelihood
+#' contribution from each individual HistoryLink in the system. Useful for debugging
+#' and verifying likelihood calculations.
+#'
+#' @param modelParameters List of model parameters (same format as runMCMC)
+#' @return List containing:
+#'   * `linkLogLikelihoods` - vector of log likelihoods for each link
+#'   * `overallLogLikelihood` - total log likelihood from model->logLikelihood()
+#'   * `numLinks` - number of history links
+#' @export
+testHistoryLinkLogLikelihoods <- function(modelParameters) {
+    .Call(`_bayestransmission_testHistoryLinkLogLikelihoods`, modelParameters)
+}
+
+#' Create a new C++ model object wrapped in appropriate reference class
+#'
+#' Creates and initializes a C++ model object based on the provided parameters,
+#' then wraps it in the appropriate R reference class that exposes the model's
+#' methods and properties.
+#'
+#' @param modelParameters List of model parameters (same format as runMCMC)
+#' @param verbose Print progress messages (default: false)
+#'
+#' @return A reference class object wrapping the C++ model:
+#'   * CppLogNormalModel - for "LogNormalModel"
+#'   * CppLinearAbxModel - for "LinearAbxModel"
+#'   * CppLinearAbxModel2 - for "LinearAbxModel2"
+#'   * CppMixedModel - for "MixedModel" (note: needs Module exposure)
+#'
+#' The returned object provides access to model methods and properties including:
+#'   * InColParams, OutColParams, InsituParams, etc.
+#'   * logLikelihood(), getHistoryLinkLogLikelihoods(), etc.
+#' @export
+newCppModelInternal <- function(modelParameters, verbose = FALSE) {
+    .Call(`_bayestransmission_newCppModelInternal`, modelParameters, verbose)
+}
+
 asAbxLocationState <- function(x) {
     .Call(`_bayestransmission_asAbxLocationState`, x)
 }

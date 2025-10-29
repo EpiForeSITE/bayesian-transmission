@@ -121,12 +121,12 @@ CREATE_WRAP_REFCLASS( models, UnitLinkedModel )
 // LogNormal
 CREATE_WRAP_REFCLASS( lognormal, LinearAbxICP)
 CREATE_WRAP_REFCLASS( lognormal, LinearAbxModel)
+CREATE_WRAP_REFCLASS( lognormal, LinearAbxModel2)
 CREATE_WRAP_REFCLASS( lognormal, LogNormalAbxICP)
-// CREATE_WRAP_REFCLASS( lognormal, LogNormalICP )
-// CREATE_WRAP_REFCLASS( lognormal, LogNormalMassAct )
-// CREATE_WRAP_REFCLASS( lognormal, LogNormalModel )
-// CREATE_WRAP_REFCLASS( lognormal, MixedICP )
-// CREATE_WRAP_REFCLASS( lognormal, MixedModel )
+CREATE_WRAP_REFCLASS( lognormal, LogNormalICP )
+CREATE_WRAP_REFCLASS( lognormal, LogNormalModel )
+CREATE_WRAP_REFCLASS( lognormal, MixedICP )
+CREATE_WRAP_REFCLASS( lognormal, MixedModel )
 
 
 // Special Conversions

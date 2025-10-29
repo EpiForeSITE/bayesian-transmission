@@ -99,6 +99,9 @@ public:
 	virtual double logLikelihood(infect::HistoryLink *h, int dogap);
 	void update(infect::SystemHistory *hist, Random *r);
 	void update(infect::SystemHistory *hist, Random *r, int max)  override;
+	
+	// Diagnostic function to get individual log likelihoods
+	std::vector<double> getHistoryLinkLogLikelihoods(infect::SystemHistory *hist);
 };
 
 } // namespace models

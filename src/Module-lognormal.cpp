@@ -94,4 +94,19 @@ void init_Module_lognormal(){
         .derives<lognormal::LogNormalModel>("CppLogNormalModel")
         .constructor<int, int, int, int>()
     ;
+
+    class_<lognormal::MixedICP>("CppMixedICP")
+        .derives<lognormal::LogNormalAbxICP>("CppLogNormalAbxICP")
+        .constructor<int, int, int>()
+        .constructor<int, int, int, int>()
+        .method("acqRate", &lognormal::MixedICP::acqRate)
+        .method("timePar", &lognormal::MixedICP::timePar)
+        .method("unTransform", &lognormal::MixedICP::unTransform)
+        .method("set", &lognormal::MixedICP::set)
+    ;
+
+    class_<lognormal::MixedModel>("CppMixedModel")
+        .derives<lognormal::LogNormalModel>("CppLogNormalModel")
+        .constructor<int, int, int, int>()
+    ;
 }

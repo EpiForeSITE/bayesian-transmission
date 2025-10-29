@@ -62,6 +62,7 @@ namespace models{
 namespace lognormal{
     DECLARE_POINTER(LinearAbxICP);
     DECLARE_POINTER(LinearAbxModel);
+    DECLARE_POINTER(LinearAbxModel2);
     DECLARE_POINTER(LogNormalAbxICP);
     DECLARE_POINTER(LogNormalICP);
     DECLARE_POINTER(LogNormalMassAct);
@@ -133,12 +134,12 @@ namespace Rcpp {
     // lognormal
     DECLARE_WRAP(lognormal::LinearAbxICP);
     DECLARE_WRAP(lognormal::LinearAbxModel);
+    DECLARE_WRAP(lognormal::LinearAbxModel2);
     DECLARE_WRAP(lognormal::LogNormalAbxICP);
-    // DECLARE_WRAP(lognormal::LogNormalICP);
-    // DECLARE_WRAP(lognormal::LogNormalMassAct);
-    // DECLARE_WRAP(lognormal::LogNormalModel);
-    // DECLARE_WRAP(lognormal::MixedICP);
-    // DECLARE_WRAP(lognormal::MixedModel);
+    DECLARE_WRAP(lognormal::LogNormalICP);
+    DECLARE_WRAP(lognormal::LogNormalModel);
+    DECLARE_WRAP(lognormal::MixedICP);
+    DECLARE_WRAP(lognormal::MixedModel);
 }
 #define DECLARE_AS(CLASS) template <> inline CLASS* as<CLASS*>(SEXP sexp);
 namespace Rcpp{

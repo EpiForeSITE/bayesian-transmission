@@ -59,6 +59,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// testHistoryLinkLogLikelihoods
+Rcpp::List testHistoryLinkLogLikelihoods(Rcpp::List modelParameters);
+RcppExport SEXP _bayestransmission_testHistoryLinkLogLikelihoods(SEXP modelParametersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type modelParameters(modelParametersSEXP);
+    rcpp_result_gen = Rcpp::wrap(testHistoryLinkLogLikelihoods(modelParameters));
+    return rcpp_result_gen;
+END_RCPP
+}
+// newCppModelInternal
+SEXP newCppModelInternal(Rcpp::List modelParameters, bool verbose);
+RcppExport SEXP _bayestransmission_newCppModelInternal(SEXP modelParametersSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type modelParameters(modelParametersSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(newCppModelInternal(modelParameters, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // asAbxLocationState
 SEXP asAbxLocationState(SEXP x);
 RcppExport SEXP _bayestransmission_asAbxLocationState(SEXP xSEXP) {
@@ -111,6 +134,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bayestransmission_EventToCode", (DL_FUNC) &_bayestransmission_EventToCode, 1},
     {"_bayestransmission_runMCMC", (DL_FUNC) &_bayestransmission_runMCMC, 4},
     {"_bayestransmission_newModelExport", (DL_FUNC) &_bayestransmission_newModelExport, 2},
+    {"_bayestransmission_testHistoryLinkLogLikelihoods", (DL_FUNC) &_bayestransmission_testHistoryLinkLogLikelihoods, 1},
+    {"_bayestransmission_newCppModelInternal", (DL_FUNC) &_bayestransmission_newCppModelInternal, 2},
     {"_bayestransmission_asAbxLocationState", (DL_FUNC) &_bayestransmission_asAbxLocationState, 1},
     {"_bayestransmission_asMap", (DL_FUNC) &_bayestransmission_asMap, 1},
     {"_bayestransmission_asHistoryLink", (DL_FUNC) &_bayestransmission_asHistoryLink, 1},

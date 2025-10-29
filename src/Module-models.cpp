@@ -89,6 +89,7 @@ void init_Module_models(){
         .method("logLikelihood_P_HL", (LogLikelihood_P_HL)&models::UnitLinkedModel::logLikelihood)
         .method("logLikelihood_P_HL_i", (LogLikelihood_P_HL_i)&models::UnitLinkedModel::logLikelihood)
         .method("logLikelihood_HL_i", (LogLikelihood_HL_i)&models::UnitLinkedModel::logLikelihood)
+        .method("getHistoryLinkLogLikelihoods", &models::UnitLinkedModel::getHistoryLinkLogLikelihoods)
     ;
 
 
