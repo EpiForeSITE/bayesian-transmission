@@ -37,7 +37,7 @@ test_that("CppLinearAbxModel constructor and basic properties", {
   expect_s4_class(icp, "Rcpp_CppLogNormalAbxICP")
 
   # Set time origin
-  icp$timeOrigin <- (sys$end - sys$start) / 2
+  icp$timeOrigin <- (sys$endTime() - sys$startTime()) / 2
 
   # Create history
   hist <- CppSystemHistory$new(sys, model, FALSE)
