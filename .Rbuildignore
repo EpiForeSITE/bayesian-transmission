@@ -20,3 +20,4 @@
 ^final_parameter_comparison\.md$
 ^test_.*\.R$
 ^original_cpp_with_r_data\.txt$
+^copilot$

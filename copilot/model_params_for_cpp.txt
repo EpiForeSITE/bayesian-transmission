@@ -1,0 +1,36 @@
+LinearAbxModel2 2
+AbxByOnOff 0
+AbxDelay 0.0
+AbxLife 1.5
+
+InsituParams
+0.90 0.0 0.10
+1 1 1
+
+SurveillanceTestParams
+0.0 0.0 0.8
+
+ClinicalTestParams
+0.5 0.5
+1.0 1.0
+
+OutOfUnitParams
+0.001 0.01 0.0
+
+InUnitParams
+0.001
+1.0
+0.9999
+0.9999
+1.0
+1.0
+1.0
+0.0
+1.0
+1.0
+0.01
+1.0
+1.0
+
+AbxRateParams
+1.0 1.0
