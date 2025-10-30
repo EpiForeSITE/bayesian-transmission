@@ -115,7 +115,7 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
     HistoryLink *stail = makeHistoryLink(m,0,0,s->endTime(),0,stop);
     shead->insertBeforeS(stail);
 
-    for (IntMap *facs = s->getFacilities(); facs->hasNext(); )
+    for (IntMap *facs = s->getFacilities().get(); facs->hasNext(); )
     {
         Facility *f = (Facility *) facs->nextValue();
 
@@ -146,13 +146,13 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
     HistoryLink **hx = new HistoryLink*[s->getPatients()->size()];
     int hxn = 0;
 
-    for (IntMap *pat = s->getPatients(); pat->hasNext(); )
+    for (IntMap *pat = s->getPatients().get(); pat->hasNext(); )
     {
         HistoryLink *prev = 0;
 
         Patient *patient = (Patient *) pat->nextValue();
 
-        for (Map *episodes = (Map *) s->getEpisodes(patient); episodes->hasNext();)
+        for (Map *episodes = s->getEpisodes(patient).get(); episodes->hasNext();)
         {
             Episode *ep = (Episode *) episodes->next();
 
@@ -236,7 +236,7 @@ SystemHistory::SystemHistory(System *s, Model *m, bool verbose)
 
     // Put the sub lists into the full lists.
 
-    for (IntMap *facs = s->getFacilities(); facs->hasNext(); )
+    for (IntMap *facs = s->getFacilities().get(); facs->hasNext(); )
     {
         Facility *f = (Facility *) facs->nextValue();
 

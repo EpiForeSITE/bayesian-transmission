@@ -10,11 +10,30 @@ using namespace models;
 #include "RRandom.h"
 
 // Expose the classes to R
+RCPP_EXPOSED_AS(util::SortedList)
 
 void init_Module_util(){
 class_<util::Object>("CppObject")
     .property("hash", &util::Object::hash)
     .property("className", &util::Object::className)
+    ;
+class_<util::IntMap>("CppIntMap")
+    .derives<util::Object>("CppObject")
+    .property("size", &util::IntMap::size)
+    .property("hasNext", &util::IntMap::hasNext)
+    .method("init", &util::IntMap::init)
+    .method("step", &util::IntMap::next)
+    .method("nextValue", &util::IntMap::nextValue)
+    ;
+class_<util::List>("CppList")
+    .derives<util::Object>("CppObject")
+    .property("size", &util::List::size)
+    .property("hasNext", &util::List::hasNext)
+    .method("init", &util::List::init)
+    .method("step", &util::List::next)
+    ;
+class_<util::SortedList>("CppSortedList")
+    .derives<util::List>("CppList")
     ;
 class_<util::Map>("CppMap")
     .derives<util::Object>("CppObject")

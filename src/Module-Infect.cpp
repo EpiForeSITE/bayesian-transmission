@@ -3,6 +3,8 @@ using namespace infect;
 
 #include "wrap.h"
 #include <Rcpp.h>
+#include <map>
+#include <utility>
 
 #include "RRandom.h"
 
@@ -12,6 +14,8 @@ RCPP_EXPOSED_AS(RRandom)
 RCPP_EXPOSED_CLASS_NODECL(util::Object)
 RCPP_EXPOSED_CLASS_NODECL(util::MapLink)
 
+RCPP_EXPOSED_AS(util::IntMap)
+RCPP_EXPOSED_AS(util::List)
 RCPP_EXPOSED_AS(util::Map)
 RCPP_EXPOSED_AS(util::Random)
 
@@ -38,11 +42,61 @@ RCPP_EXPOSED_AS(infect::SystemHistory)
 RCPP_EXPOSED_AS(infect::Unit)
 RCPP_EXPOSED_AS(infect::UnitEpisodeHistory)
 
+// Global cache to keep shared_ptrs alive as long as System exists
+// This prevents the IntMap/Map from being deleted when returned to R
+static std::map<infect::System*, std::shared_ptr<util::IntMap>> fac_cache;
+static std::map<infect::System*, std::shared_ptr<util::IntMap>> pat_cache;
+static std::map<std::pair<infect::System*, infect::Patient*>, std::shared_ptr<util::Map>> eps_cache;
+
+// Wrapper functions that explicitly wrap returned pointers in reference classes
+// with XPtr(p, false) to prevent R from deleting them (System owns them via shared_ptr)
+// The shared_ptr is also cached to keep the container alive even if intermediate R objects are GC'd
+
+static SEXP System_getFacilities_wrapper(infect::System* sys) {
+    auto sp = sys->getFacilities();
+    fac_cache[sys] = sp;  // Keep shared_ptr alive
+    util::IntMap* p = sp.get();
+    if (p == nullptr) {
+        return R_NilValue;
+    }
+    Rcpp::Function methods_new = Rcpp::Environment::namespace_env("methods")["new"];
+    return methods_new("Rcpp_CppIntMap", 
+                      Rcpp::Named(".object_pointer") = Rcpp::XPtr<util::IntMap>(p, false));
+}
+
+static SEXP System_getPatients_wrapper(infect::System* sys) {
+    auto sp = sys->getPatients();
+    pat_cache[sys] = sp;  // Keep shared_ptr alive
+    util::IntMap* p = sp.get();
+    if (p == nullptr) {
+        return R_NilValue;
+    }
+    Rcpp::Function methods_new = Rcpp::Environment::namespace_env("methods")["new"];
+    return methods_new("Rcpp_CppIntMap", 
+                      Rcpp::Named(".object_pointer") = Rcpp::XPtr<util::IntMap>(p, false));
+}
+
+static SEXP System_getEpisodes_wrapper(infect::System* sys, infect::Patient* p) {
+    auto sp = sys->getEpisodes(p);
+    eps_cache[std::make_pair(sys, p)] = sp;  // Keep shared_ptr alive
+    util::Map* m = sp.get();
+    if (m == nullptr) {
+        return R_NilValue;
+    }
+    Rcpp::Function methods_new = Rcpp::Environment::namespace_env("methods")["new"];
+    return methods_new("Rcpp_CppMap", 
+                      Rcpp::Named(".object_pointer") = Rcpp::XPtr<util::Map>(m, false));
+}
+
+// TODO: Add System destructor hook to clear cache entries for deleted Systems
 
 void init_Module_infect(){
     using namespace Rcpp;
 
-    class_<AbxLocationState>("CppAbxLocationState")
+// getUnits() and getSystemCounts() create new objects, so R should delete them
+// Keep default behavior for those
+
+    class_<infect::AbxLocationState>("CppAbxLocationState")
         .derives<util::Object>("CppObject")
         //.derives<CountLocationState>("CppCountLocationState")
         .property("nStates"    , static_cast<int (infect::AbxLocationState::*)() const>(&infect::LocationState::nStates))
@@ -91,15 +145,25 @@ void init_Module_infect(){
     class_<Event>("CppEvent")
         .derives<util::Object>("CppObject")
         .constructor()
-        .property("time", &Event::getTime)
-        .property("type", &Event::getTypeAsString)
-        .property("patient", &Event::getPatient)
-        .property("facility", &Event::getFacility)
-        .property("unit", &Event::getUnit)
+        .property("Time", &Event::getTime)
+        .property("Type", &Event::getTypeAsString)
+        .property("Patient", &Event::getPatient)
+        .property("Facility", &Event::getFacility)
+        .property("Unit", &Event::getUnit)
         .property("isTest", &Event::isTest)
         .property("isPositiveTest", &Event::isPositiveTest)
         .property("isClinicalTest", &Event::isClinicalTest)
         .property("isAdmission", &Event::isAdmission)
+    ;
+    class_<Episode>("CppEpisode")
+        .derives<util::Object>("CppObject")
+        .constructor()
+        .property("Admission", &Episode::getAdmission)
+        .property("Discharge", &Episode::getDischarge)
+        .method("getEvents", &Episode::getEvents)
+        .method("hasAdmission", &Episode::hasAdmission)
+        .method("hasDischarge", &Episode::hasDischarge)
+        .method("hasEvents", &Episode::hasEvents)
     ;
     class_<infect::Facility>("CppFacility")
         .derives<util::Object>("CppObject")
@@ -193,8 +257,15 @@ void init_Module_infect(){
         .derives<util::Object>("CppObject")
         .constructor<std::vector<int>, std::vector<int>, std::vector<double>, std::vector<int>, std::vector<int>>()
         .property("log", &System::get_log)
-        .property("start", &System::startTime)
-        .property("end", &System::endTime)
+        .method("getFacilities", &System_getFacilities_wrapper)
+        .method("getUnits", &System::getUnits)
+        .method("getPatients", &System_getPatients_wrapper)
+        .method("getEpisodes", &System_getEpisodes_wrapper)
+        .method("startTime", &System::startTime)
+        .method("endTime", &System::endTime)
+        .method("countEpisodes", (int (infect::System::*)() const)&infect::System::countEpisodes)
+        .method("countEvents", (int (infect::System::*)() const)&infect::System::countEvents)
+        .method("getSystemCounts", (util::List* (infect::System::*)() const)&infect::System::getSystemCounts)
     ;
     class_<infect::SystemHistory>("CppSystemHistory")
         .derives<util::Object>("CppObject")

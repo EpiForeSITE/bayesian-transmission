@@ -9,9 +9,9 @@ void System::handleOutOfRangeEvent(Patient *p, int t)
 
 void System::init(RawEventList *l, stringstream &err)
 {
-    fac = new IntMap();
-    pat = new IntMap();
-    pepis = new Map();
+    fac = std::make_shared<IntMap>();
+    pat = std::make_shared<IntMap>();
+    pepis = std::make_shared<Map>();
     start = (int)l->firstTime();
     end = (int) (0.99999999 + l->lastTime());
     makeAllEpisodes(l,err);
@@ -89,37 +89,78 @@ System::System(
 
 System::~System()
 {
-    for (pepis->init(); pepis->hasNext(); )
-    {
-        Map *eps = (Map *) pepis->nextValue();
-        for (eps->init(); eps->hasNext(); )
+    // Clean up episodes and their events
+    // Only delete contents if we're the only owner (refcount == 1)
+    if (pepis != nullptr && pepis.use_count() == 1) {
+        for (pepis->init(); pepis->hasNext(); )
         {
-            Episode *e = (Episode *)eps->next();
-            for (List *v = e->getEvents(); v->hasNext(); )
-            {
-                delete v->next();
+            Map *eps = (Map *) pepis->nextValue();
+            if (eps != nullptr) {
+                for (eps->init(); eps->hasNext(); )
+                {
+                    Episode *e = (Episode *)eps->next();
+                    if (e != nullptr) {
+                        for (List *v = e->getEvents(); v->hasNext(); )
+                        {
+                            if (v->next() != nullptr) {
+                                delete v->next();
+                            }
+                        }
+                        delete e;
+                    }
+                }
+                delete eps;
             }
-            delete e;
         }
-        delete eps;
     }
-    delete pepis;
+    // pepis shared_ptr will be automatically deleted
 
-    for (pat->init(); pat->hasNext(); )
-        delete pat->nextValue();
-    delete pat;
+    // Clean up patients
+    // Only delete contents if we're the only owner (refcount == 1)
+    if (pat != nullptr && pat.use_count() == 1) {
+        for (pat->init(); pat->hasNext(); ) {
+            util::Object *obj = pat->nextValue();
+            if (obj != nullptr) {
+                delete obj;
+            }
+        }
+    }
+    // pat shared_ptr will be automatically deleted
 
-    for (fac->init(); fac->hasNext(); )
-        delete fac->nextValue();
-    delete fac;
+    // Clean up facilities
+    // Only delete contents if we're the only owner (refcount == 1)
+    if (fac != nullptr && fac.use_count() == 1) {
+        for (fac->init(); fac->hasNext(); ) {
+            util::Object *obj = fac->nextValue();
+            if (obj != nullptr) {
+                delete obj;
+            }
+        }
+    }
+    // fac shared_ptr will be automatically deleted
 }
 
-Map *System::getEpisodes(Patient *p)
+std::shared_ptr<Map> System::getEpisodes(Patient *p)
 {
+    // Add null check for patient
+    if (p == nullptr) {
+        errlog << "Warning: getEpisodes called with null Patient pointer\n";
+        return std::make_shared<Map>();  // Return empty map instead of crashing
+    }
+    
     // The Episodes for a Patient are sorted to give a coherent individual history.
     Map *eps = (Map *) pepis->get(p);
+    
+    // Add null check for episode map
+    if (eps == nullptr) {
+        errlog << "Warning: No episodes found for patient " << p->hash() << "\n";
+        return std::make_shared<Map>();  // Return empty map
+    }
+    
     eps->init();
-    return eps;
+    // Need to wrap raw pointer in shared_ptr with custom deleter that does nothing
+    // because this memory is owned by pepis (the System member)
+    return std::shared_ptr<Map>(eps, [](Map*){});
 }
 
 // void System::write(ostream &os)

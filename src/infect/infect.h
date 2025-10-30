@@ -10,6 +10,7 @@
 	#include <exception>
         #include <stdexcept>
 	#include <complex>
+	#include <memory>
         using namespace std;
 
     #include "../util/util.h"

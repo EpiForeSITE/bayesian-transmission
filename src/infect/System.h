@@ -24,9 +24,9 @@ private:
 
 	double start;
 	double end;
-	IntMap *pat;
-	IntMap *fac;
-	Map *pepis;
+	std::shared_ptr<IntMap> pat;
+	std::shared_ptr<IntMap> fac;
+	std::shared_ptr<Map> pepis;
 
 	void handleOutOfRangeEvent(Patient *p, int t);
 	void init(RawEventList *l, stringstream &err);
@@ -48,14 +48,17 @@ public:
         std::vector<int> types
 	);
 	~System();
-	Map *getEpisodes(Patient *p);
+	std::shared_ptr<Map> getEpisodes(Patient *p);
 	// void write(ostream &os);
 	// void write2(ostream &os,int opt);
 
 	std::string className() const override { return "System";}
 
-	inline IntMap *getFacilities()
+	inline std::shared_ptr<IntMap> getFacilities()
 	{
+		if (fac == nullptr) {
+			return std::make_shared<IntMap>();
+		}
 		fac->init();
 		return fac;
 	}
@@ -64,15 +67,34 @@ public:
 	{
 		List *l = new List();
 
+		if (fac == nullptr) {
+			return l;
+		}
+
 		for (fac->init(); fac->hasNext(); )
-			for (IntMap *u = ((Facility *)fac->nextValue())->getUnits(); u->hasNext(); )
-				l->append(u->nextValue());
+		{
+			Facility *facility = (Facility *)fac->nextValue();
+			if (facility != nullptr) {
+				IntMap *u = facility->getUnits();
+				if (u != nullptr) {
+					for (; u->hasNext(); ) {
+						util::Object *unit = u->nextValue();
+						if (unit != nullptr) {
+							l->append(unit);
+						}
+					}
+				}
+			}
+		}
 
 		return l;
 	}
 
-	inline IntMap *getPatients()
+	inline std::shared_ptr<IntMap> getPatients()
 	{
+		if (pat == nullptr) {
+			return std::make_shared<IntMap>();
+		}
 		pat->init();
 		return pat;
 	}
@@ -88,6 +110,107 @@ public:
 	}
 
     string get_log();
+    
+    /**
+     * @brief Count total number of episodes across all patients
+     * 
+     * @return int Total episode count
+     */
+    inline int countEpisodes() const
+    {
+        if (pepis == nullptr) {
+            return 0;
+        }
+        
+        int count = 0;
+        for (pepis->init(); pepis->hasNext(); ) {
+            util::Map *eps = (util::Map *) pepis->nextValue();
+            if (eps != nullptr) {
+                count += eps->size();
+            }
+        }
+        return count;
+    }
+    
+    /**
+     * @brief Count total number of events across all episodes
+     * 
+     * Counts all events (admissions, discharges, and internal events)
+     * across all episodes for all patients.
+     * 
+     * @return int Total event count
+     */
+    inline int countEvents() const
+    {
+        if (pepis == nullptr) {
+            return 0;
+        }
+        
+        int count = 0;
+        for (pepis->init(); pepis->hasNext(); ) {
+            util::Map *eps = (util::Map *) pepis->nextValue();
+            if (eps == nullptr) {
+                continue;
+            }
+            
+            for (eps->init(); eps->hasNext(); ) {
+                Episode *ep = (Episode *) eps->next();
+                if (ep == nullptr) {
+                    continue;
+                }
+                
+                util::List *events = ep->getEvents();
+                if (events != nullptr) {
+                    count += events->size();
+                }
+            }
+        }
+        return count;
+    }
+    
+    /**
+     * @brief Get counts of various system components
+     * 
+     * Returns a summary of the system structure including counts of
+     * facilities, units, patients, episodes, and events.
+     * 
+     * @return util::List* Pointer to list containing Integer objects with counts
+     *         Caller is responsible for deleting the returned list.
+     */
+    inline util::List* getSystemCounts() const
+    {
+        util::List *counts = new util::List();
+        
+        // Count facilities (with null check)
+        counts->append(new Integer(fac != nullptr ? fac->size() : 0));
+        
+        // Count units (with null checks)
+        int nUnits = 0;
+        if (fac != nullptr) {
+            for (fac->init(); fac->hasNext(); ) {
+                Facility *f = (Facility *) fac->nextValue();
+                if (f != nullptr) {
+                    util::IntMap *units = f->getUnits();
+                    if (units != nullptr) {
+                        nUnits += units->size();
+                    }
+                }
+            }
+        }
+        counts->append(new Integer(nUnits));
+        
+        // Count patients (with null check)
+        counts->append(new Integer(pat != nullptr ? pat->size() : 0));
+        
+        // Count episodes (null checks inside countEpisodes)
+        counts->append(new Integer(countEpisodes()));
+        
+        // Count events (null checks inside countEvents)
+        counts->append(new Integer(countEvents()));
+        
+        return counts;
+    }
+    
 private:
 
 	double timeOfLastKnownEvent(Episode *ep);

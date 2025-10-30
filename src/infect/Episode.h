@@ -33,6 +33,11 @@ public:
 		return a;
 	}
 
+	inline bool hasAdmission() const
+	{
+		return a != nullptr;
+	}
+
 	inline void setDischarge(Event *e)
 	{
 		d = e;
@@ -44,6 +49,11 @@ public:
 		return d;
 	}
 
+	inline bool hasDischarge() const
+	{
+		return d != nullptr;
+	}
+
 	inline void addEvent(Event *e)
 	{
 		s->append(e);
@@ -51,8 +61,15 @@ public:
 
 	inline SortedList* getEvents()
 	{
-		s->init();
+		if (s != nullptr) {
+			s->init();
+		}
 		return s;
+	}
+
+	inline bool hasEvents() const
+	{
+		return s != nullptr && s->size() > 0;
 	}
 };
 #endif // ALUN_INFECT_EPISODE_H
