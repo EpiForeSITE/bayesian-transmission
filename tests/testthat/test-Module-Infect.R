@@ -100,6 +100,21 @@ test_that("CppRawEventList with simulated data", {
   expect_true(rel$FirstTime() <= rel$LastTime())
 })
 
+test_that("Empty CppRawEventList", {
+  rel <- CppRawEventList$new(
+    integer(0),  # facilities
+    integer(0),  # units
+    numeric(0),  # times
+    integer(0),  # patients
+    integer(0)   # types
+  )
+  
+  expect_s4_class(rel, "Rcpp_CppRawEventList")
+  expect_equal(rel$FirstTime(), 0)
+  expect_equal(rel$LastTime(),0)
+})
+
+
 # 12. Sampler ----
 test_that("CppSampler constructor", {
   # Create system and model for sampler
@@ -133,6 +148,19 @@ test_that("CppSystem constructor and properties", {
   expect_equal(sys$startTime(), 0)
   expect_equal(sys$endTime(), 1734)
   # Note: log property may contain debug output depending on build
+})
+test_that("CppSystem with empty events", {
+  sys <- CppSystem$new(
+    integer(0),  # facilities
+    integer(0),  # units
+    numeric(0),  # times
+    integer(0),  # patients
+    integer(0)   # types
+  )
+  
+  expect_s4_class(sys, "Rcpp_CppSystem")
+  expect_equal(sys$startTime(), 0)
+  expect_equal(sys$endTime(), 0)
 })
 
 test_that("CppSystem with minimal data", {
@@ -172,6 +200,123 @@ test_that("CppSystemHistory constructor and properties", {
   
   # Check that we have the expected number of units
   expect_equal(hist$UnitHeads$size, 3)
+})
+
+test_that("CppSystemHistory getEventList method", {
+  sys <- CppSystem$new(
+    simulated.data$facility,
+    simulated.data$unit,
+    simulated.data$time,
+    simulated.data$patient,
+    simulated.data$type
+  )
+  
+  model <- CppLinearAbxModel$new(2, 10, 1, 0)
+  hist <- CppSystemHistory$new(sys, model, FALSE)
+  
+  # Get the event list
+  event_list <- hist$getEventList()
+  
+  # Should return a list
+  expect_type(event_list, "list")
+  
+  # Should have events (simulated data is not empty)
+  expect_gt(length(event_list), 0)
+  
+  # First element should be an Event reference class
+  expect_s4_class(event_list[[1]], "Rcpp_CppEvent")
+  
+  # Event should have accessible properties
+  first_event <- event_list[[1]]
+  expect_type(first_event$Time, "double")
+  expect_type(first_event$Type, "character")
+  expect_type(first_event$isTest, "logical")
+  expect_type(first_event$isAdmission, "logical")
+  
+  # Events should be in chronological order
+  if (length(event_list) > 1) {
+    times <- sapply(event_list, function(e) e$Time)
+    expect_true(all(diff(times) >= 0))
+  }
+})
+
+test_that("CppSystemHistory getEventList with small dataset", {
+  # Create a minimal system with known events
+  sys <- CppSystem$new(
+    c(0L, 0L, 0L),      # facilities
+    c(0L, 0L, 0L),      # units
+    c(1.0, 5.0, 10.0),  # times
+    c(1L, 1L, 1L),      # patients
+    c(0L, 10L, 1L)      # types (admission, test, discharge)
+  )
+  
+  model <- CppLinearAbxModel$new(2, 10, 1, 0)
+  hist <- CppSystemHistory$new(sys, model, FALSE)
+  
+  event_list <- hist$getEventList()
+  
+  # Should have events
+  expect_gt(length(event_list), 0)
+  
+  # All should be Event objects
+  for (i in seq_along(event_list)) {
+    expect_s4_class(event_list[[i]], "Rcpp_CppEvent")
+  }
+  
+  # Check that we have events at the input times or close to them
+  # (SystemHistory may add additional events like start/stop)
+  times <- sapply(event_list, function(e) e$Time)
+  
+  # Should have events around the input times
+  expect_true(any(times >= 0.5 & times <= 1.5))   # Around time 1
+  expect_true(any(times >= 9.0 & times <= 11.0))  # Around time 10
+})
+
+test_that("CppSystemHistory getEventList event properties", {
+  sys <- CppSystem$new(
+    simulated.data$facility,
+    simulated.data$unit,
+    simulated.data$time,
+    simulated.data$patient,
+    simulated.data$type
+  )
+  
+  model <- CppLinearAbxModel$new(2, 10, 1, 0)
+  hist <- CppSystemHistory$new(sys, model, FALSE)
+  event_list <- hist$getEventList()
+  
+  # Test that we can access various event properties
+  if (length(event_list) >= 10) {
+    evt <- event_list[[10]]
+    
+    # Required properties should be accessible
+    expect_no_error(evt$Time)
+    expect_no_error(evt$Type)
+    expect_no_error(evt$isTest)
+    expect_no_error(evt$isPositiveTest)
+    expect_no_error(evt$isClinicalTest)
+    expect_no_error(evt$isAdmission)
+    
+    # Related objects should be accessible (may be NULL)
+    expect_no_error(evt$Patient)
+    expect_no_error(evt$Unit)
+    expect_no_error(evt$Facility)
+    
+    # If Patient exists, should be able to access its id
+    if (!is.null(evt$Patient)) {
+      expect_type(evt$Patient$id, "integer")
+    }
+    
+    # If Unit exists, should be able to access its id
+    if (!is.null(evt$Unit)) {
+      expect_type(evt$Unit$id, "integer")
+    }
+    
+    # If Facility exists, should be able to access its id
+    if (!is.null(evt$Facility)) {
+      expect_type(evt$Facility$id, "integer")
+    }
+  }
 })
 
 # 15. TestParamsAbx ----
