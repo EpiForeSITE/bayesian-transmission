@@ -476,6 +476,11 @@ void System::makeEvents(List *n, Patient *p, Episode **cur, Facility **f, Unit *
 
 void System::makePatientEpisodes(List *s, stringstream &err)
 {
+    // Guard against empty list
+    if (s->isEmpty() || s->getFirst() == nullptr) {
+        return;  // Nothing to process
+    }
+
     RawEvent *prev = 0;
     RawEvent *curev = 0;
     Facility *f = 0;
@@ -507,7 +512,7 @@ void System::makePatientEpisodes(List *s, stringstream &err)
         prev = curev;
     }
 
-    if (cur->getDischarge() == 0)
+    if (cur != nullptr && cur->getDischarge() == 0)
     {
         Event *v = makeEvent(f,u,end,p,discharge);
         cur->setDischarge(v);
@@ -526,7 +531,7 @@ void System::makeAllEpisodes(RawEventList *l, stringstream &err)
     {
         RawEvent *e = (RawEvent *)l->next();
 
-        if (e == 0 || (prev != 0 && prev->getPatientId() != e->getPatientId()))
+        if (e == 0 || (prev != 0 && prev->getPatientId() != e->getPatientId())) // This is what requires data to be patient sorted.
         {
             makePatientEpisodes(s,err);
             s->clear();
