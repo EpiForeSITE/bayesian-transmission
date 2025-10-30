@@ -88,6 +88,56 @@ static SEXP System_getEpisodes_wrapper(infect::System* sys, infect::Patient* p) 
                       Rcpp::Named(".object_pointer") = Rcpp::XPtr<util::Map>(m, false));
 }
 
+/**
+ * @brief Wrapper function to extract all Events from a SystemHistory and return them as an Rcpp::List
+ * 
+ * This function traverses the SystemHistory via the system history chain (sNext links)
+ * and collects all Event objects, wrapping each in its corresponding Rcpp reference class.
+ * The Events are returned in chronological order as they appear in the history chain.
+ * 
+ * @param hist Pointer to the SystemHistory object to extract events from
+ * @return SEXP An Rcpp::List containing wrapped CppEvent reference class objects.
+ *              Returns empty list if hist is nullptr or has no events.
+ *              Each Event pointer is wrapped with XPtr(event, false) to indicate
+ *              that R should NOT delete these objects (SystemHistory owns them).
+ * 
+ * @note The returned Event objects share memory with the SystemHistory and should
+ *       not be modified or deleted from R. They are read-only references.
+ * 
+ * @usage In R: event_list <- system_history$getEventList()
+ */
+static SEXP SystemHistory_getEventList_wrapper(infect::SystemHistory* hist) {
+    if (hist == nullptr) {
+        return R_NilValue;
+    }
+    
+    Rcpp::List event_list;
+    Rcpp::Function methods_new = Rcpp::Environment::namespace_env("methods")["new"];
+    
+    // Get the system head and traverse all history links
+    infect::HistoryLink* link = hist->getSystemHead();
+    
+    if (link == nullptr) {
+        return event_list;  // Return empty list
+    }
+    
+    // Traverse the system history chain via sNext() to collect all events
+    for (; link != nullptr; link = link->sNext()) {
+        infect::Event* event = link->getEvent();
+        
+        if (event != nullptr) {
+            // Wrap the Event pointer in an Rcpp reference class
+            // Use XPtr with false flag to indicate R should not delete it
+            // (the SystemHistory owns these events)
+            SEXP event_obj = methods_new("Rcpp_CppEvent",
+                                        Rcpp::Named(".object_pointer") = Rcpp::XPtr<infect::Event>(event, false));
+            event_list.push_back(event_obj);
+        }
+    }
+    
+    return event_list;
+}
+
 // TODO: Add System destructor hook to clear cache entries for deleted Systems
 
 void init_Module_infect(){
@@ -236,7 +286,7 @@ void init_Module_infect(){
         .property("onAbx", &infect::PatientState::onAbx)
     ;
     class_<RawEventList>("CppRawEventList")
-        .derives<util::Object>("CppObject")
+        .derives<util::SortedList>("CppSortedList")
         .constructor<
             std::vector<int>,    // facilities
             std::vector<int>,    // units
@@ -278,6 +328,7 @@ void init_Module_infect(){
         .property("Episodes", &infect::SystemHistory::getEpisodes)
         .property("Admissions", &infect::SystemHistory::getAdmissions)
         .property("Discharges", &infect::SystemHistory::getDischarges)
+        .method("getEventList", &SystemHistory_getEventList_wrapper)
     ;
     class_<TestParamsAbx>("CppTestParamsAbx")
         .derives<util::Object>("CppObject")
