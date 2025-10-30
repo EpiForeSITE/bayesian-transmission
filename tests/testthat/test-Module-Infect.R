@@ -130,8 +130,8 @@ test_that("CppSystem constructor and properties", {
   )
   
   expect_s4_class(sys, "Rcpp_CppSystem")
-  expect_equal(sys$start, 0)
-  expect_equal(sys$end, 1734)
+  expect_equal(sys$startTime(), 0)
+  expect_equal(sys$endTime(), 1734)
   # Note: log property may contain debug output depending on build
 })
 
@@ -145,8 +145,9 @@ test_that("CppSystem with minimal data", {
   )
   
   expect_s4_class(sys, "Rcpp_CppSystem")
-  expect_equal(sys$start, 1)
-  expect_equal(sys$end, 5)
+  expect_equal(sys$startTime(), 1)
+  expect_equal(sys$endTime(), 5)
+  sys$countEvents()
 })
 
 # 14. SystemHistory ----

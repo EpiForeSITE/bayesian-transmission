@@ -86,12 +86,12 @@ inline void setupInsituParams(
 
 inline void setupInsituParams(InsituParams * isp, Rcpp::List insituParameters)
 {
-    std::ostringstream ss;
-    ss << "DEBUG InsituParams: probs=[" 
-       << as<std::vector<double>>(insituParameters["probs"])[0] << ", "
-       << as<std::vector<double>>(insituParameters["probs"])[1] << ", "
-       << as<std::vector<double>>(insituParameters["probs"])[2] << "]";
-    Rcpp::message(Rcpp::wrap(ss.str()));
+    // std::ostringstream ss;
+    // ss << "DEBUG InsituParams: probs=[" 
+    //    << as<std::vector<double>>(insituParameters["probs"])[0] << ", "
+    //    << as<std::vector<double>>(insituParameters["probs"])[1] << ", "
+    //    << as<std::vector<double>>(insituParameters["probs"])[2] << "]";
+    // Rcpp::message(Rcpp::wrap(ss.str()));
     setupInsituParams(isp,
                       as< std::vector<double> >(insituParameters["probs"]),
                       as< std::vector<double> >(insituParameters["priors"]),
