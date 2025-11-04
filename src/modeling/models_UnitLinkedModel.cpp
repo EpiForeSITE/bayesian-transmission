@@ -396,34 +396,13 @@ std::vector<double> UnitLinkedModel::getHistoryLinkLogLikelihoods(infect::System
 {
     std::vector<double> lls;
     
-    int unit_idx = 0;
     for (Map *h = hist->getUnitHeads(); h->hasNext(); )
     {
-        int link_idx = 0;
         for (infect::HistoryLink *l = (infect::HistoryLink *) h->nextValue(); l != 0; l = l->uNext())
         {
             double ll = logLikelihood(l);
             lls.push_back(ll);
-            
-            // Print diagnostic info
-            infect::Event *e = l->getEvent();
-            std::cout << "Unit=" << unit_idx 
-                      << ", Link=" << link_idx
-                      << ", EventType=" << e->getType()
-                      << ", Time=" << e->getTime();
-            
-            // Safely access patient info
-            if (e->getPatient() != nullptr) {
-                std::cout << ", PatientID=" << e->getPatient()->getId();
-            } else {
-                std::cout << ", PatientID=NULL";
-            }
-            
-            std::cout << ", LogLik=" << ll << std::endl;
-            
-            link_idx++;
         }
-        unit_idx++;
     }
     
     return lls;
