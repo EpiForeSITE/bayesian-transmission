@@ -1,6 +1,9 @@
 #ifndef ALUN_LOGNORMAL_LINEARABXMODEL2_H
 #define ALUN_LOGNORMAL_LINEARABXMODEL2_H
 
+#include "LogNormalModel.h"
+#include "LinearAbxICP2.h"
+
 class LinearAbxModel2 : public LogNormalModel
 {
 public:

@@ -138,6 +138,69 @@ static SEXP SystemHistory_getEventList_wrapper(infect::SystemHistory* hist) {
     return event_list;
 }
 
+/**
+ * @brief Wrapper function to extract all HistoryLinks from a SystemHistory and return them as an Rcpp::List
+ * 
+ * This function traverses the SystemHistory via the system history chain (sNext links)
+ * and collects all HistoryLink objects, wrapping each in its corresponding Rcpp reference class.
+ * 
+ * @param hist Pointer to the SystemHistory object to extract history links from
+ * @return SEXP An Rcpp::List containing wrapped CppHistoryLink reference class objects.
+ *              Returns empty list if hist is nullptr or has no history links.
+ * 
+ * @note The returned HistoryLink objects share memory with the SystemHistory and should
+ *       not be modified or deleted from R. They are read-only references.
+ * 
+ * @usage In R: link_list <- system_history$getHistoryLinkList()
+ */
+static SEXP SystemHistory_getHistoryLinkList_wrapper(infect::SystemHistory* hist) {
+    if (hist == nullptr) {
+        return R_NilValue;
+    }
+    
+    Rcpp::List link_list;
+    Rcpp::Function methods_new = Rcpp::Environment::namespace_env("methods")["new"];
+    
+    // Get the system head and traverse all history links
+    infect::HistoryLink* link = hist->getSystemHead();
+    
+    if (link == nullptr) {
+        return link_list;  // Return empty list
+    }
+    
+    // Traverse the system history chain via sNext() to collect all history links
+    for (; link != nullptr; link = link->sNext()) {
+        // Wrap the HistoryLink pointer in an Rcpp reference class
+        // Use XPtr with false flag to indicate R should not delete it
+        SEXP link_obj = methods_new("Rcpp_CppHistoryLink",
+                                   Rcpp::Named(".object_pointer") = Rcpp::XPtr<infect::HistoryLink>(link, false));
+        link_list.push_back(link_obj);
+    }
+    
+    return link_list;
+}
+
+/**
+ * @brief Wrapper to compute log likelihood for a single HistoryLink
+ * 
+ * @param model Pointer to the Model (must be castable to UnitLinkedModel)
+ * @param link Pointer to the HistoryLink to compute likelihood for
+ * @return double The log likelihood contribution of this link (including gap probability)
+ */
+static double Model_logLikelihoodLink_wrapper(infect::Model* model, infect::HistoryLink* link) {
+    if (model == nullptr || link == nullptr) {
+        return 0.0;
+    }
+    
+    // Cast to UnitLinkedModel to access the HistoryLink-specific logLikelihood method
+    UnitLinkedModel* ulm = dynamic_cast<UnitLinkedModel*>(model);
+    if (ulm == nullptr) {
+        Rcpp::stop("Model must be a UnitLinkedModel to compute likelihood for individual links");
+    }
+    
+    return ulm->logLikelihood(link);
+}
+
 // TODO: Add System destructor hook to clear cache entries for deleted Systems
 
 void init_Module_infect(){
@@ -265,6 +328,7 @@ void init_Module_infect(){
         // .property("nFacilities", &infect::Model::getNFacilities)
 
         .method("logLikelihood", &infect::Model::logLikelihood)
+        .method("logLikelihoodLink", &Model_logLikelihoodLink_wrapper)
         .method("update", &infect::Model::update)
         .method("forwardSimulate", &infect::Model::forwardSimulate)
         .method("initEpisodeHistory", &infect::Model::initEpisodeHistory)
@@ -329,6 +393,7 @@ void init_Module_infect(){
         .property("Admissions", &infect::SystemHistory::getAdmissions)
         .property("Discharges", &infect::SystemHistory::getDischarges)
         .method("getEventList", &SystemHistory_getEventList_wrapper)
+        .method("getHistoryLinkList", &SystemHistory_getHistoryLinkList_wrapper)
     ;
     class_<TestParamsAbx>("CppTestParamsAbx")
         .derives<util::Object>("CppObject")

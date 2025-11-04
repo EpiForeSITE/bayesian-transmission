@@ -138,12 +138,17 @@ test_that("C++ model object parameter initialization with unique values", {
   
   # Check SurveillanceTestParams - 4 values for 2-state + Abx
   # Based on actual output: [P(+|unc-), P(+|col-), P(+|unc+), P(+|col+)]
-  # The Abx model sets default values for tests when onoff=FALSE
+  # NOTE: LinearAbxModel with Abx onoff=FALSE sets default surveillance test 
+  # probabilities in C++ (appears to be hardcoded behavior), so our custom
+  # surv_test_prob_col value is not used. This is documented behavior.
   surv_values <- cpp_model$SurveillanceTest
   expect_equal(length(surv_values), 4)
-  # When Abx is off, the C++ code sets default test probabilities
-  # We just verify we got 4 values back
   expect_true(all(!is.na(surv_values)))
+  # Verify the default pattern when Abx is off: [1, 0, 1, 0]
+  expect_equal(as.numeric(surv_values[1]), 1.0, tolerance = 1e-10)
+  expect_equal(as.numeric(surv_values[2]), 0.0, tolerance = 1e-10)
+  expect_equal(as.numeric(surv_values[3]), 1.0, tolerance = 1e-10)
+  expect_equal(as.numeric(surv_values[4]), 0.0, tolerance = 1e-10)
   
   # Check ClinicalTestParams (RandomTestParams) - 4 values for 2-state
   # [P(+|unc), P(+|col), rate_unc, rate_col]
@@ -155,9 +160,33 @@ test_that("C++ model object parameter initialization with unique values", {
   expect_equal(as.numeric(clin_values[4]), rtest_rate_col, tolerance = 1e-10)
   
   # Check InColParams (LinearAbxICP)
-  # These are stored in transformed space (log/logit), so we just verify presence
+  # The parameters are returned in the following order:
+  # [1] base, [2] time, [3] mass, [4] freq, [5] col_abx, [6] suss_abx, 
+  # [7] suss_ever, [8] clearance_rate, [9] clearance_abx, [10] clearance_ever_abx
   incol_values <- cpp_model$InCol
-  expect_true(length(incol_values) > 0)
+  expect_equal(length(incol_values), 10)
+  
+  # Verify each InCol parameter matches what we set
+  expect_equal(as.numeric(incol_values[1]), labx_base, tolerance = 1e-10,
+               label = "InCol acquisition base")
+  expect_equal(as.numeric(incol_values[2]), labx_time, tolerance = 1e-10,
+               label = "InCol acquisition time")
+  expect_equal(as.numeric(incol_values[3]), labx_mass, tolerance = 1e-10,
+               label = "InCol acquisition mass")
+  expect_equal(as.numeric(incol_values[4]), labx_freq, tolerance = 1e-10,
+               label = "InCol acquisition freq")
+  expect_equal(as.numeric(incol_values[5]), labx_col_abx, tolerance = 1e-10,
+               label = "InCol acquisition col_abx")
+  expect_equal(as.numeric(incol_values[6]), labx_suss_abx, tolerance = 1e-10,
+               label = "InCol acquisition suss_abx")
+  expect_equal(as.numeric(incol_values[7]), labx_suss_ever, tolerance = 1e-10,
+               label = "InCol acquisition suss_ever")
+  expect_equal(as.numeric(incol_values[8]), labx_clr, tolerance = 1e-10,
+               label = "InCol clearance rate")
+  expect_equal(as.numeric(incol_values[9]), labx_clr_abx, tolerance = 1e-10,
+               label = "InCol clearance abx")
+  expect_equal(as.numeric(incol_values[10]), labx_clr_ever, tolerance = 1e-10,
+               label = "InCol clearance ever_abx")
   
   # Check AbxRate parameters
   abx_values <- cpp_model$Abx
@@ -256,15 +285,61 @@ test_that("LinearAbxModel2 C++ object creation and parameter access", {
   expect_true(!is.null(cpp_model))
   expect_type(cpp_model, "list")
   
+  # Verify all expected parameter groups are present
+  expect_true("Insitu" %in% names(cpp_model))
+  expect_true("OutCol" %in% names(cpp_model))
+  expect_true("SurveillanceTest" %in% names(cpp_model))
+  expect_true("ClinicalTest" %in% names(cpp_model))
+  expect_true("InCol" %in% names(cpp_model))
+  expect_true("Abx" %in% names(cpp_model))
+  
   # Verify InsituParams
   insitu_values <- cpp_model$Insitu
+  expect_equal(length(insitu_values), 2)
   expect_equal(as.numeric(insitu_values[1]), 0.8321, tolerance = 1e-10)
   expect_equal(as.numeric(insitu_values[2]), 0.1679, tolerance = 1e-10)
   
   # Verify OutColParams
   outcol_values <- cpp_model$OutCol
+  expect_equal(length(outcol_values), 2)
   expect_equal(as.numeric(outcol_values[1]), 0.004321, tolerance = 1e-10)
   expect_equal(as.numeric(outcol_values[2]), 0.007654, tolerance = 1e-10)
+  
+  # Verify SurveillanceTest (same default behavior as LinearAbxModel)
+  surv_values <- cpp_model$SurveillanceTest
+  expect_equal(length(surv_values), 4)
+  expect_equal(as.numeric(surv_values[1]), 1.0, tolerance = 1e-10)
+  expect_equal(as.numeric(surv_values[2]), 0.0, tolerance = 1e-10)
+  expect_equal(as.numeric(surv_values[3]), 1.0, tolerance = 1e-10)
+  expect_equal(as.numeric(surv_values[4]), 0.0, tolerance = 1e-10)
+  
+  # Verify ClinicalTest
+  clin_values <- cpp_model$ClinicalTest
+  expect_equal(length(clin_values), 4)
+  expect_equal(as.numeric(clin_values[1]), 0.2187, tolerance = 1e-10)
+  expect_equal(as.numeric(clin_values[2]), 0.3456, tolerance = 1e-10)
+  expect_equal(as.numeric(clin_values[3]), 0.8765, tolerance = 1e-10)
+  expect_equal(as.numeric(clin_values[4]), 1.2345, tolerance = 1e-10)
+  
+  # Verify InCol - all 10 parameters
+  incol_values <- cpp_model$InCol
+  expect_equal(length(incol_values), 10)
+  expect_equal(as.numeric(incol_values[1]), 0.001234, tolerance = 1e-10)
+  expect_equal(as.numeric(incol_values[2]), 1.1111, tolerance = 1e-10)
+  expect_equal(as.numeric(incol_values[3]), 0.9123, tolerance = 1e-10)
+  expect_equal(as.numeric(incol_values[4]), 0.9234, tolerance = 1e-10)
+  expect_equal(as.numeric(incol_values[5]), 0.7777, tolerance = 1e-10)
+  expect_equal(as.numeric(incol_values[6]), 0.8888, tolerance = 1e-10)
+  expect_equal(as.numeric(incol_values[7]), 0.9999, tolerance = 1e-10)
+  expect_equal(as.numeric(incol_values[8]), 0.008765, tolerance = 1e-10)
+  expect_equal(as.numeric(incol_values[9]), 0.6666, tolerance = 1e-10)
+  expect_equal(as.numeric(incol_values[10]), 0.5555, tolerance = 1e-10)
+  
+  # Verify AbxRate
+  abx_values <- cpp_model$Abx
+  expect_equal(length(abx_values), 2)
+  expect_equal(as.numeric(abx_values[1]), 1.3333, tolerance = 1e-10)
+  expect_equal(as.numeric(abx_values[2]), 1.4444, tolerance = 1e-10)
 })
 
 test_that("LogNormalModel C++ object creation and parameter access", {
