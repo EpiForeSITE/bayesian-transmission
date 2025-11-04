@@ -29,3 +29,5 @@
 ^.*\.a$
 ^.*\.so$
 ^.*\.dll$
+^inst/original_cpp/src/lognormal/testHistLinkLL$
+^inst/original_cpp/src/util/test$
