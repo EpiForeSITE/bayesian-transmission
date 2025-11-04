@@ -30,7 +30,10 @@ LinkingTo:
 SystemRequirements: C++17, BLAS, LAPACK
 Suggests:
     checkmate,
+    devtools,
+    ggplot2,
     testthat (>= 3.0.0),
+    tidyr,
     knitr,
     rmarkdown,
     pillar

@@ -64,3 +64,4 @@ docker-compose.yaml
 compile.txt
 output.txt
 *.Rcheck
+*.tar.gz

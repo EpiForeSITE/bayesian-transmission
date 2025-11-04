@@ -21,3 +21,11 @@
 ^test_.*\.R$
 ^original_cpp_with_r_data\.txt$
 ^copilot$
+^check_output\.log$
+^compare_ll\.py$
+^.*\.tar\.gz$
+^.*\.Rcheck$
+^.*\.o$
+^.*\.a$
+^.*\.so$
+^.*\.dll$
