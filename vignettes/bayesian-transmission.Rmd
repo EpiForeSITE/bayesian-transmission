@@ -381,14 +381,154 @@ the following arguments:
 results <- runMCMC(
   data = simulated.data,
   MCMCParameters = list(
-    nburn = 0,
-    nsims = 100,
+    nburn = 100,
+    nsims = 1000,
     outputparam = TRUE,
     outputfinal = TRUE
   ),
   modelParameters = params,
   verbose = TRUE
 )
+```
+
+# Analyzing MCMC Results
+
+## Converting Parameters to Data Frame
+
+The `results$Parameters` object contains the MCMC chain of all model parameters. 
+To create trace plots and posterior distributions, we need to convert this nested
+list structure into a tidy data frame format.
+
+```{r}
+# Function to safely extract parameter by name
+get_param <- function(vec, name, default = NA_real_) {
+  if (name %in% names(vec)) {
+    return(as.numeric(vec[name]))
+  }
+  return(default)
+}
+
+# Convert parameters to long-format data frame
+param_df <- data.frame()
+
+for (i in seq_along(results$Parameters)) {
+  iter_params <- results$Parameters[[i]]
+  
+  # Extract key parameters based on actual structure
+  row <- data.frame(
+    iteration = i,
+    
+    # In-situ probabilities
+    insitu_uncolonized = get_param(iter_params$Insitu, "Insit.P(unc)"),
+    insitu_colonized = get_param(iter_params$Insitu, "Insit.P(col)"),
+    
+    # Surveillance test parameters
+    surv_test_uncol_neg = get_param(iter_params$SurveillanceTest, "ATest.P(+|unc-)"),
+    surv_test_col_neg = get_param(iter_params$SurveillanceTest, "ATest.P(+|col-)"),
+    surv_test_uncol_pos = get_param(iter_params$SurveillanceTest, "ATest.P(+|unc+)"),
+    surv_test_col_pos = get_param(iter_params$SurveillanceTest, "ATest.P(+|col+)"),
+    
+    # Clinical test parameters
+    clin_test_uncol = get_param(iter_params$ClinicalTest, "RTest.P(+|unc)"),
+    clin_test_col = get_param(iter_params$ClinicalTest, "RTest.P(+|col)"),
+    clin_rate_uncol = get_param(iter_params$ClinicalTest, "RTest.rateUnc"),
+    clin_rate_col = get_param(iter_params$ClinicalTest, "RTest.rateCol"),
+    
+    # Out of unit parameters
+    outunit_acquisition = get_param(iter_params$OutCol, "Out.acq"),
+    outunit_clearance = get_param(iter_params$OutCol, "Out.clr"),
+    
+    # In unit parameters (first few unnamed parameters)
+    inunit_param1 = if(length(iter_params$InCol) >= 1) iter_params$InCol[1] else NA_real_,
+    inunit_param2 = if(length(iter_params$InCol) >= 2) iter_params$InCol[2] else NA_real_,
+    inunit_param3 = if(length(iter_params$InCol) >= 3) iter_params$InCol[3] else NA_real_,
+    inunit_param4 = if(length(iter_params$InCol) >= 4) iter_params$InCol[4] else NA_real_,
+    
+    # Antibiotic rate parameters
+    abxrate_uncolonized = get_param(iter_params$Abx, "Abx.rateUnc"),
+    abxrate_colonized = get_param(iter_params$Abx, "Abx.rateCol"),
+    
+    # Log likelihood
+    loglikelihood = results$LogLikelihood[i]
+  )
+  
+  param_df <- rbind(param_df, row)
+}
+
+# Display first few rows
+head(param_df)
+```
+
+## Trace Plots
+
+Trace plots show the evolution of parameters across MCMC iterations, helping
+to assess convergence.
+
+```{r, fig.width=10, fig.height=8}
+library(ggplot2)
+library(tidyr)
+
+# Select key parameters for trace plots
+trace_params <- param_df[, c("iteration", "insitu_colonized", "surv_test_col_pos", 
+                              "outunit_acquisition", "inunit_param1", 
+                              "abxrate_colonized", "loglikelihood")]
+
+# Convert to long format
+trace_long <- pivot_longer(trace_params, 
+                           cols = -iteration,
+                           names_to = "parameter",
+                           values_to = "value")
+
+# Create trace plots
+ggplot(trace_long, aes(x = iteration, y = value)) +
+  geom_line() +
+  facet_wrap(~parameter, scales = "free_y", ncol = 2) +
+  theme_minimal() +
+  labs(title = "MCMC Trace Plots",
+       x = "Iteration",
+       y = "Parameter Value")
+```
+
+## Posterior Distributions
+
+Posterior distributions show the estimated distribution of each parameter
+after the MCMC sampling.
+
+```{r, fig.width=10, fig.height=8}
+# Remove burn-in if needed (here we already set nburn in the MCMC call)
+# For demonstration, let's use all samples since nburn=0 was specified
+
+# Create density plots for posterior distributions
+ggplot(trace_long, aes(x = value)) +
+  geom_density(fill = "steelblue", alpha = 0.5) +
+  geom_vline(aes(xintercept = mean(value, na.rm = TRUE)), 
+             color = "red", linetype = "dashed") +
+  facet_wrap(~parameter, scales = "free", ncol = 2) +
+  theme_minimal() +
+  labs(title = "Posterior Distributions",
+       subtitle = "Red dashed line shows posterior mean",
+       x = "Parameter Value",
+       y = "Density")
+```
+
+## Summary Statistics
+
+```{r}
+# Calculate summary statistics for each parameter
+library(dplyr)
+
+summary_stats <- trace_long %>%
+  group_by(parameter) %>%
+  summarise(
+    mean = mean(value, na.rm = TRUE),
+    median = median(value, na.rm = TRUE),
+    sd = sd(value, na.rm = TRUE),
+    q025 = quantile(value, 0.025, na.rm = TRUE),
+    q975 = quantile(value, 0.975, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+print(summary_stats)
 ```
 
 
