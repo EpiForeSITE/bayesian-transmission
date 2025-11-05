@@ -22,8 +22,8 @@ public:
     AbxLocationState(Object *own, int nstates);
     ~AbxLocationState();
 
-    void clear();
-    void copy(State *s);
+    void clear() override;
+    void copy(State *s) override;
     int onAbx(Patient *p) const;
     int everAbx(Patient *p) const;
     int getAbxTotal() const;
@@ -42,9 +42,9 @@ public:
     int getNeverAbxLatent() const;
     int getNoAbxSusceptible() const;
     int getNeverAbxSusceptible() const;
-    void write(ostream &os) const;
-    void apply(Event *e);
-    void unapply(Event *e);
+    void write(ostream &os) const override;
+    void apply(Event *e) override;
+    void unapply(Event *e) override;
 };
 
 #endif // ALUN_INFECT_ABXLOCATIONSTATE_H

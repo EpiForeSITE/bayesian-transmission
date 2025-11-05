@@ -81,7 +81,7 @@ public:
 	List* getTestLinks();
 	Map* positives();
 	int sumocc();
-	void write(ostream &os);
+	void write(ostream &os) override;
 	void write2(ostream &os, int opt);
 };
 

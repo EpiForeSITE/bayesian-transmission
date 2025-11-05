@@ -15,7 +15,7 @@ private:
 public:
 	Facility(int id);
 	~Facility();
-	void write(ostream &os) const;
+	void write(ostream &os) const override;
 
 	inline void addUnit(Unit *u)
 	{

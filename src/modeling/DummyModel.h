@@ -11,8 +11,8 @@ public:
 
 	DummyModel(int ns) : BasicModel(ns,0,1){}
 
-	virtual infect::PatientState *makePatientState(infect::Patient *p);
-    virtual int needEventType(EventCode e);
+	virtual infect::PatientState *makePatientState(infect::Patient *p) override;
+    virtual int needEventType(EventCode e) override;
 
 };
 } // namespace models

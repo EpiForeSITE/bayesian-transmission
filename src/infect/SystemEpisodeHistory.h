@@ -8,10 +8,10 @@ class SystemEpisodeHistory : public EpisodeHistory
 {
 protected:
 
-	virtual void applyInitialEvent(Event *e);
-	virtual void unapplyInitialEvent(Event *e);
-	virtual void applyAndInsert(HistoryLink *l);
-	virtual void removeAndUnapply(HistoryLink *l);
+	virtual void applyInitialEvent(Event *e) override;
+	virtual void unapplyInitialEvent(Event *e) override;
+	virtual void applyAndInsert(HistoryLink *l) override;
+	virtual void removeAndUnapply(HistoryLink *l) override;
 
 public:
 

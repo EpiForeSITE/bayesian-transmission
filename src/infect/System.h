@@ -49,7 +49,7 @@ public:
 	);
 	~System();
 	std::shared_ptr<Map> getEpisodes(Patient *p);
-	// void write(ostream &os);
+	// void write(ostream &os) override;
 	// void write2(ostream &os,int opt);
 
 	std::string className() const override { return "System";}

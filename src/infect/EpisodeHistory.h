@@ -78,6 +78,6 @@ public:
 		return td;
 	}
 
-	void write(ostream &os) const;
+	void write(ostream &os) const override;
 };
 #endif // ALUN_INFECT_EPISODEHISTORY_H

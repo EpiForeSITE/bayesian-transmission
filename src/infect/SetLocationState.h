@@ -24,7 +24,7 @@ public:
 
 	~SetLocationState();
 
-	inline void clear()
+	inline void clear() override
 	{
 		pat->clear();
 		sus->clear();
@@ -38,17 +38,17 @@ public:
 		return pat;
 	}
 
-	virtual int getTotal() const;
+	virtual int getTotal() const override;
 	virtual int getTotal(int g) const;
-	virtual int getSusceptible() const;
+	virtual int getSusceptible() const override;
 	virtual int getSusceptible(int g) const;
-	virtual int getLatent() const;
+	virtual int getLatent() const override;
 	virtual int getLatent(int g) const;
-	virtual int getColonized() const;
+	virtual int getColonized() const override;
 	virtual int getColonized(int g) const;
-	virtual void copy(State *ss);
-	virtual void apply(Event *e);
-	virtual void unapply(Event *e);
+	virtual void copy(State *ss) override;
+	virtual void apply(Event *e) override;
+	virtual void unapply(Event *e) override;
 	void write(ostream &os) const override;
 
 };

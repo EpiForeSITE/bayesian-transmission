@@ -8,7 +8,7 @@ class FacilityEpisodeHistory : public EpisodeHistory
 {
 protected:
 
-	virtual void applyInitialEvent(Event *e)
+	virtual void applyInitialEvent(Event *e) override
 	{
 		for (HistoryLink *l = d; ; l = l->fPrev())
 		{
@@ -30,7 +30,7 @@ protected:
 		}
 	}
 
-	virtual void unapplyInitialEvent(Event *e)
+	virtual void unapplyInitialEvent(Event *e) override
 	{
 		for (HistoryLink *l = a;  ; l = l->fNext())
 		{
@@ -51,7 +51,7 @@ protected:
 		}
 	}
 
-	virtual void applyAndInsert(HistoryLink *l)
+	virtual void applyAndInsert(HistoryLink *l) override
 	{
 		HistoryLink *fnext = d;
 		HistoryLink *unext = d;
@@ -111,7 +111,7 @@ protected:
 		}
 	}
 
-	virtual void removeAndUnapply(HistoryLink *l)
+	virtual void removeAndUnapply(HistoryLink *l) override
 	{
 		l->removePatient();
 		l->removeUnit();

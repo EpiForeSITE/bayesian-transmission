@@ -20,7 +20,7 @@ public:
         delete s;
     }
 
-	void write(ostream &os) const;
+	void write(ostream &os) const override;
 
 	inline void setAdmission(Event *e)
 	{

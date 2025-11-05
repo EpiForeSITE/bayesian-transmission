@@ -162,7 +162,7 @@ public:
 
 
 	void write2(ostream &os, int opt) const;
-	void write(ostream &os) const;
+	void write(ostream &os) const override;
 
 // Trivial accessors.
 

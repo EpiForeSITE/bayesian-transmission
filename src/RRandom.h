@@ -13,14 +13,14 @@ public:
     /**
      Random number generators.
      */
-    double runif();
-    double runif(double a, double b);
-    double rexp();
-    double rexp(double l);
-    double rgamma(double a, double b);
-    double rnorm();
-    double rnorm(double m, double s);
-    double rpoisson(double l);
+    double runif() override;
+    double runif(double a, double b) override;
+    double rexp() override;
+    double rexp(double l) override;
+    double rgamma(double a, double b) override;
+    double rnorm() override;
+    double rnorm(double m, double s) override;
+    double rpoisson(double l) override;
 /*
     double mcmillerone(int n, double a, double sigma, double p, double q, double r, double s);
     void rmiller(double *ab, double p, double q, double r, double s);

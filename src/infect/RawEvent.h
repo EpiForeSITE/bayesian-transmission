@@ -22,7 +22,7 @@ public:
 	// to create the checked lists of Events and Episodes.
 	int compare (Object const * const e) const;
 
-	void write(ostream &os) const;
+	void write(ostream &os) const override;
 
 
 	inline double getTime() const

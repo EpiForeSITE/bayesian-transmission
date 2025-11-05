@@ -29,12 +29,12 @@ private:
 		tprev = 0;
 	}
 
-	std::string className() const
+	std::string className() const override
 	{
 		return "MapLink";
 	}
 
-	void write(std::ostream &os) const
+	void write(std::ostream &os) const override
 	{
 		Object::write(os);
 		os << "(" << key << "->" << value << ")";

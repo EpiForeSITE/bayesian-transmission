@@ -262,7 +262,7 @@ public:
      *
      * @param os Output stream to write to.
      */
-    void write(ostream &os) const;
+    void write(ostream &os) const override;
 
     /**
      * @brief Writes the event details to an output stream with options.

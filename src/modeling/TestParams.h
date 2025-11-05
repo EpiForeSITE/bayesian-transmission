@@ -35,26 +35,26 @@ public:
 
 	TestParams(int nst);
 	~TestParams();
-	virtual string header() const;
-	virtual int getNStates() const;
+	virtual string header() const override;
+	virtual int getNStates() const override;
 	virtual double eventProb(InfectionStatus s, int onabx, EventCode e) const;
 	virtual double* resultProbs(int onabx, EventCode e) const;
 
 // Implement Parameters.
 
-	virtual double logProb(infect::HistoryLink *h);
-	virtual void initCounts();
-	virtual void count(infect::HistoryLink *h);
-	virtual void update(Random *r, bool max = false);
+	virtual double logProb(infect::HistoryLink *h) override;
+	virtual void initCounts() override;
+	virtual void count(infect::HistoryLink *h) override;
+	virtual void update(Random *r, bool max = false) override;
 	virtual void update_max(Random *r);
 
 // Personal accessors.
 
 	// Set value, update and Beta prior.
 	virtual void set(int i, double value, int update, double prival, double prin);
-	virtual std::vector<std::string> paramNames() const;
-    virtual std::vector<double> getValues() const;
-	virtual void write (ostream &os) const;
+	virtual std::vector<std::string> paramNames() const override;
+    virtual std::vector<double> getValues() const override;
+	virtual void write (ostream &os) const override;
 
 	virtual int nParam() const
 	{

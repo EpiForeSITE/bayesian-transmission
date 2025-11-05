@@ -22,12 +22,12 @@ public:
 	virtual int getColonized() const = 0;
 	virtual int getLatent() const = 0;
 	virtual int getSusceptible() const = 0;
-	virtual void copy(State *s) = 0;
-	virtual void apply(Event *e) = 0;
-	virtual void unapply(Event *e) = 0;
+	virtual void copy(State *s) override = 0;
+	virtual void apply(Event *e) override = 0;
+	virtual void unapply(Event *e) override = 0;
 
 
-	virtual void write(ostream &os) const;
+	virtual void write(ostream &os) const override;
 };
 
 #endif // ALUN_INFECT_LOCATIONSTATE_H

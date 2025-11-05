@@ -18,7 +18,7 @@ public:
 		nstates = nst;
 	}
 
-	virtual int getNStates() const
+	virtual int getNStates() const override
 	{
 		return nstates;
 	}

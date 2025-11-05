@@ -16,15 +16,15 @@ public:
 
 	CountLocationState(Object *own, int nstates = 0);
 
-	virtual void clear();
-	virtual int getTotal() const;
-	virtual int getColonized() const;
-	virtual int getLatent() const;
-	virtual int getSusceptible() const;
+	virtual void clear() override;
+	virtual int getTotal() const override;
+	virtual int getColonized() const override;
+	virtual int getLatent() const override;
+	virtual int getSusceptible() const override;
 
-	virtual void copy(State *s);
-	virtual void apply(Event *e);
-	virtual void unapply(Event *e);
-	virtual void write(ostream &os) const;
+	virtual void copy(State *s) override;
+	virtual void apply(Event *e) override;
+	virtual void unapply(Event *e) override;
+	virtual void write(ostream &os) const override;
 };
 #endif // ALUN_INFECT_COUNTLOCATIONSTATE_H

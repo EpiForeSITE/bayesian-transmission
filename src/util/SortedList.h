@@ -22,7 +22,7 @@ public:
 		return k->compare(p);
 	}
 
-	virtual void append(Object *k)
+	virtual void append(Object *k) override
 	{
 		ListLink *prev = tail;
 		for ( ; prev != 0 && carefulCompare(k,prev->key) < 0; )
@@ -52,7 +52,7 @@ public:
 		}
 	}
 
-	virtual void prepend(Object *k)
+	virtual void prepend(Object *k) override
 	{
 		ListLink *next = head;
 		for ( ; next != 0 && carefulCompare(k,next->key) >= 0; )
@@ -82,7 +82,7 @@ public:
 		}
 	}
 
-	std::string className() const
+	std::string className() const override
 	{
 		return "SortedList";
 	}

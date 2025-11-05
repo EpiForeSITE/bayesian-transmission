@@ -120,7 +120,7 @@ public:
 	void simulateChain();
 
 // Implement Object
-	void write(ostream &os) const;
+	void write(ostream &os) const override;
 };
 } // namespace util
 #endif // ALUN_UTIL_MARKOV_H

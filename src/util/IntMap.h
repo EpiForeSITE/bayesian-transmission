@@ -28,12 +28,12 @@ private:
 		tprev = 0;
 	}
 
-	std::string className() const
+	std::string className() const override
 	{
 		return "IntMapLink";
 	}
 
-	void write(std::ostream &os) const
+	void write(std::ostream &os) const override
 	{
 		Object::write(os);
 		os << "(" << key << "->" << value << ")";
@@ -269,12 +269,12 @@ public:
 		return tail == 0 ? 0 : tail->value;
 	}
 
-	std::string className() const
+	std::string className() const override
 	{
 		return "IntMap";
 	}
 
-	void write (std::ostream &os)
+	void write (std::ostream &os) override
 	{
 		Object::write(os);
 		os << "(" << use << "/" << cap << ")";

@@ -24,8 +24,8 @@ public:
 		return key;
 	}
 
-	std::string className() const;
-	void write(std::ostream &os) const;
+	std::string className() const override;
+	void write(std::ostream &os) const override;
 };
 
 class List : public Object

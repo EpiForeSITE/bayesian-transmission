@@ -27,7 +27,7 @@ public:
 	{
 	}
 
-	void write(ostream &os) const;
+	void write(ostream &os) const override;
 
 	inline Object *getOwner() const
 	{

@@ -30,9 +30,9 @@ public:
 
 	virtual int onAbx() const;
 	virtual int everAbx() const;
-	virtual void copy(State *t);
-	virtual void apply(Event *e);
-	virtual void unapply(Event *e);
-	virtual void write(ostream &os) const;
+	virtual void copy(State *t) override;
+	virtual void apply(Event *e) override;
+	virtual void unapply(Event *e) override;
+	virtual void write(ostream &os) const override;
 };
 #endif // ALUN_INFECT_PATIENTSTATE_H
