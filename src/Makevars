@@ -3,7 +3,7 @@ LAPACK_LIBS = -llapack
 BLAS_LIBS = -lblas
 
 # Include subdirectories for headers
-PKG_CPPFLAGS = -I. -I./infect -I./lognormal -I./modeling -I./util -Wsuggest-override
+PKG_CPPFLAGS = -I. -I./infect -I./lognormal -I./modeling -I./util
 
 # Explicitly list all object files for portability (avoids GNU wildcard)
 OBJECTS = CodeToEvent.o \

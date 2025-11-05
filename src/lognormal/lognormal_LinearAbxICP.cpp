@@ -133,7 +133,7 @@ double LinearAbxICP::unTransform(int i, int j)
     return exp(par[i][j]);
 }
 
-void LinearAbxICP::set(int i, int j, double value, int update, double prival, double priorn)
+void LinearAbxICP::set(int i, int j, double value, int update, double prival, double priorn, double sig)
 {
     if (i == 0)
     {
