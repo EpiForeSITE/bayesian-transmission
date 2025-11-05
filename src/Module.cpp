@@ -16,8 +16,8 @@ using namespace lognormal;
 
 
 void init_Module_util();
-void init_Module_infect_system();
 void init_Module_infect();
+void init_Module_infect_system();
 void init_Module_models();
 void init_Module_lognormal();
 
@@ -59,6 +59,7 @@ RCPP_MODULE(BayesianInfectiousDiseaseModelingModule){
 
     init_Module_util();
     init_Module_infect();
+    init_Module_infect_system();
     init_Module_models();
     init_Module_lognormal();
 
