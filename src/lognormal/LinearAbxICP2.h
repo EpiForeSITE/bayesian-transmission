@@ -15,7 +15,7 @@ public:
     virtual double getRate(int i, int risk, int ever, int cur) const;
     virtual double acqRate(int nsus, int onabx, int everabx, int ncolabx, int ncol, int tot, double time);
 
-    virtual void set(int i, int j, double value, int update, double prival, double priorn);
+    virtual void set(int i, int j, double value, int update, double prival, double priorn) override;
 
 // LogNormalICP Implementation
     virtual double logProgressionRate(double time, PatientState *p, LocationState *s) override;
