@@ -140,20 +140,21 @@ void LinearAbxICP::set(int i, int j, double value, int update, double prival, do
         switch(j)
         {
         case 1:
+            // Time parameter uses a smaller proposal sigma
             setWithLogTransform(i,j,value,update,prival,priorn,0.001);
             break;
         case 2:
         case 3:
-            setWithLogitTransform(i,j,value,update,prival,priorn);
+            setWithLogitTransform(i,j,value,update,prival,priorn,sig);
             break;
         default:
-            setWithLogTransform(i,j,value,update,prival,priorn);
+            setWithLogTransform(i,j,value,update,prival,priorn,sig);
         }
 
     }
     else
     {
-        setWithLogTransform(i,j,value,update,prival,priorn);
+        setWithLogTransform(i,j,value,update,prival,priorn,sig);
     }
 }
 

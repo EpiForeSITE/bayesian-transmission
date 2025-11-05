@@ -137,7 +137,7 @@ double LinearAbxICP2::unTransform(int i, int j)
 void LinearAbxICP2::set(int i, int j, double value, int update, double prival, double priorn, double sig)
 {
     // LinearAbxICP2 uses log transform for ALL parameters (not logit for 2,3)
-    setWithLogTransform(i,j,value,update,prival,priorn);
+    setWithLogTransform(i,j,value,update,prival,priorn,sig);
 }
 
 } // namespace lognormal
