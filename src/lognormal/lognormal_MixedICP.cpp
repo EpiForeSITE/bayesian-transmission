@@ -53,11 +53,11 @@ double MixedICP::unTransform(int i, int j)
     return exp(par[i][j]);
 }
 
-void MixedICP::set(int i, int j, double value, int update, double prival, double priorn, double sig)
+void MixedICP::set(int i, int j, double value, int update, double prival, double priorn)
 {
     if (i == 0 && j == 1)
-        setWithLogitTransform(i,j,value,update,prival,priorn,sig);
+        setWithLogitTransform(i,j,value,update,prival,priorn,0.1);
     else
-        setWithLogTransform(i,j,value,update,prival,priorn,sig);
+        setWithLogTransform(i,j,value,update,prival,priorn,0.1);
 }
 } // namespace lognormal

@@ -102,9 +102,9 @@ double LogNormalICP::getTimeOrigin()
 
 // Personal accessors.
 
-void LogNormalICP::set(int i, int j, double value, int update, double prival, double priorn, double sig)
+void LogNormalICP::set(int i, int j, double value, int update, double prival, double priorn)
 {
-    setWithLogTransform(i,j,value,update,prival,priorn,sig);
+    setWithLogTransform(i,j,value,update,prival,priorn,0.1);
 }
 
 double LogNormalICP::unTransform(int i, int j)
