@@ -16,6 +16,7 @@ using namespace lognormal;
 
 
 void init_Module_util();
+void init_Module_infect_system();
 void init_Module_infect();
 void init_Module_models();
 void init_Module_lognormal();
