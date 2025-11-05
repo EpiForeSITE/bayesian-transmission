@@ -66,9 +66,10 @@ MultiUnitAbxICP::MultiUnitAbxICP(List *u, int nst, int isDensity, int nmet) : Lo
     setNormal(2,1,0,0,0,1);
 }
 
-void MultiUnitAbxICP::setUnit(int i, Object *u, double value, int update, double prival, double priorn, double sig = 0.1)
+void MultiUnitAbxICP::setUnit(int i, Object *u, double value, int update, double prival, double priorn, double sig)
 {
-    set(i,index(u),value,update,prival,priorn,sig);
+    set(i,index(u),value,update,prival,priorn);
+    // Note: sig parameter is ignored - set() calls use fixed sigma values internally
 }
 
 // Implement LogNormalICP.

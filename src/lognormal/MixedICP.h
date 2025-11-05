@@ -21,6 +21,6 @@ public:
 	double acqRate(double time, int onabx, int everabx, double ncolabx, double ncol, double tot);
 	virtual double timePar() override;
 	virtual double unTransform(int i, int j) override;
-	virtual void set(int i, int j, double value, int update, double prival, double priorn, double sig = 0.1) override;
+	virtual void set(int i, int j, double value, int update, double prival, double priorn) override;
 };
 #endif // ALUN_LOGNORMAL_MIXEDICP_H

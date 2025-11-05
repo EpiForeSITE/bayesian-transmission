@@ -55,6 +55,7 @@ OBJECTS = CodeToEvent.o \
           modeling/models_UnitLinkedModel.o \
           Module.o \
           Module-Infect.o \
+          Module-Infect-System.o \
           Module-lognormal.o \
           Module-models.o \
           Module-utils.o \

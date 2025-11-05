@@ -62,7 +62,7 @@ public:
 
 // Personal accessors.
 
-	virtual void set(int i, int j, double value, int update, double prival, double priorn, double sig = 0.1);
+	virtual void set(int i, int j, double value, int update, double prival, double priorn);
 	virtual void setWithLogTransform(int i, int j, double value, int update, double prival, double priorn, double sig = 0.1);
 	virtual void setWithLogitTransform(int i, int j, double value, int update, double prival, double priorn, double sig = 0.1);
 	virtual void setNormal(int i, int j, double value, int update, double prim, double privar, double sig = 0.1);
