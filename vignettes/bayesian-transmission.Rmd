@@ -190,18 +190,27 @@ In the base log normal antibiotic model,
 function.
 
 $$
-\log(P(\mathrm{Acq(t)})) = \beta_0 + \beta_t(t-t_0) + 
-    \beta_c N_og(\mathrm{Colonized(t)})a_{ca}N_{ca}(t) + \beta_A A_i(t) + \beta_E E_i(t)
-$$ Where $\beta_\star$ represents the coefficient corresponding to the
+\log(P(\mathrm{Acq(t)})) =  % lognormal_logNormalAbxICP.cpp:68-74
+    \beta_0 +               % logbeta_acq_constant
+    \beta_t (t-t_0) +       % logbeta_acq_time
+    \beta_c N_c(t)  +       % logbeta_acq_col() * ncol +
+    \beta_{ca} N_{ca}(t) +  % logbeta_acq_abx_col() * ncolabx +
+    \beta_A A_i(t) +        % logbeta_acq_onabx() * onabx +
+    \beta_E E_i(t)          % logbeta_acq_everabx() * everabx;
+$$ 
+
+Where $\beta_\star$ represents the coefficient corresponding to the
 amounts, $N_c(t)$ represent the total number of colonized patients at
 time $t$, $N_{ca}(t)$ the number of colonized on antibiotics, and
 $A_i(t)$ and $E_i(t)$ represents if patient $i$ is currently or ever on
 antibiotics.
 
 The linear antibiotic (`LinearAbxAcquisitionParams`) takes a more
-complicated form for the acquisition model. $$
+complicated form for the acquisition model.
+
+$$
 P(\mathrm{Acq(t)}) =
-  \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
+  \left[e^{\beta_\mathrm{time}(t-t_0)}\right]
   \left\{e^{\beta_0}
          \left[
             \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})\right)
@@ -210,7 +219,7 @@ P(\mathrm{Acq(t)}) =
             \right)
           + 1 - e^{\beta_\mathrm{mass}}
         \right]
-  \right\}\\
+  \right\}
   \left[
     N_S(t) - N_E(t) + e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right) +A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
   \right]
