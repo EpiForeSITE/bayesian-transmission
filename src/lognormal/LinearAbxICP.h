@@ -14,6 +14,7 @@ public:
 
     LinearAbxICP(int nst, int nmet, int nacqpar = 7);
     virtual string header() const  override;
+    virtual std::vector<std::string> paramNames() const override;
     virtual double getRate(int i, int risk, int ever, int cur) const;
     virtual double acqRate(int nsus, int onabx, int everabx, int ncolabx, int ncol, int tot, double time);
 

@@ -28,6 +28,28 @@ string LinearAbxICP::header() const
     return s.str();
 }
 
+std::vector<std::string> LinearAbxICP::paramNames() const
+{
+    std::vector<std::string> names;
+    names.push_back("LABX.base");
+    names.push_back("LABX.time");
+    names.push_back("LABX.mass.mx");
+    names.push_back("LABX.freq.mx");
+    names.push_back("LABX.colabx");
+    names.push_back("LABX.susabx");
+    names.push_back("LABX.susever");
+    if (nstates == 3)
+    {
+        names.push_back("LABX.pro");
+        names.push_back("LABX.proAbx");
+        names.push_back("LABX.proEver");
+    }
+    names.push_back("LABX.clr");
+    names.push_back("LABX.clrAbx");
+    names.push_back("LABX.clrEver");
+    return names;
+}
+
 double LinearAbxICP::getRate(int i, int risk, int ever, int cur) const
 {
     return epar[i][0] * ( risk-ever + epar[i][2] * (ever-cur + epar[i][1] * cur));

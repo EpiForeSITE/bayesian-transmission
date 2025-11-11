@@ -312,9 +312,15 @@ $gamma(N_i, 1)$ distribution. Then all three are normalized to sum to 1.
 
 ```{r}
 insitu <- InsituParams(
-  # Starting 90/10 split uncolonized to colonized  
-  probs = c(uncolonized = 0.90, #< names are unnecessary.
-              colonized = 0.10)
+  # Starting 90/10 split uncolonized to colonized
+  # For 2-state model, latent probability is 0
+  probs = c(uncolonized = 0.90,
+            latent = 0.0,
+            colonized = 0.10),
+  # Prior values for Bayesian updating  
+  priors = c(1, 1, 1),
+  # Which states to update (latent is fixed at 0 for 2-state model)
+  doit = c(TRUE, FALSE, TRUE)
 )
 ```
 
@@ -336,10 +342,13 @@ the number of positive and negative tests respectively for state $s$.
 
 ```{r}
 surv <- SurveillanceTestParams(
-    # Probability of a positive test when uncolonized
-    uncolonized = Param(0),
-    # Probability of a positive test when colonized
-    colonized = Param(0.9, 1, TRUE)
+    # Probability of a positive test when uncolonized (false positive rate)
+    # Use small non-zero value to avoid -Inf likelihood if data has any false positives
+    uncolonized = Param(0.01, 1),
+    # Probability of a positive test when colonized (true positive rate/sensitivity)
+    colonized = Param(0.9, 1),
+    # Latent state (for 2-state model, this is not used but must be specified)
+    latent = Param(0, 0)
 )
 
 ```
@@ -355,9 +364,11 @@ multiplicative between rate and effectiveness.
 ```{r}
 clin <- ClinicalTestParams(
     # Rate of testing when uncolonized
-    uncolonized = ParamWRate(Param(0, 0), rate = Param(1)),
-    # Rate of testing when colonized
-    colonized = ParamWRate(Param(0, 0), rate = Param(1))
+    uncolonized = ParamWRate(Param(0.5, 0), rate = Param(1, 0)),
+    # Rate of testing when colonized  
+    colonized = ParamWRate(Param(0.5, 0), rate = Param(1, 0)),
+    # Latent state (for 2-state model, not used but must be specified)
+    latent = ParamWRate(Param(0, 0), rate = Param(0, 0))
 )
 ```
 
@@ -396,7 +407,7 @@ results <- runMCMC(
     outputfinal = TRUE
   ),
   modelParameters = params,
-  verbose = TRUE
+  verbose = FALSE
 )
 ```
 
@@ -405,64 +416,12 @@ results <- runMCMC(
 ## Converting Parameters to Data Frame
 
 The `results$Parameters` object contains the MCMC chain of all model parameters. 
-To create trace plots and posterior distributions, we need to convert this nested
-list structure into a tidy data frame format.
+To create trace plots and posterior distributions, we use the `mcmc_to_dataframe()`
+function to convert this nested list structure into a tidy data frame format.
 
 ```{r}
-# Function to safely extract parameter by name
-get_param <- function(vec, name, default = NA_real_) {
-  if (name %in% names(vec)) {
-    return(as.numeric(vec[name]))
-  }
-  return(default)
-}
-
-# Convert parameters to long-format data frame
-param_df <- data.frame()
-
-for (i in seq_along(results$Parameters)) {
-  iter_params <- results$Parameters[[i]]
-  
-  # Extract key parameters based on actual structure
-  row <- data.frame(
-    iteration = i,
-    
-    # In-situ probabilities
-    insitu_uncolonized = get_param(iter_params$Insitu, "Insit.P(unc)"),
-    insitu_colonized = get_param(iter_params$Insitu, "Insit.P(col)"),
-    
-    # Surveillance test parameters
-    surv_test_uncol_neg = get_param(iter_params$SurveillanceTest, "ATest.P(+|unc-)"),
-    surv_test_col_neg = get_param(iter_params$SurveillanceTest, "ATest.P(+|col-)"),
-    surv_test_uncol_pos = get_param(iter_params$SurveillanceTest, "ATest.P(+|unc+)"),
-    surv_test_col_pos = get_param(iter_params$SurveillanceTest, "ATest.P(+|col+)"),
-    
-    # Clinical test parameters
-    clin_test_uncol = get_param(iter_params$ClinicalTest, "RTest.P(+|unc)"),
-    clin_test_col = get_param(iter_params$ClinicalTest, "RTest.P(+|col)"),
-    clin_rate_uncol = get_param(iter_params$ClinicalTest, "RTest.rateUnc"),
-    clin_rate_col = get_param(iter_params$ClinicalTest, "RTest.rateCol"),
-    
-    # Out of unit parameters
-    outunit_acquisition = get_param(iter_params$OutCol, "Out.acq"),
-    outunit_clearance = get_param(iter_params$OutCol, "Out.clr"),
-    
-    # In unit parameters (first few unnamed parameters)
-    inunit_param1 = if(length(iter_params$InCol) >= 1) iter_params$InCol[1] else NA_real_,
-    inunit_param2 = if(length(iter_params$InCol) >= 2) iter_params$InCol[2] else NA_real_,
-    inunit_param3 = if(length(iter_params$InCol) >= 3) iter_params$InCol[3] else NA_real_,
-    inunit_param4 = if(length(iter_params$InCol) >= 4) iter_params$InCol[4] else NA_real_,
-    
-    # Antibiotic rate parameters
-    abxrate_uncolonized = get_param(iter_params$Abx, "Abx.rateUnc"),
-    abxrate_colonized = get_param(iter_params$Abx, "Abx.rateCol"),
-    
-    # Log likelihood
-    loglikelihood = results$LogLikelihood[i]
-  )
-  
-  param_df <- rbind(param_df, row)
-}
+# Convert parameters to data frame using package function
+param_df <- mcmc_to_dataframe(results)
 
 # Display first few rows
 head(param_df)
@@ -479,7 +438,7 @@ library(tidyr)
 
 # Select key parameters for trace plots
 trace_params <- param_df[, c("iteration", "insitu_colonized", "surv_test_col_pos", 
-                              "outunit_acquisition", "inunit_param1", 
+                              "outunit_acquisition", "inunit_base", 
                               "abxrate_colonized", "loglikelihood")]
 
 # Convert to long format
