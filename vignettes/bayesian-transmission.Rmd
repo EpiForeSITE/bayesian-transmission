@@ -125,16 +125,19 @@ This function takes up to four arguments:
 4. `prior`, the mean of the prior distribution.  Taken with the weight will fully parameterize the distribution.
 ```
 
+**Important:** Always explicitly specify `init` values for parameters to ensure 
+reproducibility and avoid potential numerical issues.
+
 ```{r paramexamples, results='hide'}
 # Fully specified parameter.
 Param(init = 0, weight = 1, update = TRUE, prior = 0.5)
-# Fixed parameter
+# Fixed parameter with explicit init
 # Weight = 0 implies update=FALSE and prior is ignored.
-Param(0, 0)
-# Update parameter that starts at zero.
-Param(0, weight =1, update=TRUE)
-# Parameters specified at zero implies fixed.
-Param(0)
+Param(init = 0, weight = 0)
+# Updated parameter that starts at zero.
+Param(init = 0, weight = 1, update = TRUE)
+# Short form for fixed parameter
+Param(init = 0, weight = 0)
 ```
 
 ## `Abx` Antibiotic use
@@ -149,11 +152,12 @@ components:
 -   `life`, the duration where the antibiotic to be effective.
 
 ```{r}
-abx <- AbxParams(onoff = TRUE, delay = 0.3, life = 1)
+abx <- AbxParams(onoff = 0, delay = 0.0, life = 2.0)
 ```
 
 Currently, all antibiotics are assumed to be equally effective and have
-the same duration of effectiveness.
+the same duration of effectiveness. Note: `onoff = 0` means antibiotics are
+turned off for this example (set to 1 to enable).
 
 ## `AbxRate` Antibiotic rates
 
@@ -161,15 +165,16 @@ The `AbxRate` parameter control the antibiotic administration rates.
 
 ```{r}
 abxrate <- AbxRateParams(
-  # Uncolonized patients do use antibiotics but at a low rate.
-  uncolonized = 0.05,  
-  # Colonized patients use antibiotics at a high rate.
-  colonized = 0.7      
+  # Fixed parameters when antibiotics are off
+  uncolonized = Param(init = 1.0, weight = 0),
+  colonized = Param(init = 1.0, weight = 0)
 )
 ```
 
 Here since both parameters are non-zero both will be updated. A rate of
 zero for either would indicate that group would never be on antibiotics.
+When antibiotics are turned off (`Abx$onoff = 0`), these parameters are 
+typically fixed (weight = 0).
 
 ## `InUnit` In unit infection rate
 
@@ -227,13 +232,13 @@ $$
 
 ```{r}
 acquisition <- LinearAbxAcquisitionParams(
-    base = Param(0.01),     #< Base acquisition rate (Updated)
-    time = Param(1, 0),     #< Time effect (Fixed)
-    mass = Param(1),        #< Mass Mixing (Updated)
-    freq = Param(1),        #< Frequency/Density effect (Updated)
-    col_abx = Param(1, 0),  #< Colonized on antibiotics (Fixed)
-    suss_abx = Param(1, 0), #< Susceptible on antibiotics (Fixed)
-    suss_ever = Param(1, 0) #< Ever on antibiotics (Fixed)  
+    base = Param(init = 0.001, weight = 1),     #< Base acquisition rate (Updated)
+    time = Param(init = 1.0, weight = 0),       #< Time effect (Fixed)
+    mass = Param(init = 1.0, weight = 1),       #< Mass Mixing (Updated)
+    freq = Param(init = 1.0, weight = 1),       #< Frequency/Density effect (Updated)
+    col_abx = Param(init = 1.0, weight = 0),    #< Colonized on antibiotics (Fixed)
+    suss_abx = Param(init = 1.0, weight = 0),   #< Susceptible on antibiotics (Fixed)
+    suss_ever = Param(init = 1.0, weight = 0)   #< Ever on antibiotics (Fixed)  
 )
 ```
 
@@ -258,9 +263,9 @@ same.
 
 ```{r}
 progression <- ProgressionParams(
-    rate = Param(0.01),     #< Base progression rate (Updated)
-    abx  = Param(1, 0),     #< Currently on antibiotics (Fixed)
-    ever = Param(1, 0)      #< Ever on antibiotics (Fixed)
+    rate = Param(init = 0.0, weight = 0),      #< Base progression rate (Fixed for 2-state)
+    abx  = Param(init = 1.0, weight = 0),      #< Currently on antibiotics (Fixed)
+    ever_abx = Param(init = 1.0, weight = 0)   #< Ever on antibiotics (Fixed)
 )
 ```
 
@@ -271,9 +276,9 @@ normal and the linear cases, the coefficients however are independent.
 
 ```{r}
 clearance <- ClearanceParams(
-    rate = Param(0.01),     #< Base clearance rate (Updated)
-    abx  = Param(1, 0),     #< Currently on antibiotics (Fixed)
-    ever = Param(1, 0)      #< Ever on antibiotics (Fixed)
+    rate = Param(init = 0.01, weight = 1),     #< Base clearance rate (Updated)
+    abx  = Param(init = 1.0, weight = 0),      #< Currently on antibiotics (Fixed)
+    ever_abx = Param(init = 1.0, weight = 0)   #< Ever on antibiotics (Fixed)
 )
 ```
 
@@ -296,8 +301,9 @@ $$
 
 ```{r}
 outcol <- OutOfUnitInfectionParams(
-  acquisition = 0.1,
-  clearance = 0.5
+  acquisition = Param(init = 0.001, weight = 1),
+  clearance = Param(init = 0.01, weight = 0),
+  progression = Param(init = 0.0, weight = 0)
 )
 ```
 
@@ -343,12 +349,14 @@ the number of positive and negative tests respectively for state $s$.
 ```{r}
 surv <- SurveillanceTestParams(
     # Probability of a positive test when uncolonized (false positive rate)
-    # Use small non-zero value to avoid -Inf likelihood if data has any false positives
-    uncolonized = Param(0.01, 1),
+    # IMPORTANT: Must be > 0 to avoid -Inf likelihood. Use small value like 1e-10.
+    # Setting to exactly 0.0 causes log(0) = -Inf if any uncolonized patient tests positive.
+    uncolonized = Param(init = 1e-10, weight = 0),
     # Probability of a positive test when colonized (true positive rate/sensitivity)
-    colonized = Param(0.9, 1),
+    # Starting at 0.8, will be updated during MCMC
+    colonized = Param(init = 0.8, weight = 1),
     # Latent state (for 2-state model, this is not used but must be specified)
-    latent = Param(0, 0)
+    latent = Param(init = 0.0, weight = 0)
 )
 
 ```
@@ -362,13 +370,22 @@ handled the same as surveillance testing and the likelihood is
 multiplicative between rate and effectiveness.
 
 ```{r}
-clin <- ClinicalTestParams(
+clin <- RandomTestParams(
     # Rate of testing when uncolonized
-    uncolonized = ParamWRate(Param(0.5, 0), rate = Param(1, 0)),
+    uncolonized = ParamWRate(
+      param = Param(init = 0.5, weight = 0), 
+      rate = Param(init = 1.0, weight = 0)
+    ),
     # Rate of testing when colonized  
-    colonized = ParamWRate(Param(0.5, 0), rate = Param(1, 0)),
+    colonized = ParamWRate(
+      param = Param(init = 0.5, weight = 0), 
+      rate = Param(init = 1.0, weight = 0)
+    ),
     # Latent state (for 2-state model, not used but must be specified)
-    latent = ParamWRate(Param(0, 0), rate = Param(0, 0))
+    latent = ParamWRate(
+      param = Param(init = 0.5, weight = 0), 
+      rate = Param(init = 1.0, weight = 0)
+    )
 )
 ```
 
@@ -398,16 +415,18 @@ the following arguments:
 
 
 ```{r}
-results <- runMCMC(
-  data = simulated.data,
-  MCMCParameters = list(
-    nburn = 100,
-    nsims = 1000,
-    outputparam = TRUE,
-    outputfinal = TRUE
-  ),
-  modelParameters = params,
-  verbose = FALSE
+system.time(
+  results <- runMCMC(
+    data = simulated.data_sorted,
+    MCMCParameters = list(
+      nburn = 100,
+      nsims = 1000,
+      outputparam = TRUE,
+      outputfinal = TRUE
+    ),
+    modelParameters = params,
+    verbose = FALSE
+  )
 )
 ```
 

@@ -231,9 +231,9 @@ OutOfUnitInfectionParams <- function(
 #' @examples
 #' SurveillanceTestParams()
 SurveillanceTestParams <- function(
-    colonized = Param(0, 0),
-    uncolonized = Param(0.8, 1),
-    latent = Param(0, 0)) {
+    colonized = Param(init = 0.8, weight = 1),       # High sensitivity for detecting colonized
+    uncolonized = Param(init = 1e-10, weight = 0),   # Very low false positive rate
+    latent = Param(init = 0.0, weight = 0)) {        # Not used in 2-state model
   list(
     colonized = colonized,
     uncolonized = uncolonized,

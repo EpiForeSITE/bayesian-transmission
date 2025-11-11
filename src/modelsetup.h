@@ -104,9 +104,9 @@ inline void setupSurveillanceTestParams(
         Rcpp::List stpColonizedParam,
         Rcpp::List stpLatentParam
 ){
-    setParam(stp, 0, stpUncolonizedParam);
-    setParam(stp, 1, stpColonizedParam);
-    setParam(stp, 2, stpLatentParam);
+    setParam(stp, 0, stpUncolonizedParam);  // index 0 = uncolonized
+    setParam(stp, 2, stpColonizedParam);    // index 2 = colonized (FIXED: was 1)
+    setParam(stp, 1, stpLatentParam);        // index 1 = latent (FIXED: was 2)
 }
 
 inline void setupSurveillanceTestParams(TestParams * stp, Rcpp::List SurveillanceTestParameters)
@@ -135,9 +135,9 @@ inline void setupClinicalTestParams(
         Rcpp::List ctpColonizedParamWRate,
         Rcpp::List ctpLatentParamWRate
 ){
-    setParamWRate(ctp, 0, ctpUncolonizedParamWRate);
-    setParamWRate(ctp, 1, ctpColonizedParamWRate);
-    setParamWRate(ctp, 2, ctpLatentParamWRate);
+    setParamWRate(ctp, 0, ctpUncolonizedParamWRate);  // index 0 = uncolonized
+    setParamWRate(ctp, 2, ctpColonizedParamWRate);    // index 2 = colonized (FIXED: was 1)
+    setParamWRate(ctp, 1, ctpLatentParamWRate);        // index 1 = latent (FIXED: was 2)
 }
 
 
