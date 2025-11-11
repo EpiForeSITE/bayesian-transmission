@@ -276,10 +276,16 @@ terms of acquisition, progression, and clearance.</p>
 <p>In the base log normal antibiotic model,
 <code>LogNormalABXInUnitParameters()</code> log acquisition probability
 is a linear function.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">q</mi><mrow><mo stretchy="true" form="prefix" mathvariant="normal">(</mo><mi mathvariant="normal">t</mi><mo stretchy="true" form="postfix" mathvariant="normal">)</mo></mrow></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mi>t</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>−</mo><msub><mi>t</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mi>c</mi></msub><msub><mi>N</mi><mi>o</mi></msub><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">z</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">d</mi><mrow><mo stretchy="true" form="prefix" mathvariant="normal">(</mo><mi mathvariant="normal">t</mi><mo stretchy="true" form="postfix" mathvariant="normal">)</mo></mrow></mrow><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>a</mi><mrow><mi>c</mi><mi>a</mi></mrow></msub><msub><mi>N</mi><mrow><mi>c</mi><mi>a</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mi>A</mi></msub><msub><mi>A</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mi>E</mi></msub><msub><mi>E</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
-\log(P(\mathrm{Acq(t)})) = \beta_0 + \beta_t(t-t_0) + 
-    \beta_c N_og(\mathrm{Colonized(t)})a_{ca}N_{ca}(t) + \beta_A A_i(t) + \beta_E E_i(t)
-</annotation></semantics></math> Where
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">q</mi><mrow><mo stretchy="true" form="prefix" mathvariant="normal">(</mo><mi mathvariant="normal">t</mi><mo stretchy="true" form="postfix" mathvariant="normal">)</mo></mrow></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mi>t</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>−</mo><msub><mi>t</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mi>c</mi></msub><msub><mi>N</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mrow><mi>c</mi><mi>a</mi></mrow></msub><msub><mi>N</mi><mrow><mi>c</mi><mi>a</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mi>A</mi></msub><msub><mi>A</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mi>E</mi></msub><msub><mi>E</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+\log(P(\mathrm{Acq(t)})) =  % lognormal_logNormalAbxICP.cpp:68-74
+    \beta_0 +               % logbeta_acq_constant
+    \beta_t (t-t_0) +       % logbeta_acq_time
+    \beta_c N_c(t)  +       % logbeta_acq_col() * ncol +
+    \beta_{ca} N_{ca}(t) +  % logbeta_acq_abx_col() * ncolabx +
+    \beta_A A_i(t) +        % logbeta_acq_onabx() * onabx +
+    \beta_E E_i(t)          % logbeta_acq_everabx() * everabx;
+</annotation></semantics></math></p>
+<p>Where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mo>⋆</mo></msub><annotation encoding="application/x-tex">\beta_\star</annotation></semantics></math>
 represents the coefficient corresponding to the amounts,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N_c(t)</annotation></semantics></math>
@@ -294,26 +300,23 @@ represents if patient
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 is currently or ever on antibiotics.</p>
 <p>The linear antibiotic (<code>LinearAbxAcquisitionParams</code>) takes
-a more complicated form for the acquisition model. <span class="math display">$$
+a more complicated form for the acquisition model.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">q</mi><mrow><mo stretchy="true" form="prefix" mathvariant="normal">(</mo><mi mathvariant="normal">t</mi><mo stretchy="true" form="postfix" mathvariant="normal">)</mo></mrow></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msup><mi>e</mi><mrow><msub><mi>β</mi><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>−</mo><msub><mi>t</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msup><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">{</mo><msup><mi>e</mi><msub><mi>β</mi><mn>0</mn></msub></msup><mrow><mo stretchy="true" form="prefix">[</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msub><mi>β</mi><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">q</mi></mrow></msub><mrow><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><msub><mi>β</mi><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">q</mi></mrow></msub></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><msup><mi>e</mi><msub><mi>β</mi><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi></mrow></msub></msup><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>N</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><msub><mi>N</mi><mrow><mi>c</mi><mi>a</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msup><mi>e</mi><msub><mi>β</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">_</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">x</mi></mrow></msub></msup><msub><mi>N</mi><mrow><mi>c</mi><mi>a</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><msub><mi>β</mi><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi></mrow></msub></msup><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">}</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>N</mi><mi>S</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><msub><mi>N</mi><mi>E</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msup><mi>e</mi><msub><mi>β</mi><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">_</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow></msub></msup><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>E</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><msub><mi>A</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>A</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><msup><mi>e</mi><msub><mi>β</mi><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">_</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">x</mi></mrow></msub></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 P(\mathrm{Acq(t)}) =
-  \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
+  \left[e^{\beta_\mathrm{time}(t-t_0)}\right]
   \left\{e^{\beta_0}
          \left[
-            \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 -
-e^{\beta_\mathrm{freq}})\right)
+            \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})\right)
             e^{\beta_\mathrm{mass}}\left(
-                (N_c(t) - N_{ca}(t)) +
-e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
+                (N_c(t) - N_{ca}(t)) + e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
             \right)
           + 1 - e^{\beta_\mathrm{mass}}
         \right]
-  \right\}\\
+  \right\}
   \left[
-    N_S(t) - N_E(t) +
-e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right)
-+A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
+    N_S(t) - N_E(t) + e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right) +A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
   \right]
-$$</span></p>
+</annotation></semantics></math></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">acquisition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LinearAbxAcquisitionParams.html">LinearAbxAcquisitionParams</a></span><span class="op">(</span></span>
 <span>    base <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span>,     <span class="co">#&lt; Base acquisition rate (Updated)</span></span>
@@ -393,9 +396,15 @@ are not time dependent.</p>
 distribution. Then all three are normalized to sum to 1.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">insitu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InsituParams.html">InsituParams</a></span><span class="op">(</span></span>
-<span>  <span class="co"># Starting 90/10 split uncolonized to colonized  </span></span>
-<span>  probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>uncolonized <span class="op">=</span> <span class="fl">0.90</span>, <span class="co">#&lt; names are unnecessary.</span></span>
-<span>              colonized <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></span>
+<span>  <span class="co"># Starting 90/10 split uncolonized to colonized</span></span>
+<span>  <span class="co"># For 2-state model, latent probability is 0</span></span>
+<span>  probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>uncolonized <span class="op">=</span> <span class="fl">0.90</span>,</span>
+<span>            latent <span class="op">=</span> <span class="fl">0.0</span>,</span>
+<span>            colonized <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span>,</span>
+<span>  <span class="co"># Prior values for Bayesian updating  </span></span>
+<span>  priors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="co"># Which states to update (latent is fixed at 0 for 2-state model)</span></span>
+<span>  doit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -421,10 +430,13 @@ are the number of positive and negative tests respectively for state
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SurveillanceTestParams.html">SurveillanceTestParams</a></span><span class="op">(</span></span>
-<span>    <span class="co"># Probability of a positive test when uncolonized</span></span>
-<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>    <span class="co"># Probability of a positive test when colonized</span></span>
-<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.9</span>, <span class="fl">1</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="co"># Probability of a positive test when uncolonized (false positive rate)</span></span>
+<span>    <span class="co"># Use small non-zero value to avoid -Inf likelihood if data has any false positives</span></span>
+<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    <span class="co"># Probability of a positive test when colonized (true positive rate/sensitivity)</span></span>
+<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.9</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    <span class="co"># Latent state (for 2-state model, this is not used but must be specified)</span></span>
+<span>    latent <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -438,9 +450,11 @@ the likelihood is multiplicative between rate and effectiveness.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">clin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RandomTestParams.html">ClinicalTestParams</a></span><span class="op">(</span></span>
 <span>    <span class="co"># Rate of testing when uncolonized</span></span>
-<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="co"># Rate of testing when colonized</span></span>
-<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="co"># Rate of testing when colonized  </span></span>
+<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="co"># Latent state (for 2-state model, not used but must be specified)</span></span>
+<span>    latent <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -475,1134 +489,8 @@ function takes the following arguments:</p>
 <span>    outputfinal <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  modelParameters <span class="op">=</span> <span class="va">params</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Initializing Variables</span></span>
-<span><span class="co">#&gt; Creating RNG...Done</span></span>
-<span><span class="co">#&gt; Setting up System...Done</span></span>
-<span><span class="co">#&gt; Creating model...</span></span>
-<span><span class="co">#&gt; (In LinearAbxModel specialization)</span></span>
-<span><span class="co">#&gt;   * Setting up Abx...Done</span></span>
-<span><span class="co">#&gt;   * Setting up Insitu...Done</span></span>
-<span><span class="co">#&gt;   * Setting up Surveillance Test...Done</span></span>
-<span><span class="co">#&gt;   * Setting up Clinical Test...Done</span></span>
-<span><span class="co">#&gt;   * Setting up Out of Unit...Done</span></span>
-<span><span class="co">#&gt;   * Setting up In Unit...Done</span></span>
-<span><span class="co">#&gt;   * Setting up Abx Rates...Done</span></span>
-<span><span class="co">#&gt; Done</span></span>
-<span><span class="co">#&gt; Set time origin</span></span>
-<span><span class="co">#&gt; Building history structure...Done</span></span>
-<span><span class="co">#&gt; Finding tests for WAIC.</span></span>
-<span><span class="co">#&gt; Building sampler.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; === INITIAL PARAMETERS ===</span></span>
-<span><span class="co">#&gt; 0.9000000000 0.0000000000    0.0000000000    0.8000000000    0.0000000000    0.8000000000    0.0000000000    0.0000000000    1.0000000000    0.0000000000    0.1000000000    0.5000000000    0.0100000000    1.0000000000    0.9999999999    0.9999999999    1.0000000000    1.0000000000    1.0000000000    0.0100000000    1.0000000000    1.0000000000    0.0500000000    0.7000000000            LogLike=-inf</span></span>
-<span><span class="co">#&gt; === END INITIAL PARAMETERS ===</span></span>
-<span><span class="co">#&gt; burning in MCMC.</span></span>
-<span><span class="co">#&gt; 0:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 1:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 2:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 3:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 4:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 5:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 6:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 7:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 8:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 9:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 10:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 11:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 12:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 13:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 14:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 15:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 16:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 17:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 18:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 19:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 20:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 21:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 22:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 23:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 24:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 25:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 26:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 27:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 28:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 29:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 30:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 31:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 32:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 33:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 34:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 35:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 36:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 37:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 38:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 39:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 40:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 41:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 42:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 43:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 44:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 45:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 46:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 47:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 48:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 49:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 50:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 51:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 52:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 53:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 54:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 55:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 56:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 57:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 58:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 59:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 60:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 61:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 62:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 63:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 64:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 65:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 66:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 67:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 68:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 69:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 70:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 71:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 72:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 73:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 74:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 75:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 76:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 77:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 78:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 79:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 80:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 81:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 82:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 83:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 84:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 85:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 86:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 87:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 88:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 89:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 90:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 91:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 92:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 93:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 94:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 95:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 96:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 97:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 98:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; 99:sample episodes...Sample Model...done.</span></span>
-<span><span class="co">#&gt; Running MCMC.</span></span>
-<span><span class="co">#&gt; 0:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 1:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 2:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 3:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 4:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 5:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 6:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 7:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 8:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 9:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 10:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 11:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 12:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 13:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 14:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 15:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 16:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 17:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 18:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 19:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 20:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 21:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 22:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 23:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 24:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 25:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 26:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 27:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 28:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 29:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 30:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 31:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 32:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 33:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 34:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 35:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 36:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 37:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 38:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 39:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 40:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 41:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 42:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 43:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 44:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 45:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 46:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 47:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 48:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 49:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 50:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 51:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 52:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 53:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 54:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 55:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 56:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 57:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 58:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 59:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 60:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 61:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 62:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 63:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 64:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 65:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 66:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 67:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 68:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 69:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 70:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 71:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 72:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 73:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 74:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 75:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 76:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 77:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 78:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 79:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 80:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 81:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 82:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 83:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 84:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 85:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 86:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 87:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 88:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 89:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 90:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 91:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 92:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 93:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 94:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 95:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 96:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 97:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 98:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 99:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 100:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 101:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 102:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 103:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 104:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 105:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 106:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 107:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 108:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 109:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 110:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 111:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 112:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 113:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 114:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 115:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 116:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 117:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 118:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 119:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 120:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 121:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 122:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 123:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 124:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 125:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 126:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 127:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 128:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 129:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 130:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 131:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 132:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 133:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 134:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 135:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 136:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 137:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 138:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 139:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 140:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 141:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 142:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 143:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 144:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 145:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 146:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 147:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 148:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 149:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 150:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 151:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 152:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 153:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 154:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 155:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 156:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 157:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 158:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 159:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 160:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 161:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 162:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 163:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 164:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 165:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 166:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 167:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 168:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 169:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 170:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 171:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 172:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 173:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 174:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 175:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 176:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 177:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 178:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 179:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 180:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 181:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 182:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 183:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 184:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 185:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 186:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 187:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 188:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 189:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 190:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 191:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 192:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 193:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 194:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 195:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 196:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 197:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 198:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 199:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 200:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 201:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 202:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 203:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 204:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 205:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 206:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 207:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 208:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 209:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 210:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 211:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 212:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 213:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 214:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 215:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 216:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 217:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 218:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 219:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 220:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 221:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 222:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 223:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 224:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 225:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 226:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 227:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 228:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 229:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 230:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 231:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 232:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 233:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 234:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 235:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 236:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 237:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 238:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 239:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 240:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 241:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 242:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 243:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 244:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 245:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 246:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 247:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 248:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 249:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 250:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 251:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 252:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 253:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 254:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 255:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 256:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 257:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 258:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 259:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 260:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 261:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 262:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 263:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 264:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 265:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 266:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 267:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 268:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 269:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 270:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 271:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 272:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 273:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 274:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 275:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 276:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 277:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 278:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 279:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 280:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 281:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 282:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 283:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 284:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 285:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 286:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 287:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 288:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 289:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 290:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 291:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 292:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 293:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 294:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 295:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 296:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 297:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 298:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 299:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 300:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 301:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 302:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 303:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 304:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 305:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 306:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 307:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 308:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 309:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 310:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 311:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 312:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 313:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 314:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 315:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 316:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 317:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 318:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 319:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 320:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 321:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 322:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 323:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 324:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 325:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 326:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 327:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 328:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 329:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 330:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 331:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 332:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 333:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 334:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 335:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 336:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 337:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 338:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 339:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 340:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 341:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 342:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 343:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 344:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 345:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 346:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 347:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 348:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 349:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 350:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 351:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 352:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 353:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 354:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 355:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 356:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 357:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 358:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 359:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 360:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 361:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 362:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 363:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 364:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 365:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 366:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 367:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 368:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 369:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 370:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 371:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 372:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 373:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 374:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 375:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 376:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 377:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 378:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 379:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 380:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 381:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 382:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 383:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 384:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 385:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 386:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 387:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 388:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 389:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 390:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 391:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 392:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 393:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 394:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 395:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 396:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 397:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 398:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 399:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 400:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 401:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 402:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 403:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 404:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 405:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 406:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 407:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 408:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 409:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 410:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 411:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 412:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 413:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 414:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 415:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 416:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 417:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 418:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 419:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 420:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 421:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 422:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 423:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 424:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 425:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 426:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 427:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 428:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 429:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 430:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 431:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 432:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 433:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 434:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 435:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 436:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 437:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 438:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 439:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 440:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 441:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 442:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 443:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 444:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 445:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 446:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 447:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 448:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 449:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 450:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 451:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 452:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 453:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 454:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 455:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 456:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 457:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 458:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 459:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 460:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 461:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 462:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 463:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 464:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 465:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 466:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 467:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 468:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 469:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 470:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 471:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 472:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 473:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 474:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 475:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 476:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 477:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 478:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 479:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 480:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 481:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 482:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 483:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 484:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 485:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 486:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 487:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 488:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 489:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 490:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 491:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 492:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 493:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 494:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 495:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 496:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 497:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 498:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 499:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 500:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 501:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 502:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 503:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 504:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 505:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 506:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 507:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 508:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 509:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 510:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 511:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 512:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 513:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 514:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 515:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 516:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 517:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 518:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 519:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 520:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 521:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 522:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 523:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 524:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 525:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 526:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 527:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 528:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 529:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 530:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 531:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 532:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 533:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 534:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 535:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 536:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 537:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 538:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 539:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 540:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 541:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 542:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 543:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 544:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 545:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 546:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 547:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 548:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 549:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 550:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 551:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 552:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 553:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 554:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 555:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 556:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 557:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 558:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 559:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 560:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 561:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 562:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 563:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 564:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 565:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 566:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 567:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 568:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 569:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 570:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 571:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 572:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 573:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 574:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 575:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 576:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 577:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 578:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 579:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 580:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 581:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 582:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 583:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 584:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 585:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 586:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 587:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 588:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 589:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 590:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 591:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 592:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 593:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 594:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 595:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 596:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 597:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 598:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 599:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 600:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 601:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 602:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 603:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 604:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 605:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 606:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 607:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 608:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 609:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 610:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 611:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 612:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 613:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 614:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 615:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 616:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 617:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 618:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 619:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 620:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 621:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 622:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 623:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 624:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 625:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 626:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 627:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 628:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 629:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 630:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 631:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 632:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 633:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 634:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 635:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 636:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 637:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 638:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 639:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 640:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 641:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 642:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 643:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 644:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 645:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 646:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 647:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 648:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 649:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 650:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 651:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 652:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 653:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 654:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 655:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 656:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 657:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 658:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 659:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 660:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 661:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 662:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 663:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 664:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 665:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 666:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 667:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 668:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 669:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 670:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 671:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 672:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 673:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 674:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 675:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 676:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 677:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 678:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 679:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 680:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 681:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 682:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 683:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 684:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 685:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 686:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 687:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 688:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 689:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 690:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 691:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 692:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 693:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 694:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 695:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 696:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 697:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 698:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 699:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 700:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 701:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 702:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 703:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 704:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 705:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 706:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 707:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 708:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 709:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 710:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 711:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 712:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 713:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 714:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 715:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 716:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 717:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 718:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 719:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 720:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 721:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 722:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 723:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 724:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 725:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 726:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 727:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 728:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 729:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 730:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 731:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 732:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 733:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 734:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 735:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 736:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 737:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 738:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 739:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 740:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 741:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 742:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 743:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 744:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 745:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 746:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 747:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 748:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 749:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 750:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 751:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 752:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 753:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 754:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 755:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 756:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 757:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 758:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 759:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 760:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 761:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 762:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 763:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 764:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 765:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 766:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 767:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 768:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 769:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 770:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 771:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 772:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 773:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 774:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 775:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 776:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 777:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 778:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 779:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 780:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 781:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 782:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 783:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 784:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 785:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 786:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 787:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 788:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 789:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 790:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 791:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 792:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 793:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 794:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 795:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 796:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 797:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 798:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 799:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 800:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 801:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 802:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 803:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 804:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 805:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 806:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 807:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 808:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 809:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 810:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 811:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 812:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 813:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 814:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 815:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 816:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 817:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 818:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 819:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 820:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 821:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 822:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 823:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 824:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 825:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 826:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 827:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 828:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 829:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 830:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 831:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 832:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 833:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 834:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 835:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 836:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 837:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 838:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 839:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 840:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 841:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 842:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 843:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 844:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 845:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 846:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 847:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 848:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 849:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 850:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 851:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 852:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 853:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 854:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 855:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 856:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 857:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 858:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 859:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 860:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 861:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 862:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 863:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 864:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 865:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 866:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 867:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 868:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 869:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 870:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 871:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 872:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 873:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 874:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 875:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 876:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 877:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 878:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 879:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 880:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 881:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 882:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 883:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 884:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 885:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 886:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 887:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 888:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 889:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 890:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 891:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 892:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 893:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 894:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 895:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 896:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 897:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 898:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 899:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 900:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 901:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 902:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 903:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 904:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 905:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 906:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 907:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 908:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 909:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 910:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 911:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 912:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 913:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 914:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 915:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 916:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 917:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 918:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 919:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 920:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 921:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 922:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 923:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 924:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 925:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 926:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 927:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 928:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 929:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 930:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 931:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 932:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 933:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 934:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 935:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 936:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 937:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 938:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 939:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 940:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 941:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 942:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 943:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 944:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 945:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 946:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 947:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 948:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 949:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 950:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 951:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 952:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 953:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 954:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 955:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 956:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 957:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 958:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 959:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 960:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 961:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 962:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 963:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 964:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 965:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 966:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 967:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 968:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 969:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 970:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 971:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 972:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 973:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 974:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 975:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 976:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 977:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 978:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 979:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 980:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 981:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 982:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 983:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 984:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 985:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 986:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 987:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 988:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 989:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 990:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 991:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 992:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 993:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 994:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 995:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 996:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 997:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 998:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; 999:sample episodes...Sample Model...Outputting parameters...likelhood...done.</span></span>
-<span><span class="co">#&gt; MCMC done.</span></span>
-<span><span class="co">#&gt; WAIC 1 2 =   0.653861    0.912502</span></span>
-<span><span class="co">#&gt; Writing complete form of final state.</span></span></code></pre></div>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="analyzing-mcmc-results">Analyzing MCMC Results<a class="anchor" aria-label="anchor" href="#analyzing-mcmc-results"></a>
@@ -1612,129 +500,56 @@ function takes the following arguments:</p>
 </h3>
 <p>The <code>results$Parameters</code> object contains the MCMC chain of
 all model parameters. To create trace plots and posterior distributions,
-we need to convert this nested list structure into a tidy data frame
-format.</p>
+we use the <code><a href="../reference/mcmc_to_dataframe.html">mcmc_to_dataframe()</a></code> function to convert this
+nested list structure into a tidy data frame format.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Function to safely extract parameter by name</span></span>
-<span><span class="va">get_param</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">vec</span>, <span class="va">name</span>, <span class="va">default</span> <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">vec</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">vec</span><span class="op">[</span><span class="va">name</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">default</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="co"># Convert parameters to long-format data frame</span></span>
-<span><span class="va">param_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">Parameters</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">iter_params</span> <span class="op">&lt;-</span> <span class="va">results</span><span class="op">$</span><span class="va">Parameters</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span></span>
-<span>  </span>
-<span>  <span class="co"># Extract key parameters based on actual structure</span></span>
-<span>  <span class="va">row</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    iteration <span class="op">=</span> <span class="va">i</span>,</span>
-<span>    </span>
-<span>    <span class="co"># In-situ probabilities</span></span>
-<span>    insitu_uncolonized <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">Insitu</span>, <span class="st">"Insit.P(unc)"</span><span class="op">)</span>,</span>
-<span>    insitu_colonized <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">Insitu</span>, <span class="st">"Insit.P(col)"</span><span class="op">)</span>,</span>
-<span>    </span>
-<span>    <span class="co"># Surveillance test parameters</span></span>
-<span>    surv_test_uncol_neg <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">SurveillanceTest</span>, <span class="st">"ATest.P(+|unc-)"</span><span class="op">)</span>,</span>
-<span>    surv_test_col_neg <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">SurveillanceTest</span>, <span class="st">"ATest.P(+|col-)"</span><span class="op">)</span>,</span>
-<span>    surv_test_uncol_pos <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">SurveillanceTest</span>, <span class="st">"ATest.P(+|unc+)"</span><span class="op">)</span>,</span>
-<span>    surv_test_col_pos <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">SurveillanceTest</span>, <span class="st">"ATest.P(+|col+)"</span><span class="op">)</span>,</span>
-<span>    </span>
-<span>    <span class="co"># Clinical test parameters</span></span>
-<span>    clin_test_uncol <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">ClinicalTest</span>, <span class="st">"RTest.P(+|unc)"</span><span class="op">)</span>,</span>
-<span>    clin_test_col <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">ClinicalTest</span>, <span class="st">"RTest.P(+|col)"</span><span class="op">)</span>,</span>
-<span>    clin_rate_uncol <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">ClinicalTest</span>, <span class="st">"RTest.rateUnc"</span><span class="op">)</span>,</span>
-<span>    clin_rate_col <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">ClinicalTest</span>, <span class="st">"RTest.rateCol"</span><span class="op">)</span>,</span>
-<span>    </span>
-<span>    <span class="co"># Out of unit parameters</span></span>
-<span>    outunit_acquisition <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">OutCol</span>, <span class="st">"Out.acq"</span><span class="op">)</span>,</span>
-<span>    outunit_clearance <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">OutCol</span>, <span class="st">"Out.clr"</span><span class="op">)</span>,</span>
-<span>    </span>
-<span>    <span class="co"># In unit parameters (first few unnamed parameters)</span></span>
-<span>    inunit_param1 <span class="op">=</span> <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">InCol</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">1</span><span class="op">)</span> <span class="va">iter_params</span><span class="op">$</span><span class="va">InCol</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="kw">else</span> <span class="cn">NA_real_</span>,</span>
-<span>    inunit_param2 <span class="op">=</span> <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">InCol</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">2</span><span class="op">)</span> <span class="va">iter_params</span><span class="op">$</span><span class="va">InCol</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="kw">else</span> <span class="cn">NA_real_</span>,</span>
-<span>    inunit_param3 <span class="op">=</span> <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">InCol</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">3</span><span class="op">)</span> <span class="va">iter_params</span><span class="op">$</span><span class="va">InCol</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="kw">else</span> <span class="cn">NA_real_</span>,</span>
-<span>    inunit_param4 <span class="op">=</span> <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">InCol</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">4</span><span class="op">)</span> <span class="va">iter_params</span><span class="op">$</span><span class="va">InCol</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span> <span class="kw">else</span> <span class="cn">NA_real_</span>,</span>
-<span>    </span>
-<span>    <span class="co"># Antibiotic rate parameters</span></span>
-<span>    abxrate_uncolonized <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">Abx</span>, <span class="st">"Abx.rateUnc"</span><span class="op">)</span>,</span>
-<span>    abxrate_colonized <span class="op">=</span> <span class="fu">get_param</span><span class="op">(</span><span class="va">iter_params</span><span class="op">$</span><span class="va">Abx</span>, <span class="st">"Abx.rateCol"</span><span class="op">)</span>,</span>
-<span>    </span>
-<span>    <span class="co"># Log likelihood</span></span>
-<span>    loglikelihood <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">LogLikelihood</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
-<span>  <span class="op">)</span></span>
-<span>  </span>
-<span>  <span class="va">param_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">param_df</span>, <span class="va">row</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
+<code class="sourceCode R"><span><span class="co"># Convert parameters to data frame using package function</span></span>
+<span><span class="va">param_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mcmc_to_dataframe.html">mcmc_to_dataframe</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Display first few rows</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">param_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                                  iteration insitu_uncolonized insitu_colonized</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED          1          0.9302875                0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED1         2          0.9998525                0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED2         3          0.9908906                0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED3         4          0.9556866                0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED4         5          0.8666393                0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED5         6          1.0000000                0</span></span>
-<span><span class="co">#&gt;                                  surv_test_uncol_neg surv_test_col_neg</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED                    1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED1                   1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED2                   1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED3                   1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED4                   1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED5                   1                 0</span></span>
-<span><span class="co">#&gt;                                  surv_test_uncol_pos surv_test_col_pos</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED                    1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED1                   1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED2                   1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED3                   1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED4                   1                 0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED5                   1                 0</span></span>
-<span><span class="co">#&gt;                                  clin_test_uncol clin_test_col clin_rate_uncol</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED                0             0        1391.482</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED1               0             0        5333.154</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED2               0             0        7545.635</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED3               0             0        5170.308</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED4               0             0        4230.554</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED5               0             0       14083.426</span></span>
-<span><span class="co">#&gt;                                  clin_rate_col outunit_acquisition</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED              0         0.002885853</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED1             0         0.002885853</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED2             0         0.001218417</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED3             0         0.001218417</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED4             0         0.001218417</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED5             0         0.001218417</span></span>
-<span><span class="co">#&gt;                                  outunit_clearance inunit_param1 inunit_param2</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED       0.0012281783   0.003159614             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED1      0.0012281783   0.003116127             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED2      0.0006971535   0.003844998             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED3      0.0006971535   0.004461223             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED4      0.0006971535   0.003907606             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED5      0.0006971535   0.004158357             1</span></span>
-<span><span class="co">#&gt;                                  inunit_param3 inunit_param4</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED              1             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED1             1             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED2             1             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED3             1             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED4             1             1</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED5             1             1</span></span>
-<span><span class="co">#&gt;                                  abxrate_uncolonized abxrate_colonized</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED              1226980          636348.4</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED1             1165656          629777.4</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED2             1271520          680347.0</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED3             1150118          666265.7</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED4             1214577          672626.5</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED5             1226288          734988.7</span></span>
-<span><span class="co">#&gt;                                  loglikelihood</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED           -Inf</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED1          -Inf</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED2          -Inf</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED3          -Inf</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED4          -Inf</span></span>
-<span><span class="co">#&gt; PARAMETER NAMES NOT IMPLEMENTED5          -Inf</span></span></code></pre></div>
+<span><span class="co">#&gt;   iteration insitu_uncolonized insitu_colonized surv_test_uncol_neg</span></span>
+<span><span class="co">#&gt; 1         1         0.36352949        0.6364705                   1</span></span>
+<span><span class="co">#&gt; 2         2         0.08540797        0.9145920                   1</span></span>
+<span><span class="co">#&gt; 3         3         0.33773365        0.6622664                   1</span></span>
+<span><span class="co">#&gt; 4         4         0.43523142        0.5647686                   1</span></span>
+<span><span class="co">#&gt; 5         5         0.69401926        0.3059807                   1</span></span>
+<span><span class="co">#&gt; 6         6         0.73077686        0.2692231                   1</span></span>
+<span><span class="co">#&gt;   surv_test_col_neg surv_test_uncol_pos surv_test_col_pos clin_test_uncol</span></span>
+<span><span class="co">#&gt; 1                 0                   1                 0             0.5</span></span>
+<span><span class="co">#&gt; 2                 0                   1                 0             0.5</span></span>
+<span><span class="co">#&gt; 3                 0                   1                 0             0.5</span></span>
+<span><span class="co">#&gt; 4                 0                   1                 0             0.5</span></span>
+<span><span class="co">#&gt; 5                 0                   1                 0             0.5</span></span>
+<span><span class="co">#&gt; 6                 0                   1                 0             0.5</span></span>
+<span><span class="co">#&gt;   clin_test_col clin_rate_uncol clin_rate_col outunit_acquisition</span></span>
+<span><span class="co">#&gt; 1             0               1             0          0.04872909</span></span>
+<span><span class="co">#&gt; 2             0               1             0          0.04872909</span></span>
+<span><span class="co">#&gt; 3             0               1             0          0.04872909</span></span>
+<span><span class="co">#&gt; 4             0               1             0          0.04872909</span></span>
+<span><span class="co">#&gt; 5             0               1             0          0.04872909</span></span>
+<span><span class="co">#&gt; 6             0               1             0          0.04872909</span></span>
+<span><span class="co">#&gt;   outunit_clearance inunit_base inunit_time inunit_mass inunit_freq</span></span>
+<span><span class="co">#&gt; 1         0.0258701 0.002423405           1           1           1</span></span>
+<span><span class="co">#&gt; 2         0.0258701 0.002697885           1           1           1</span></span>
+<span><span class="co">#&gt; 3         0.0258701 0.002706596           1           1           1</span></span>
+<span><span class="co">#&gt; 4         0.0258701 0.002598325           1           1           1</span></span>
+<span><span class="co">#&gt; 5         0.0258701 0.002510386           1           1           1</span></span>
+<span><span class="co">#&gt; 6         0.0258701 0.002608298           1           1           1</span></span>
+<span><span class="co">#&gt;   inunit_colabx inunit_susabx inunit_susever  inunit_clr inunit_clrAbx</span></span>
+<span><span class="co">#&gt; 1             1             1              1 0.001853747             1</span></span>
+<span><span class="co">#&gt; 2             1             1              1 0.001824026             1</span></span>
+<span><span class="co">#&gt; 3             1             1              1 0.001689453             1</span></span>
+<span><span class="co">#&gt; 4             1             1              1 0.001566023             1</span></span>
+<span><span class="co">#&gt; 5             1             1              1 0.001663549             1</span></span>
+<span><span class="co">#&gt; 6             1             1              1 0.001480498             1</span></span>
+<span><span class="co">#&gt;   inunit_clrEver abxrate_uncolonized abxrate_colonized loglikelihood</span></span>
+<span><span class="co">#&gt; 1              1             1054791          629771.8          -Inf</span></span>
+<span><span class="co">#&gt; 2              1             1166696          711553.9          -Inf</span></span>
+<span><span class="co">#&gt; 3              1             1251557          677976.5          -Inf</span></span>
+<span><span class="co">#&gt; 4              1             1102664          658573.4          -Inf</span></span>
+<span><span class="co">#&gt; 5              1             1097877          695118.3          -Inf</span></span>
+<span><span class="co">#&gt; 6              1             1171478          656579.7          -Inf</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="trace-plots">Trace Plots<a class="anchor" aria-label="anchor" href="#trace-plots"></a>
@@ -1747,7 +562,7 @@ helping to assess convergence.</p>
 <span></span>
 <span><span class="co"># Select key parameters for trace plots</span></span>
 <span><span class="va">trace_params</span> <span class="op">&lt;-</span> <span class="va">param_df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iteration"</span>, <span class="st">"insitu_colonized"</span>, <span class="st">"surv_test_col_pos"</span>, </span>
-<span>                              <span class="st">"outunit_acquisition"</span>, <span class="st">"inunit_param1"</span>, </span>
+<span>                              <span class="st">"outunit_acquisition"</span>, <span class="st">"inunit_base"</span>, </span>
 <span>                              <span class="st">"abxrate_colonized"</span>, <span class="st">"loglikelihood"</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Convert to long format</span></span>
@@ -1764,7 +579,7 @@ helping to assess convergence.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"MCMC Trace Plots"</span>,</span>
 <span>       x <span class="op">=</span> <span class="st">"Iteration"</span>,</span>
 <span>       y <span class="op">=</span> <span class="st">"Parameter Value"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="bayesian-transmission_files/figure-html/unnamed-chunk-17-1.png" width="960"></p>
+<p><img src="bayesian-transmission_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" width="960"></p>
 </div>
 <div class="section level3">
 <h3 id="posterior-distributions">Posterior Distributions<a class="anchor" aria-label="anchor" href="#posterior-distributions"></a>
@@ -1788,7 +603,7 @@ parameter after the MCMC sampling.</p>
 <span>       y <span class="op">=</span> <span class="st">"Density"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 1000 rows containing non-finite outside the scale range</span></span>
 <span><span class="co">#&gt; (`stat_density()`).</span></span></code></pre></div>
-<p><img src="bayesian-transmission_files/figure-html/unnamed-chunk-18-1.png" width="960"></p>
+<p><img src="bayesian-transmission_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" width="960"></p>
 </div>
 <div class="section level3">
 <h3 id="summary-statistics">Summary Statistics<a class="anchor" aria-label="anchor" href="#summary-statistics"></a>
@@ -1820,11 +635,11 @@ parameter after the MCMC sampling.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
 <span><span class="co">#&gt;   parameter                    mean       median        sd       q025       q975</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> abxrate_colonized   <span style="text-decoration: underline;">656</span>449.            6.56<span style="color: #949494;">e</span>+5   3.39<span style="color: #949494;">e</span>+4    5.91<span style="color: #949494;">e</span>+5    7.24<span style="color: #949494;">e</span>+5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> insitu_colonized         0             0   <span style="color: #949494;"> </span>     0   <span style="color: #949494;"> </span>      0   <span style="color: #949494;"> </span>      0   <span style="color: #949494;"> </span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> inunit_param1            0.000<span style="text-decoration: underline;">533</span>      1.48<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>   9.40<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>    3.85<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>    4.17<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> abxrate_colonized   <span style="text-decoration: underline;">659</span>427.            6.59<span style="color: #949494;">e</span>+5   3.37<span style="color: #949494;">e</span>+4    5.91<span style="color: #949494;">e</span>+5    7.26<span style="color: #949494;">e</span>+5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> insitu_colonized         0.494         4.82<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span>   2.92<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span>    2.73<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>    9.78<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> inunit_base              0.000<span style="text-decoration: underline;">451</span>      3.41<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>   3.69<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>    1.35<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>    1.55<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> loglikelihood         -<span style="color: #BB0000;">Inf</span>          -<span style="color: #BB0000;">Inf</span>   <span style="color: #949494;"> </span>   <span style="color: #BB0000;">NaN</span>   <span style="color: #949494;"> </span>   -<span style="color: #BB0000;">Inf</span>   <span style="color: #949494;"> </span>   -<span style="color: #BB0000;">Inf</span>   <span style="color: #949494;"> </span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> outunit_acquisition      0.000<span style="text-decoration: underline;">437</span>      3.19<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>   4.88<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>    3.03<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>    1.55<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> outunit_acquisition      0.002<span style="text-decoration: underline;">29</span>       1.24<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>   6.09<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span>    5.13<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>    1.64<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> surv_test_col_pos        0             0   <span style="color: #949494;"> </span>     0   <span style="color: #949494;"> </span>      0   <span style="color: #949494;"> </span>      0   <span style="color: #949494;"> </span></span></span></code></pre></div>
 </div>
 </div>
@@ -1839,7 +654,7 @@ parameter after the MCMC sampling.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

@@ -1,0 +1,117 @@
+## Bayesian Transmission Model
+
+[![ForeSITE
+Group](https://github.com/EpiForeSITE/software/raw/e82ed88f75e0fe5c0a1a3b38c2b94509f122019c/docs/assets/foresite-software-badge.svg)](https://github.com/EpiForeSITE)
+
+Provides estimates for critical epidemiological parameters that
+characterize the spread of bacterial pathogens in healthcare settings.
+Parameter estimated: Transmission rate (frequency-dependent or
+density-dependent mass action), importation probability, clearance rate
+(loss of colonization per colonized person per unit time), surveillance
+test sensitivity, surveillance test specificity, effect of covariate on
+transmission (multiplier in relation to overall transmission rate).
+
+- Khader K, Thomas A, Stevens V, Visnovsky L, Nevers M, Toth D, Keegan
+  LT, Jones M, Rubin M, Samore MH (2021). [Association Between Contact
+  Precautions And Transmission of Methicillin-Resistant Staphylococcus
+  Aureus in Veterans Affairs
+  Hospitals](https://pubmed.ncbi.nlm.nih.gov/33720369/)
+  [DOI](https://doi.org/10.1001/jamanetworkopen.2021.0971). JAMA Netw
+  Open.
+
+- Khader K, Munoz-Price LS, Hanson R, Stevens V, Keegan LT, Thomas A,
+  Pezzin LE, Nattinger A, Singh S, Samore MH (2021). [Transmission
+  Dynamics of Clostridioides difficile in 2 High-Acuity Hospital
+  Units](https://doi.org/10.1093/cid/ciaa1580). Clin Infect Dis.
+
+- Khader K, Thomas A, Huskins WC, Stevens V, Keegan LT, Visnovsky L,
+  Samore MH (2021). [Effectiveness of Contact Precautions to Prevent
+  Transmission of Methicillin-Resistant Staphylococcus aureus and
+  Vancomycin-Resistant Enterococci in Intensive Care
+  Units](https://doi.org/10.1093/cid/ciaa1603). Clin Infect Dis.
+
+- Khader K, Thomas A, Jones M, Toth D, Stevens V, Samore MH (2019).
+  [Variation and trends in transmission dynamics of
+  Methicillin-resistant Staphylococcus aureus in veterans affairs
+  hospitals and nursing
+  homes](https://doi.org/10.1016/j.epidem.2019.100347). Epidemics.
+
+- Thomas A, Khader K, Redd A, Leecaster M, Zhang Y, Jones M, Greene T,
+  Samore M (2018). [Extended models for nosocomial infection: parameter
+  estimation and model
+  selection](https://doi.org/10.1093/imammb/dqx010). Math Med Biol,
+  35(suppl_1), 29-49.
+
+- Khader K, Thomas A, Huskins WC, Leecaster M, Zhang Y, Greene T, Redd
+  A, Samore MH (2017). [A dynamic transmission model to evaluate the
+  effectiveness of infection control
+  strategies](https://doi.org/10.1093/ofid/ofw247). Open Forum Infect
+  Dis.
+
+- Thomas A, Redd A, Khader K, Leecaster M, Greene T, Samore M (2015).
+  [Efficient parameter estimation for models of healthcare-associated
+  pathogen transmission in discrete and continuous
+  time](https://doi.org/10.1093/imammb/dqt021). Math Med Biol, 32(1),
+  79-98.”
+
+# Package index
+
+## All functions
+
+- [`AbxParams()`](https://epiforesite.github.io/bayesian-transmission/reference/AbxParams.md)
+  : Antibiotic Parameters
+- [`AbxRateParams()`](https://epiforesite.github.io/bayesian-transmission/reference/AbxRateParams.md)
+  : Antibiotic Administration Rate Parameters
+- [`ClearanceParams()`](https://epiforesite.github.io/bayesian-transmission/reference/ClearanceParams.md)
+  : Clearance Parameters
+- [`CodeToEvent()`](https://epiforesite.github.io/bayesian-transmission/reference/CodeToEvent.md)
+  : Convert coded events to string events
+- [`EventToCode()`](https://epiforesite.github.io/bayesian-transmission/reference/EventToCode.md)
+  : Convert string events to coded events
+- [`InUnitParams()`](https://epiforesite.github.io/bayesian-transmission/reference/InUnitParams.md)
+  [`ABXInUnitParams()`](https://epiforesite.github.io/bayesian-transmission/reference/InUnitParams.md)
+  : In Unit Parameters
+- [`InsituParams()`](https://epiforesite.github.io/bayesian-transmission/reference/InsituParams.md)
+  : InSitu Parameters
+- [`LinearAbxAcquisitionParams()`](https://epiforesite.github.io/bayesian-transmission/reference/LinearAbxAcquisitionParams.md)
+  : Linear Antibiotic Acquisition Parameters
+- [`LogNormalModelParams()`](https://epiforesite.github.io/bayesian-transmission/reference/LogNormalModelParams.md)
+  [`LinearAbxModel()`](https://epiforesite.github.io/bayesian-transmission/reference/LogNormalModelParams.md)
+  : Model Parameters for a Log Normal Model
+- [`OutOfUnitInfectionParams()`](https://epiforesite.github.io/bayesian-transmission/reference/OutOfUnitInfectionParams.md)
+  : Out of Unit Infection Parameters
+- [`Param()`](https://epiforesite.github.io/bayesian-transmission/reference/Param.md)
+  : Construct a parameter with a prior, weight and an update flag.
+- [`ParamWRate()`](https://epiforesite.github.io/bayesian-transmission/reference/ParamWRate.md)
+  : Specify a random testing parameter with a rate.
+- [`ProgressionParams()`](https://epiforesite.github.io/bayesian-transmission/reference/ProgressionParams.md)
+  : Progression Parameters
+- [`RandomTestParams()`](https://epiforesite.github.io/bayesian-transmission/reference/RandomTestParams.md)
+  [`ClinicalTestParams()`](https://epiforesite.github.io/bayesian-transmission/reference/RandomTestParams.md)
+  : Random Testing Parameter Set
+- [`SurveillanceTestParams()`](https://epiforesite.github.io/bayesian-transmission/reference/SurveillanceTestParams.md)
+  : Surveillance Test Parameters
+- [`getCppModelParams()`](https://epiforesite.github.io/bayesian-transmission/reference/getCppModelParams.md)
+  : Extract Model Parameters from C++ Model Object
+- [`mcmc_to_dataframe()`](https://epiforesite.github.io/bayesian-transmission/reference/mcmc_to_dataframe.md)
+  : Convert MCMC Parameters to Data Frame
+- [`newCppModel()`](https://epiforesite.github.io/bayesian-transmission/reference/newCppModel.md)
+  : Create a new C++ model object with parameters
+- [`newCppModelInternal()`](https://epiforesite.github.io/bayesian-transmission/reference/newCppModelInternal.md)
+  : Create a new C++ model object wrapped in appropriate reference class
+- [`newModelExport()`](https://epiforesite.github.io/bayesian-transmission/reference/newModelExport.md)
+  : Create a new model object
+- [`runMCMC()`](https://epiforesite.github.io/bayesian-transmission/reference/runMCMC.md)
+  : Run Bayesian Transmission MCMC
+- [`simulated.data`](https://epiforesite.github.io/bayesian-transmission/reference/simulated.data.md)
+  : Simulated Transmission Data
+- [`simulated.data_sorted`](https://epiforesite.github.io/bayesian-transmission/reference/simulated.data_sorted.md)
+  : Simulated Transmission Data (Sorted)
+- [`testHistoryLinkLogLikelihoods()`](https://epiforesite.github.io/bayesian-transmission/reference/testHistoryLinkLogLikelihoods.md)
+  : Get Individual HistoryLink Log Likelihoods (Diagnostic Function)
+
+# Articles
+
+### All vignettes
+
+- [bayesian-transmission](https://epiforesite.github.io/bayesian-transmission/articles/bayesian-transmission.md):
