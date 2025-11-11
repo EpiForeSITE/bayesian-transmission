@@ -5,9 +5,9 @@
 \title{Surveillance Test Parameters}
 \usage{
 SurveillanceTestParams(
-  colonized = Param(0, 0),
-  uncolonized = Param(0.8, 1),
-  latent = Param(0, 0)
+  colonized = Param(init = 0.8, weight = 1),
+  uncolonized = Param(init = 1e-10, weight = 0),
+  latent = Param(init = 0, weight = 0)
 )
 }
 \arguments{

@@ -94,7 +94,7 @@ test_that("Diagnostic: Track where -Inf likelihood originates", {
   cat("Is finite?", is.finite(initial_ll), "\n")
   
   # Test 4: The actual expectation - should be finite and close to C++ value
-  expect_finite(initial_ll, 
+  expect_true(is.finite(initial_ll), 
                 info = "Initial log likelihood should be finite, not -Inf")
   
   # Allow some tolerance for floating point differences

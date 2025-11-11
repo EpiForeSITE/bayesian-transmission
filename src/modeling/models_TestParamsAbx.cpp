@@ -208,20 +208,26 @@ std::vector<double> TestParamsAbx::getValues() const
 
     if (nstates == 3)
     {
-        res[0] = probs[0][0][0];//"ATest.P(+|unc-)";
-        res[1] = probs[0][0][1];//"ATest.P(+|lat-)";
-        res[2] = probs[1][0][0];//"ATest.P(+|col-)";
-        res[3] = probs[1][1][1];//"ATest.P(+|unc+)";
-        res[4] = probs[2][1][0];//"ATest.P(+|lat+)";
-        res[5] = probs[2][1][1];//"ATest.P(+|col+)";
+        // Return probabilities in order matching paramNames():
+        // [P(+|unc-), P(+|lat-), P(+|col-), P(+|unc+), P(+|lat+), P(+|col+)]
+        // where probs[i][j][k] = i:state(0=unc,1=lat,2=col), j:abx(0=off,1=on), k:result(0=neg,1=pos)
+        res[0] = probs[0][0][1];  // P(+|unc,off)
+        res[1] = probs[1][0][1];  // P(+|lat,off)
+        res[2] = probs[2][0][1];  // P(+|col,off)
+        res[3] = probs[0][1][1];  // P(+|unc,on)
+        res[4] = probs[1][1][1];  // P(+|lat,on)
+        res[5] = probs[2][1][1];  // P(+|col,on)
     }
 
     if (nstates == 2)
     {
-        res[0] = probs[0][0][0];//"ATest.P(+|unc-)";
-        res[1] = probs[0][0][1];//"ATest.P(+|lat-)";
-        res[2] = probs[1][0][0];//"ATest.P(+|col-)";
-        res[3] = probs[1][1][1];//"ATest.P(+|unc+)";
+        // Return probabilities in order matching paramNames():
+        // [P(+|unc-), P(+|col-), P(+|unc+), P(+|col+)]
+        // where probs[i][j][k] = i:state(0=unc,2=col), j:abx(0=off,1=on), k:result(0=neg,1=pos)
+        res[0] = probs[0][0][1];  // P(+|unc,off)
+        res[1] = probs[2][0][1];  // P(+|col,off) - NOTE: index 2, not 1!
+        res[2] = probs[0][1][1];  // P(+|unc,on)
+        res[3] = probs[2][1][1];  // P(+|col,on) - NOTE: index 2, not 1!
     }
 
     return res;

@@ -136,28 +136,50 @@ test_that("C++ model object parameter initialization with unique values", {
   expect_equal(as.numeric(outcol_values[1]), out_acquire, tolerance = 1e-10)
   expect_equal(as.numeric(outcol_values[2]), out_clear, tolerance = 1e-10)
   
-  # Check SurveillanceTestParams - 4 values for 2-state + Abx
-  # Based on actual output: [P(+|unc-), P(+|col-), P(+|unc+), P(+|col+)]
-  # NOTE: LinearAbxModel with Abx onoff=FALSE sets default surveillance test 
-  # probabilities in C++ (appears to be hardcoded behavior), so our custom
-  # surv_test_prob_col value is not used. This is documented behavior.
+  # Check SurveillanceTestParams - for 2-state model
+  # LinearAbxModel uses TestParamsAbx which returns 4 values for 2-state model:
+  # [P(+|unc,off-abx), P(+|col,off-abx), P(+|unc,on-abx), P(+|col,on-abx)]
   surv_values <- cpp_model$SurveillanceTest
-  expect_equal(length(surv_values), 4)
+  expect_equal(length(surv_values), 4)  # TestParamsAbx returns 4 values
   expect_true(all(!is.na(surv_values)))
-  # Verify the default pattern when Abx is off: [1, 0, 1, 0]
-  expect_equal(as.numeric(surv_values[1]), 1.0, tolerance = 1e-10)
-  expect_equal(as.numeric(surv_values[2]), 0.0, tolerance = 1e-10)
-  expect_equal(as.numeric(surv_values[3]), 1.0, tolerance = 1e-10)
-  expect_equal(as.numeric(surv_values[4]), 0.0, tolerance = 1e-10)
   
-  # Check ClinicalTestParams (RandomTestParams) - 4 values for 2-state
-  # [P(+|unc), P(+|col), rate_unc, rate_col]
+  # Verify correct parameter assignment:
+  # Off-abx parameters (indices 1-2):
+  expect_equal(as.numeric(surv_values[1]), 0.0, tolerance = 1e-10,
+               label = "SurveillanceTest P(+|uncolonized, off-abx)")
+  expect_equal(as.numeric(surv_values[2]), surv_test_prob_col, tolerance = 1e-10,
+               label = "SurveillanceTest P(+|colonized, off-abx) - MUST match R input!")
+  # On-abx parameters (indices 3-4): currently set to same as off-abx
+  expect_equal(as.numeric(surv_values[3]), 0.0, tolerance = 1e-10,
+               label = "SurveillanceTest P(+|uncolonized, on-abx)")
+  expect_equal(as.numeric(surv_values[4]), surv_test_prob_col, tolerance = 1e-10,
+               label = "SurveillanceTest P(+|colonized, on-abx)")
+  
+  # Check ClinicalTestParams (RandomTestParams) - for 2-state model
+  # C++ storage: probabilities [unc, lat, col] then rates [unc, lat, col]
+  # But we get back only the used indices for 2-state: indices 0 and 2
+  # After index swap fix: [P(+|unc), P(+|col), rate_unc, rate_col]
   clin_values <- cpp_model$ClinicalTest
   expect_equal(length(clin_values), 4)
-  expect_equal(as.numeric(clin_values[1]), rtest_prob_unc, tolerance = 1e-10)
-  expect_equal(as.numeric(clin_values[2]), rtest_prob_col, tolerance = 1e-10)
-  expect_equal(as.numeric(clin_values[3]), rtest_rate_unc, tolerance = 1e-10)
-  expect_equal(as.numeric(clin_values[4]), rtest_rate_col, tolerance = 1e-10)
+  
+  # CRITICAL: The test params were set with values in the LATENT field
+  # to test the index swap bug. With the bug fixed, these should now be:
+  # - uncolonized prob/rate: rtest_prob_unc, rtest_rate_unc
+  # - colonized prob/rate: 0.0, 0.0 (what we set in colonized field)
+  # - latent prob/rate: rtest_prob_col, rtest_rate_col (but latent isn't returned for 2-state)
+  
+  # Index 0 = uncolonized prob
+  expect_equal(as.numeric(clin_values[1]), rtest_prob_unc, tolerance = 1e-10,
+               label = "ClinicalTest P(+|uncolonized)")
+  # Index 2 = colonized prob (we set this to 0.0!)
+  expect_equal(as.numeric(clin_values[2]), 0.0, tolerance = 1e-10,
+               label = "ClinicalTest P(+|colonized) - we set colonized to 0.0")
+  # Index 0 rate = uncolonized rate
+  expect_equal(as.numeric(clin_values[3]), rtest_rate_unc, tolerance = 1e-10,
+               label = "ClinicalTest rate(uncolonized)")
+  # Index 2 rate = colonized rate (we set this to 0.0!)
+  expect_equal(as.numeric(clin_values[4]), 0.0, tolerance = 1e-10,
+               label = "ClinicalTest rate(colonized) - we set colonized to 0.0")
   
   # Check InColParams (LinearAbxICP)
   # The parameters are returned in the following order:
@@ -305,21 +327,35 @@ test_that("LinearAbxModel2 C++ object creation and parameter access", {
   expect_equal(as.numeric(outcol_values[1]), 0.004321, tolerance = 1e-10)
   expect_equal(as.numeric(outcol_values[2]), 0.007654, tolerance = 1e-10)
   
-  # Verify SurveillanceTest (same default behavior as LinearAbxModel)
+  # Verify SurveillanceTest
+  # LinearAbxModel2 uses TestParamsAbx which returns 4 values for 2-state model:
+  # [P(+|unc,off-abx), P(+|col,off-abx), P(+|unc,on-abx), P(+|col,on-abx)]
   surv_values <- cpp_model$SurveillanceTest
   expect_equal(length(surv_values), 4)
-  expect_equal(as.numeric(surv_values[1]), 1.0, tolerance = 1e-10)
-  expect_equal(as.numeric(surv_values[2]), 0.0, tolerance = 1e-10)
-  expect_equal(as.numeric(surv_values[3]), 1.0, tolerance = 1e-10)
-  expect_equal(as.numeric(surv_values[4]), 0.0, tolerance = 1e-10)
   
-  # Verify ClinicalTest
+  # Verify correct parameter values:
+  expect_equal(as.numeric(surv_values[1]), 0.0, tolerance = 1e-10,
+               label = "SurveillanceTest P(+|uncolonized, off-abx)")
+  expect_equal(as.numeric(surv_values[2]), 0.6543, tolerance = 1e-10,
+               label = "SurveillanceTest P(+|colonized, off-abx) - critical test for index swap bug!")
+  expect_equal(as.numeric(surv_values[3]), 0.0, tolerance = 1e-10,
+               label = "SurveillanceTest P(+|uncolonized, on-abx)")
+  expect_equal(as.numeric(surv_values[4]), 0.6543, tolerance = 1e-10,
+               label = "SurveillanceTest P(+|colonized, on-abx)")
+  
+  # Verify ClinicalTest - after index swap bug fix
+  # We set: uncolonized=(0.2187, 0.8765), colonized=(0.0, 0.0), latent=(0.3456, 1.2345)
+  # For 2-state model, should return [unc_prob, col_prob, unc_rate, col_rate]
   clin_values <- cpp_model$ClinicalTest
   expect_equal(length(clin_values), 4)
-  expect_equal(as.numeric(clin_values[1]), 0.2187, tolerance = 1e-10)
-  expect_equal(as.numeric(clin_values[2]), 0.3456, tolerance = 1e-10)
-  expect_equal(as.numeric(clin_values[3]), 0.8765, tolerance = 1e-10)
-  expect_equal(as.numeric(clin_values[4]), 1.2345, tolerance = 1e-10)
+  expect_equal(as.numeric(clin_values[1]), 0.2187, tolerance = 1e-10,
+               label = "ClinicalTest P(+|uncolonized)")
+  expect_equal(as.numeric(clin_values[2]), 0.0, tolerance = 1e-10,
+               label = "ClinicalTest P(+|colonized) - we set to 0.0")
+  expect_equal(as.numeric(clin_values[3]), 0.8765, tolerance = 1e-10,
+               label = "ClinicalTest rate(uncolonized)")
+  expect_equal(as.numeric(clin_values[4]), 0.0, tolerance = 1e-10,
+               label = "ClinicalTest rate(colonized) - we set to 0.0")
   
   # Verify InCol - all 10 parameters
   incol_values <- cpp_model$InCol

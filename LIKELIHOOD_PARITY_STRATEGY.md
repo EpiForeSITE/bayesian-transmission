@@ -148,7 +148,7 @@ test_that("R and C++ produce identical initial log likelihood", {
   expected_ll <- -12942.9
   tolerance <- 0.1  # Allow tiny floating point differences
   
-  expect_finite(results_r$LogLikelihood[1])
+  expect_true(is.finite(results_r$LogLikelihood[1]))
   expect_equal(results_r$LogLikelihood[1], expected_ll, tolerance = tolerance)
 })
 ```

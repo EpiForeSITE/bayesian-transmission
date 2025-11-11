@@ -117,6 +117,55 @@ inline void setupSurveillanceTestParams(TestParams * stp, Rcpp::List Surveillanc
                                Rcpp::as<Rcpp::List>(SurveillanceTestParameters["latent"]));
 }
 
+// Special setup for TestParamsAbx which has separate on/off antibiotic parameters
+inline void setupSurveillanceTestParamsAbx(
+        models::TestParamsAbx * stp,
+        Rcpp::List stpUncolonizedParam,
+        Rcpp::List stpColonizedParam,
+        Rcpp::List stpLatentParam
+){
+    // TestParamsAbx::set(i, j, value, update, prival, prin)
+    // where i = colonization state (0=unc, 1=lat, 2=col)
+    //       j = abx status (0=off, 1=on)
+    
+    // For now, set both off-abx and on-abx to the same values
+    // (matching constructor behavior)
+    
+    // Off-abx:
+    stp->set(0, 0, 
+             Rcpp::as<double>(stpUncolonizedParam["init"]),
+             Rcpp::as<bool>(stpUncolonizedParam["update"]),
+             Rcpp::as<double>(stpUncolonizedParam["prior"]),
+             Rcpp::as<double>(stpUncolonizedParam["weight"]));
+    stp->set(1, 0,
+             Rcpp::as<double>(stpLatentParam["init"]),
+             Rcpp::as<bool>(stpLatentParam["update"]),
+             Rcpp::as<double>(stpLatentParam["prior"]),
+             Rcpp::as<double>(stpLatentParam["weight"]));
+    stp->set(2, 0,
+             Rcpp::as<double>(stpColonizedParam["init"]),
+             Rcpp::as<bool>(stpColonizedParam["update"]),
+             Rcpp::as<double>(stpColonizedParam["prior"]),
+             Rcpp::as<double>(stpColonizedParam["weight"]));
+    
+    // On-abx (same as off-abx for now):
+    stp->set(0, 1,
+             Rcpp::as<double>(stpUncolonizedParam["init"]),
+             Rcpp::as<bool>(stpUncolonizedParam["update"]),
+             Rcpp::as<double>(stpUncolonizedParam["prior"]),
+             Rcpp::as<double>(stpUncolonizedParam["weight"]));
+    stp->set(1, 1,
+             Rcpp::as<double>(stpLatentParam["init"]),
+             Rcpp::as<bool>(stpLatentParam["update"]),
+             Rcpp::as<double>(stpLatentParam["prior"]),
+             Rcpp::as<double>(stpLatentParam["weight"]));
+    stp->set(2, 1,
+             Rcpp::as<double>(stpColonizedParam["init"]),
+             Rcpp::as<bool>(stpColonizedParam["update"]),
+             Rcpp::as<double>(stpColonizedParam["prior"]),
+             Rcpp::as<double>(stpColonizedParam["weight"]));
+}
+
 
 inline void setParamWRate(RandomTestParams* rtp, int i,
                           Rcpp::List p,
@@ -270,7 +319,17 @@ void modelsetup(ModelType * model, Rcpp::List modelParameters, bool verbose = fa
     if(verbose) Rcpp::Rcout << "Done" << std::endl
                             << "  * Setting up Surveillance Test...";
     auto stp = model->getSurveillanceTestParams();
-    setupSurveillanceTestParams(stp, modelParameters["SurveillanceTest"]);
+    // Check if this is a TestParamsAbx (used by LinearAbxModel, LinearAbxModel2, etc.)
+    models::TestParamsAbx* stp_abx = dynamic_cast<models::TestParamsAbx*>(stp);
+    if (stp_abx != nullptr) {
+        Rcpp::List stParams = modelParameters["SurveillanceTest"];
+        setupSurveillanceTestParamsAbx(stp_abx, 
+                                       Rcpp::as<Rcpp::List>(stParams["uncolonized"]),
+                                       Rcpp::as<Rcpp::List>(stParams["colonized"]),
+                                       Rcpp::as<Rcpp::List>(stParams["latent"]));
+    } else {
+        setupSurveillanceTestParams(stp, modelParameters["SurveillanceTest"]);
+    }
 
     //  Clinical test parameters.
     if(verbose) Rcpp::Rcout << "Done" << std::endl
@@ -316,11 +375,20 @@ void modelsetup(lognormal::LinearAbxModel * model, Rcpp::List modelParameters, b
     auto isp = model->getInsituParams();
     setupInsituParams(isp, modelParameters["Insitu"]);
 
-    // Surveillance test parameters.
+    // Surveillance test parameters - LinearAbxModel uses TestParamsAbx
     if(verbose) Rcpp::Rcout << "Done" << std::endl
                             << "  * Setting up Surveillance Test...";
-    auto stp = model->getSurveillanceTestParams();
-    setupSurveillanceTestParams(stp, modelParameters["SurveillanceTest"]);
+    models::TestParamsAbx* stp = dynamic_cast<models::TestParamsAbx*>(model->getSurveillanceTestParams());
+    if (stp != nullptr) {
+        Rcpp::List stParams = modelParameters["SurveillanceTest"];
+        setupSurveillanceTestParamsAbx(stp, 
+                                       Rcpp::as<Rcpp::List>(stParams["uncolonized"]),
+                                       Rcpp::as<Rcpp::List>(stParams["colonized"]),
+                                       Rcpp::as<Rcpp::List>(stParams["latent"]));
+    } else {
+        // Fallback to regular setup if cast fails
+        setupSurveillanceTestParams(model->getSurveillanceTestParams(), modelParameters["SurveillanceTest"]);
+    }
 
     //  Clinical test parameters.
     if(verbose) Rcpp::Rcout << "Done" << std::endl

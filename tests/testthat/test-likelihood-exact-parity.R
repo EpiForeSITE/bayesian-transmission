@@ -84,7 +84,7 @@ test_that("R and C++ produce identical initial log likelihood", {
   initial_ll <- results$LogLikelihood[1]
   
   # The likelihood MUST be finite
-  expect_finite(initial_ll,
+  expect_true(is.finite(initial_ll),
                 info = paste("Initial log likelihood is", initial_ll, "but should be finite"))
   
   # Note: Original C++ gave ~-12942.9 with P(+|uncolonized) = 0.0
