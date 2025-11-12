@@ -1,5 +1,4 @@
 test_that("runMCMC Works", {
-
   modelParameters <- LinearAbxModel(nstates = 2)
 
   expect_named(modelParameters, c("modname", "nstates", "nmetro", "forward",
@@ -14,10 +13,11 @@ test_that("runMCMC Works", {
 
   expect_true(rlang::is_list(modelParameters$Insitu))
   expect_named(modelParameters$Insitu, c("probs", "priors", "doit"))
-  checkmate::expect_double(modelParameters$Insitu$probs, 0, 1, len = 3)
-  checkmate::expect_double(modelParameters$Insitu$priors, 0, 1, len = 3)
-  checkmate::expect_logical(modelParameters$Insitu$doit, len = 3)
-
+  if(rlang::is_installed("checkmate")){
+    checkmate::expect_double(modelParameters$Insitu$probs, 0, 1, len = 3)
+    checkmate::expect_double(modelParameters$Insitu$priors, 0, 1, len = 3)
+    checkmate::expect_logical(modelParameters$Insitu$doit, len = 3)
+  }
   expect_true(rlang::is_list(modelParameters$SurveillanceTest))
   expect_named(modelParameters$SurveillanceTest, c("colonized", "uncolonized", "latent"), ignore.order = TRUE)
 
