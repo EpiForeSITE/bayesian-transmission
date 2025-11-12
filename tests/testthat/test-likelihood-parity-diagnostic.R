@@ -66,8 +66,8 @@ test_that("Diagnostic: Track where -Inf likelihood originates", {
   )
   
   # Test 1: Verify model creation doesn't produce -Inf
-  model <- newModelExport(params, verbose = FALSE)
-  expect_s4_class(model, "Rcpp_CppModel")
+  model <- newCppModel(params, verbose = FALSE)
+  expect_s4_class(model, "C++Object")
   
   # Test 2: Run minimal MCMC (0 burn-in, 1 iteration) to get initial likelihood
   set.seed(42)

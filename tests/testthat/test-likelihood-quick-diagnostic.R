@@ -14,8 +14,8 @@ test_that("Quick diagnostic: Model initialization check", {
   expect_equal(params$modname, "LinearAbxModel")
   
   # Try to create the C++ model object
-  model <- newModelExport(params, verbose = TRUE)
-  expect_s4_class(model, "Rcpp_CppModel")
+  model <- newCppModel(params, verbose = FALSE)
+  expect_s4_class(model, "Rcpp_CppLinearAbxModel")
   
   cat("\n✓ Model created successfully\n")
 })
@@ -43,11 +43,11 @@ test_that("Quick diagnostic: Check for P=0 in surveillance test", {
   )
   
   # Both should create successfully
-  model_zero <- newModelExport(params_zero, verbose = FALSE)
-  model_small <- newModelExport(params_small, verbose = FALSE)
+  model_zero <- newCppModel(params_zero, verbose = FALSE)
+  model_small <- newCppModel(params_small, verbose = FALSE)
   
-  expect_s4_class(model_zero, "Rcpp_CppModel")
-  expect_s4_class(model_small, "Rcpp_CppModel")
+  expect_s4_class(model_zero, "Rcpp_CppLinearAbxModel")
+  expect_s4_class(model_small, "Rcpp_CppLinearAbxModel")
   
   cat("\n=== Parameter Comparison ===\n")
   cat("With P=0.0: Model created\n")
@@ -80,5 +80,5 @@ test_that("Quick diagnostic: Examine simulated.data_sorted for impossible events
   cat("- Then likelihood of that test = 0 → log(0) = -Inf\n")
   cat("\nSOLUTION: Use P(+|uncolonized) >= 1e-10, never exactly 0\n")
   
-  expect_gt(nrow(surv_pos), 0, info = "Should have positive surveillance tests in data")
+  expect_gt(nrow(surv_pos), 0, label = "Should have positive surveillance tests in data")
 })
