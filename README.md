@@ -3,6 +3,71 @@
 
 Provides estimates for critical epidemiological parameters that characterize the spread of bacterial pathogens in healthcare settings. Parameter estimated: Transmission rate (frequency-dependent or density-dependent mass action), importation probability, clearance rate (loss of colonization per colonized person per unit time), surveillance test sensitivity, surveillance test specificity, effect of covariate on transmission (multiplier in relation to overall transmission rate).
 
+## Installation
+
+You can install the stable version of `bayestransmission` from CRAN with:
+
+``` r
+install.packages("bayestransmission")
+```
+
+To get a bug fix or to use a feature from the development version, you
+can install the development version of `bayestransmission` from
+[GitHub](https://github.com/EpiForeSITE/bayesian-transmission) with:
+
+You can install the development version of bayestransmission from GitHub with:
+
+```r
+# install.packages("devtools")
+devtools::install_github("EpiForeSITE/bayesian-transmission")
+```
+
+### System Requirements
+
+This package requires a C++ compiler and the following system dependencies:
+
+- R (>= 3.5.0)
+- Rcpp (>= 1.0.0)
+- RcppArmadillo
+
+## Quick Start
+
+```r
+library(bayestransmission)
+
+# Load example data
+data(simulated.data)
+
+# Set up model parameters
+params <- LinearAbxModel(
+  nstates = 2,
+  SurveillanceTest = SurveillanceTestParams(
+    colonized = Param(init = 0.8, weight = 1),
+    uncolonized = Param(init = 1e-10, weight = 0)
+  )
+  # ... additional parameters
+)
+
+# Run MCMC
+results <- runMCMC(
+  data = simulated.data,
+  modelParameters = params,
+  nsims = 1000,
+  nburn = 100,
+  outputparam = TRUE,
+  outputfinal = FALSE,
+  verbose = TRUE
+)
+```
+
+For more detailed examples, see the package vignettes:
+
+```r
+browseVignettes("bayestransmission")
+```
+
+## References
+
 - Khader K, Thomas A, Stevens V, Visnovsky L, Nevers M, Toth D, Keegan LT, Jones M, Rubin M, Samore MH (2021). [Association Between Contact Precautions And Transmission of Methicillin-Resistant Staphylococcus Aureus in Veterans Affairs Hospitals](https://pubmed.ncbi.nlm.nih.gov/33720369/) [DOI](https://doi.org/10.1001/jamanetworkopen.2021.0971). JAMA Netw Open.
 
 - Khader K, Munoz-Price LS, Hanson R, Stevens V, Keegan LT, Thomas A, Pezzin LE, Nattinger A, Singh S, Samore MH (2021). [Transmission Dynamics of Clostridioides difficile in 2 High-Acuity Hospital Units](https://doi.org/10.1093/cid/ciaa1580). Clin Infect Dis.

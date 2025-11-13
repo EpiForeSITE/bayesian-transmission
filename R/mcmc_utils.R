@@ -26,9 +26,11 @@
 #' @examples
 #' \dontrun{
 #' results <- runMCMC(data = simulated.data,
-#'                    MCMCParameters = list(nburn = 100, nsims = 1000,
-#'                                         outputparam = TRUE, outputfinal = TRUE),
-#'                    modelParameters = LinearAbxModel())
+#'                    modelParameters = LinearAbxModel(),
+#'                    nsims = 1000,
+#'                    nburn = 100,
+#'                    outputparam = TRUE,
+#'                    outputfinal = TRUE)
 #' param_df <- mcmc_to_dataframe(results)
 #' head(param_df)
 #' }

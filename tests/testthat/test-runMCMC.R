@@ -39,13 +39,11 @@ test_that("runMCMC Works", {
 
   results <- runMCMC(
     data = simulated.data,
-    MCMCParameters = list(
-      nburn = 2,
-      nsims = 3,
-      outputparam = TRUE,
-      outputfinal = TRUE
-    ),
     modelParameters = modelParameters,
+    nsims = 3,
+    nburn = 2,
+    outputparam = TRUE,
+    outputfinal = TRUE,
     verbose = TRUE
   )
 })
@@ -126,13 +124,11 @@ test_that("runMCMC produces consistent output with fixed parameters", {
   # Run MCMC with minimal iterations for testing
   results <- runMCMC(
     data = simulated.data,
-    MCMCParameters = list(
-      nburn = 5,
-      nsims = 10,
-      outputparam = TRUE,
-      outputfinal = FALSE
-    ),
     modelParameters = modelParameters,
+    nsims = 10,
+    nburn = 5,
+    outputparam = TRUE,
+    outputfinal = FALSE,
     verbose = FALSE
   )
   
@@ -167,7 +163,7 @@ test_that("runMCMC produces consistent output with fixed parameters", {
   expect_true(is.finite(results$waic1))
   expect_true(is.finite(results$waic2))
   
-  # Check that MCMC parameters are preserved
+  # Check that MCMC parameters are preserved in return value
   expect_equal(results$MCMCParameters$nburn, 5)
   expect_equal(results$MCMCParameters$nsims, 10)
 })
@@ -252,8 +248,11 @@ test_that("runMCMC is reproducible with same seed", {
   set.seed(123)
   results1 <- runMCMC(
     data = simulated.data,
-    MCMCParameters = mcmc_params,
     modelParameters = modelParameters,
+    nsims = 3,
+    nburn = 2,
+    outputparam = TRUE,
+    outputfinal = FALSE,
     verbose = FALSE
   )
   
@@ -261,8 +260,11 @@ test_that("runMCMC is reproducible with same seed", {
   set.seed(123)
   results2 <- runMCMC(
     data = simulated.data,
-    MCMCParameters = mcmc_params,
     modelParameters = modelParameters,
+    nsims = 3,
+    nburn = 2,
+    outputparam = TRUE,
+    outputfinal = FALSE,
     verbose = FALSE
   )
   

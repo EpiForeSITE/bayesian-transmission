@@ -34,16 +34,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // runMCMC
-SEXP runMCMC(Rcpp::DataFrame data, Rcpp::List MCMCParameters, Rcpp::List modelParameters, bool verbose);
-RcppExport SEXP _bayestransmission_runMCMC(SEXP dataSEXP, SEXP MCMCParametersSEXP, SEXP modelParametersSEXP, SEXP verboseSEXP) {
+SEXP runMCMC(Rcpp::DataFrame data, Rcpp::List modelParameters, unsigned int nsims, unsigned int nburn, bool outputparam, bool outputfinal, bool verbose);
+RcppExport SEXP _bayestransmission_runMCMC(SEXP dataSEXP, SEXP modelParametersSEXP, SEXP nsimsSEXP, SEXP nburnSEXP, SEXP outputparamSEXP, SEXP outputfinalSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::DataFrame >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type MCMCParameters(MCMCParametersSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type modelParameters(modelParametersSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type nsims(nsimsSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type nburn(nburnSEXP);
+    Rcpp::traits::input_parameter< bool >::type outputparam(outputparamSEXP);
+    Rcpp::traits::input_parameter< bool >::type outputfinal(outputfinalSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(runMCMC(data, MCMCParameters, modelParameters, verbose));
+    rcpp_result_gen = Rcpp::wrap(runMCMC(data, modelParameters, nsims, nburn, outputparam, outputfinal, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -132,7 +135,7 @@ RcppExport SEXP _rcpp_module_boot_BayesianInfectiousDiseaseModelingModule();
 static const R_CallMethodDef CallEntries[] = {
     {"_bayestransmission_CodeToEvent", (DL_FUNC) &_bayestransmission_CodeToEvent, 1},
     {"_bayestransmission_EventToCode", (DL_FUNC) &_bayestransmission_EventToCode, 1},
-    {"_bayestransmission_runMCMC", (DL_FUNC) &_bayestransmission_runMCMC, 4},
+    {"_bayestransmission_runMCMC", (DL_FUNC) &_bayestransmission_runMCMC, 7},
     {"_bayestransmission_newModelExport", (DL_FUNC) &_bayestransmission_newModelExport, 2},
     {"_bayestransmission_testHistoryLinkLogLikelihoods", (DL_FUNC) &_bayestransmission_testHistoryLinkLogLikelihoods, 1},
     {"_bayestransmission_newCppModelInternal", (DL_FUNC) &_bayestransmission_newCppModelInternal, 2},

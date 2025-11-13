@@ -8,8 +8,11 @@ test_that("runMCMC validates data is sorted by patient, then time", {
   expect_error(
     runMCMC(
       data = unsorted_data,
-      MCMCParameters = list(nburn = 1, nsims = 1, outputparam = FALSE, outputfinal = FALSE),
       modelParameters = modelParameters,
+      nsims = 1,
+      nburn = 1,
+      outputparam = FALSE,
+      outputfinal = FALSE,
       verbose = FALSE
     ),
     regexp = "Data must be sorted by patient ID, then time",
@@ -29,8 +32,11 @@ test_that("runMCMC validates data is sorted by patient, then time", {
     expect_error(
       runMCMC(
         data = bad_data,
-        MCMCParameters = list(nburn = 1, nsims = 1, outputparam = FALSE, outputfinal = FALSE),
         modelParameters = modelParameters,
+        nsims = 1,
+        nburn = 1,
+        outputparam = FALSE,
+        outputfinal = FALSE,
         verbose = FALSE
       ),
       regexp = "Data must be sorted by patient ID, then time",
@@ -44,8 +50,11 @@ test_that("runMCMC validates data is sorted by patient, then time", {
   expect_no_error({
     results <- runMCMC(
       data = sorted_data,
-      MCMCParameters = list(nburn = 1, nsims = 1, outputparam = FALSE, outputfinal = FALSE),
       modelParameters = modelParameters,
+      nsims = 1,
+      nburn = 1,
+      outputparam = FALSE,
+      outputfinal = FALSE,
       verbose = FALSE
     )
   })

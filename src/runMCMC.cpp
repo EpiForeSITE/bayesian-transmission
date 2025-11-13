@@ -93,26 +93,32 @@ lognormal::LogNormalModel* newModel(
 //' Run Bayesian Transmission MCMC
 //'
 //' @param data Data frame with columns, in order: facility, unit, time, patient, and event type.
-//' @param MCMCParameters List of MCMC parameters.
 //' @param modelParameters List of model parameters, see <LogNormalModelParams>.
+//' @param nsims Number of MCMC samples to collect after burn-in.
+//' @param nburn Number of burn-in iterations.
+//' @param outputparam Whether to output parameter values at each iteration.
+//' @param outputfinal Whether to output the final model state.
 //' @param verbose Print progress messages.
 //'
 //' @return A list with the following elements:
-//'   * `Parameters` the MCMC chain of model parameters
-//'   * `LogLikelihood` the log likelihood of the model at each iteration
+//'   * `Parameters` the MCMC chain of model parameters (if outputparam=TRUE)
+//'   * `LogLikelihood` the log likelihood of the model at each iteration (if outputparam=TRUE)
 //'   * `MCMCParameters` the MCMC parameters used
 //'   * `ModelParameters` the model parameters used
 //'   * `ModelName` the name of the model
 //'   * `nstates` the number of states in the model
 //'   * `waic1` the WAIC1 estimate
 //'   * `waic2` the WAIC2 estimate
-//'   * and optionally (if `MCMCParameters$outputfinal` is true) `FinalModel` the final model state.
+//'   * and optionally (if outputfinal=TRUE) `FinalModel` the final model state.
 //' @export
 // [[Rcpp::export]]
 SEXP runMCMC(
     Rcpp::DataFrame data,
-    Rcpp::List MCMCParameters,
     Rcpp::List modelParameters,
+    unsigned int nsims,
+    unsigned int nburn = 100,
+    bool outputparam = true,
+    bool outputfinal = false,
     bool verbose = false
 ) {
     if(verbose)
@@ -200,9 +206,6 @@ SEXP runMCMC(
 
     // Make and runsampler.
 
-    bool outputparam = MCMCParameters["outputparam"];
-    unsigned int nsims = MCMCParameters["nsims"];
-
     Rcpp::List paramchain(nsims);
     Rcpp::NumericVector llchain(nsims);
     if (verbose)
@@ -246,7 +249,6 @@ SEXP runMCMC(
 
     if (verbose)
         Rcpp::message(Rcpp::wrap(string("burning in MCMC.\n")));
-    unsigned int nburn = MCMCParameters["nburn"];
     for (unsigned int i=0; i<nburn; i++)
     {
         if(verbose) Rcout << i << ":sample episodes...";
@@ -301,6 +303,14 @@ SEXP runMCMC(
 /*
 */
 
+    // Reconstruct MCMCParameters list for return value
+    Rcpp::List MCMCParameters = Rcpp::List::create(
+        _["nsims"] = nsims,
+        _["nburn"] = nburn,
+        _["outputparam"] = outputparam,
+        _["outputfinal"] = outputfinal
+    );
+
     Rcpp::List ret = Rcpp::List::create(
         _["Parameters"] = paramchain,
         _["LogLikelihood"] = llchain,
@@ -311,8 +321,6 @@ SEXP runMCMC(
         _["waic1"] = waic1,
         _["waic2"] = waic2
     );
-
-    bool outputfinal = MCMCParameters["outputfinal"];
 
     if(outputfinal)
     {
