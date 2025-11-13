@@ -4,29 +4,43 @@
 \alias{runMCMC}
 \title{Run Bayesian Transmission MCMC}
 \usage{
-runMCMC(data, MCMCParameters, modelParameters, verbose = FALSE)
+runMCMC(
+  data,
+  modelParameters,
+  nsims,
+  nburn = 100L,
+  outputparam = TRUE,
+  outputfinal = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{data}{Data frame with columns, in order: facility, unit, time, patient, and event type.}
 
-\item{MCMCParameters}{List of MCMC parameters.}
-
 \item{modelParameters}{List of model parameters, see \if{html}{\out{<LogNormalModelParams>}}.}
+
+\item{nsims}{Number of MCMC samples to collect after burn-in.}
+
+\item{nburn}{Number of burn-in iterations.}
+
+\item{outputparam}{Whether to output parameter values at each iteration.}
+
+\item{outputfinal}{Whether to output the final model state.}
 
 \item{verbose}{Print progress messages.}
 }
 \value{
 A list with the following elements:
 \itemize{
-\item \code{Parameters} the MCMC chain of model parameters
-\item \code{LogLikelihood} the log likelihood of the model at each iteration
+\item \code{Parameters} the MCMC chain of model parameters (if outputparam=TRUE)
+\item \code{LogLikelihood} the log likelihood of the model at each iteration (if outputparam=TRUE)
 \item \code{MCMCParameters} the MCMC parameters used
 \item \code{ModelParameters} the model parameters used
 \item \code{ModelName} the name of the model
 \item \code{nstates} the number of states in the model
 \item \code{waic1} the WAIC1 estimate
 \item \code{waic2} the WAIC2 estimate
-\item and optionally (if \code{MCMCParameters$outputfinal} is true) \code{FinalModel} the final model state.
+\item and optionally (if outputfinal=TRUE) \code{FinalModel} the final model state.
 }
 }
 \description{
