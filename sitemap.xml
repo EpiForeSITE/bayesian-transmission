@@ -1,13 +1,11 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://epiforesite.github.io/bayesian-transmission/404.html</loc></url>
-<url><loc>https://epiforesite.github.io/bayesian-transmission/COMPLETE_LIKELIHOOD_FIX.html</loc></url>
 <url><loc>https://epiforesite.github.io/bayesian-transmission/LICENSE-text.html</loc></url>
-<url><loc>https://epiforesite.github.io/bayesian-transmission/LIKELIHOOD_PARITY_STRATEGY.html</loc></url>
-<url><loc>https://epiforesite.github.io/bayesian-transmission/VIGNETTE_PARAMETER_FIX.html</loc></url>
 <url><loc>https://epiforesite.github.io/bayesian-transmission/articles/bayesian-transmission.html</loc></url>
 <url><loc>https://epiforesite.github.io/bayesian-transmission/articles/index.html</loc></url>
 <url><loc>https://epiforesite.github.io/bayesian-transmission/authors.html</loc></url>
 <url><loc>https://epiforesite.github.io/bayesian-transmission/index.html</loc></url>
+<url><loc>https://epiforesite.github.io/bayesian-transmission/news/index.html</loc></url>
 <url><loc>https://epiforesite.github.io/bayesian-transmission/reference/AbxParams.html</loc></url>
 <url><loc>https://epiforesite.github.io/bayesian-transmission/reference/AbxRateParams.html</loc></url>
 <url><loc>https://epiforesite.github.io/bayesian-transmission/reference/ClearanceParams.html</loc></url>

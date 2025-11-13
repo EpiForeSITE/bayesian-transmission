@@ -11,6 +11,74 @@ density-dependent mass action), importation probability, clearance rate
 test sensitivity, surveillance test specificity, effect of covariate on
 transmission (multiplier in relation to overall transmission rate).
 
+## Installation
+
+You can install the stable version of `bayestransmission` from CRAN
+with:
+
+``` r
+install.packages("bayestransmission")
+```
+
+To get a bug fix or to use a feature from the development version, you
+can install the development version of `bayestransmission` from
+[GitHub](https://github.com/EpiForeSITE/bayesian-transmission) with:
+
+You can install the development version of bayestransmission from GitHub
+with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("EpiForeSITE/bayesian-transmission")
+```
+
+### System Requirements
+
+This package requires a C++ compiler and the following system
+dependencies:
+
+- R (\>= 3.5.0)
+- Rcpp (\>= 1.0.0)
+- RcppArmadillo
+
+## Quick Start
+
+``` r
+library(bayestransmission)
+
+# Load example data
+data(simulated.data)
+
+# Set up model parameters
+params <- LinearAbxModel(
+  nstates = 2,
+  SurveillanceTest = SurveillanceTestParams(
+    colonized = Param(init = 0.8, weight = 1),
+    uncolonized = Param(init = 1e-10, weight = 0)
+  )
+  # ... additional parameters
+)
+
+# Run MCMC
+results <- runMCMC(
+  data = simulated.data,
+  modelParameters = params,
+  nsims = 1000,
+  nburn = 100,
+  outputparam = TRUE,
+  outputfinal = FALSE,
+  verbose = TRUE
+)
+```
+
+For more detailed examples, see the package vignettes:
+
+``` r
+browseVignettes("bayestransmission")
+```
+
+## References
+
 - Khader K, Thomas A, Stevens V, Visnovsky L, Nevers M, Toth D, Keegan
   LT, Jones M, Rubin M, Samore MH (2021). [Association Between Contact
   Precautions And Transmission of Methicillin-Resistant Staphylococcus
@@ -53,3 +121,7 @@ transmission (multiplier in relation to overall transmission rate).
   pathogen transmission in discrete and continuous
   time](https://doi.org/10.1093/imammb/dqt021). Math Med Biol, 32(1),
   79-98.”
+
+This work was supported by the Centers for Disease Control and
+Prevention, Modeling Infectious Diseases in Healthcare Network award
+U01CK000585.

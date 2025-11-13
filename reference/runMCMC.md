@@ -5,7 +5,15 @@ Run Bayesian Transmission MCMC
 ## Usage
 
 ``` r
-runMCMC(data, MCMCParameters, modelParameters, verbose = FALSE)
+runMCMC(
+  data,
+  modelParameters,
+  nsims,
+  nburn = 100L,
+  outputparam = TRUE,
+  outputfinal = FALSE,
+  verbose = FALSE
+)
 ```
 
 ## Arguments
@@ -15,13 +23,25 @@ runMCMC(data, MCMCParameters, modelParameters, verbose = FALSE)
   Data frame with columns, in order: facility, unit, time, patient, and
   event type.
 
-- MCMCParameters:
-
-  List of MCMC parameters.
-
 - modelParameters:
 
   List of model parameters, see .
+
+- nsims:
+
+  Number of MCMC samples to collect after burn-in.
+
+- nburn:
+
+  Number of burn-in iterations.
+
+- outputparam:
+
+  Whether to output parameter values at each iteration.
+
+- outputfinal:
+
+  Whether to output the final model state.
 
 - verbose:
 
@@ -31,9 +51,10 @@ runMCMC(data, MCMCParameters, modelParameters, verbose = FALSE)
 
 A list with the following elements:
 
-- `Parameters` the MCMC chain of model parameters
+- `Parameters` the MCMC chain of model parameters (if outputparam=TRUE)
 
-- `LogLikelihood` the log likelihood of the model at each iteration
+- `LogLikelihood` the log likelihood of the model at each iteration (if
+  outputparam=TRUE)
 
 - `MCMCParameters` the MCMC parameters used
 
@@ -47,5 +68,5 @@ A list with the following elements:
 
 - `waic2` the WAIC2 estimate
 
-- and optionally (if `MCMCParameters$outputfinal` is true) `FinalModel`
-  the final model state.
+- and optionally (if outputfinal=TRUE) `FinalModel` the final model
+  state.

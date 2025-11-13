@@ -36,6 +36,7 @@
 <li><a class="dropdown-item" href="../articles/bayesian-transmission.html">bayesian-transmission</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -495,24 +496,43 @@ the likelihood is multiplicative between rate and effectiveness.</p>
 <div class="section level2">
 <h2 id="running-the-model">Running the Model<a class="anchor" aria-label="anchor" href="#running-the-model"></a>
 </h2>
-<p>The model is run through the <code><a href="../reference/runMCMC.html">runMCMC()</a></code> function. This
+<p>The model is run through the <code><a href="../reference/runMCMC.html">runMCMC()</a></code> function. The
 function takes the following arguments:</p>
+<ul>
+<li>
+<code>data</code>: The data frame with patient event data</li>
+<li>
+<code>modelParameters</code>: The model specification (created
+above)</li>
+<li>
+<code>nsims</code>: Number of MCMC samples to collect after
+burn-in</li>
+<li>
+<code>nburn</code>: Number of burn-in iterations (default: 100)</li>
+<li>
+<code>outputparam</code>: Whether to save parameter values at each
+iteration (default: TRUE)</li>
+<li>
+<code>outputfinal</code>: Whether to save the final model state
+(default: FALSE)</li>
+<li>
+<code>verbose</code>: Whether to print progress messages (default:
+FALSE)</li>
+</ul>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
 <span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runMCMC.html">runMCMC</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">simulated.data_sorted</span>,</span>
-<span>    MCMCParameters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      nburn <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>      nsims <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>      outputparam <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>      outputfinal <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>    <span class="op">)</span>,</span>
 <span>    modelParameters <span class="op">=</span> <span class="va">params</span>,</span>
+<span>    nsims <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>    nburn <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>    outputparam <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    outputfinal <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt; 173.688 159.921 167.182</span></span></code></pre></div>
+<span><span class="co">#&gt; 172.685 158.673 166.055</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="analyzing-mcmc-results">Analyzing MCMC Results<a class="anchor" aria-label="anchor" href="#analyzing-mcmc-results"></a>

@@ -375,24 +375,31 @@ params <- LinearAbxModel(
 
 The model is run through the
 [`runMCMC()`](https://epiforesite.github.io/bayesian-transmission/reference/runMCMC.md)
-function. This function takes the following arguments:
+function. The function takes the following arguments:
+
+- `data`: The data frame with patient event data
+- `modelParameters`: The model specification (created above)
+- `nsims`: Number of MCMC samples to collect after burn-in
+- `nburn`: Number of burn-in iterations (default: 100)
+- `outputparam`: Whether to save parameter values at each iteration
+  (default: TRUE)
+- `outputfinal`: Whether to save the final model state (default: FALSE)
+- `verbose`: Whether to print progress messages (default: FALSE)
 
 ``` r
 system.time(
   results <- runMCMC(
     data = simulated.data_sorted,
-    MCMCParameters = list(
-      nburn = 100,
-      nsims = 1000,
-      outputparam = TRUE,
-      outputfinal = TRUE
-    ),
     modelParameters = params,
+    nsims = 1000,
+    nburn = 100,
+    outputparam = TRUE,
+    outputfinal = TRUE,
     verbose = FALSE
   )
 )
 #>    user  system elapsed 
-#> 173.688 159.921 167.182
+#> 172.685 158.673 166.055
 ```
 
 ## Analyzing MCMC Results
