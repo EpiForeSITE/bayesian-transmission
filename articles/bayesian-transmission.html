@@ -205,16 +205,19 @@ function. This function takes up to four arguments:</p>
 3. `update`, a flag of if the parameter should be sampled in the MCMC algorithm. 
     `FALSE` indicates that the parameter should be fixed, and is by default `TRUE` when `weight` is greater than zero.
 4. `prior`, the mean of the prior distribution.  Taken with the weight will fully parameterize the distribution.</code></pre>
+<p><strong>Important:</strong> Always explicitly specify
+<code>init</code> values for parameters to ensure reproducibility and
+avoid potential numerical issues.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Fully specified parameter.</span></span>
 <span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0</span>, weight <span class="op">=</span> <span class="fl">1</span>, update <span class="op">=</span> <span class="cn">TRUE</span>, prior <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span><span class="co"># Fixed parameter</span></span>
+<span><span class="co"># Fixed parameter with explicit init</span></span>
 <span><span class="co"># Weight = 0 implies update=FALSE and prior is ignored.</span></span>
-<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="co"># Update parameter that starts at zero.</span></span>
-<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, weight <span class="op">=</span><span class="fl">1</span>, update<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co"># Parameters specified at zero implies fixed.</span></span>
-<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="co"># Updated parameter that starts at zero.</span></span>
+<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0</span>, weight <span class="op">=</span> <span class="fl">1</span>, update <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># Short form for fixed parameter</span></span>
+<span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -237,9 +240,11 @@ effect.</li>
 effective.</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">abx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AbxParams.html">AbxParams</a></span><span class="op">(</span>onoff <span class="op">=</span> <span class="cn">TRUE</span>, delay <span class="op">=</span> <span class="fl">0.3</span>, life <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">abx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AbxParams.html">AbxParams</a></span><span class="op">(</span>onoff <span class="op">=</span> <span class="fl">0</span>, delay <span class="op">=</span> <span class="fl">0.0</span>, life <span class="op">=</span> <span class="fl">2.0</span><span class="op">)</span></span></code></pre></div>
 <p>Currently, all antibiotics are assumed to be equally effective and
-have the same duration of effectiveness.</p>
+have the same duration of effectiveness. Note: <code>onoff = 0</code>
+means antibiotics are turned off for this example (set to 1 to
+enable).</p>
 </div>
 <div class="section level3">
 <h3 id="abxrate-antibiotic-rates">
@@ -249,14 +254,15 @@ have the same duration of effectiveness.</p>
 administration rates.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">abxrate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/AbxRateParams.html">AbxRateParams</a></span><span class="op">(</span></span>
-<span>  <span class="co"># Uncolonized patients do use antibiotics but at a low rate.</span></span>
-<span>  uncolonized <span class="op">=</span> <span class="fl">0.05</span>,  </span>
-<span>  <span class="co"># Colonized patients use antibiotics at a high rate.</span></span>
-<span>  colonized <span class="op">=</span> <span class="fl">0.7</span>      </span>
+<span>  <span class="co"># Fixed parameters when antibiotics are off</span></span>
+<span>  uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  colonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Here since both parameters are non-zero both will be updated. A rate
 of zero for either would indicate that group would never be on
-antibiotics.</p>
+antibiotics. When antibiotics are turned off
+(<code>Abx$onoff = 0</code>), these parameters are typically fixed
+(weight = 0).</p>
 </div>
 <div class="section level3">
 <h3 id="inunit-in-unit-infection-rate">
@@ -319,13 +325,13 @@ P(\mathrm{Acq(t)}) =
 </annotation></semantics></math></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">acquisition</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LinearAbxAcquisitionParams.html">LinearAbxAcquisitionParams</a></span><span class="op">(</span></span>
-<span>    base <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span>,     <span class="co">#&lt; Base acquisition rate (Updated)</span></span>
-<span>    time <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,     <span class="co">#&lt; Time effect (Fixed)</span></span>
-<span>    mass <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,        <span class="co">#&lt; Mass Mixing (Updated)</span></span>
-<span>    freq <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,        <span class="co">#&lt; Frequency/Density effect (Updated)</span></span>
-<span>    col_abx <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,  <span class="co">#&lt; Colonized on antibiotics (Fixed)</span></span>
-<span>    suss_abx <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>, <span class="co">#&lt; Susceptible on antibiotics (Fixed)</span></span>
-<span>    suss_ever <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span> <span class="co">#&lt; Ever on antibiotics (Fixed)  </span></span>
+<span>    base <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.001</span>, weight <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,     <span class="co">#&lt; Base acquisition rate (Updated)</span></span>
+<span>    time <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,       <span class="co">#&lt; Time effect (Fixed)</span></span>
+<span>    mass <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,       <span class="co">#&lt; Mass Mixing (Updated)</span></span>
+<span>    freq <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,       <span class="co">#&lt; Frequency/Density effect (Updated)</span></span>
+<span>    col_abx <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,    <span class="co">#&lt; Colonized on antibiotics (Fixed)</span></span>
+<span>    suss_abx <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,   <span class="co">#&lt; Susceptible on antibiotics (Fixed)</span></span>
+<span>    suss_ever <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>   <span class="co">#&lt; Ever on antibiotics (Fixed)  </span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -346,9 +352,9 @@ P(\mathrm{progression}) = e^{\delta_0}\left[1-E_i(t)+e^{\delta_2}\left(E_i(t)-A_
 for the coefficients, but the notation is the same.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">progression</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ProgressionParams.html">ProgressionParams</a></span><span class="op">(</span></span>
-<span>    rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span>,     <span class="co">#&lt; Base progression rate (Updated)</span></span>
-<span>    abx  <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,     <span class="co">#&lt; Currently on antibiotics (Fixed)</span></span>
-<span>    ever <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>      <span class="co">#&lt; Ever on antibiotics (Fixed)</span></span>
+<span>    rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,      <span class="co">#&lt; Base progression rate (Fixed for 2-state)</span></span>
+<span>    abx  <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,      <span class="co">#&lt; Currently on antibiotics (Fixed)</span></span>
+<span>    ever_abx <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>   <span class="co">#&lt; Ever on antibiotics (Fixed)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -359,9 +365,9 @@ log normal and the linear cases, the coefficients however are
 independent.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">clearance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ClearanceParams.html">ClearanceParams</a></span><span class="op">(</span></span>
-<span>    rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span>,     <span class="co">#&lt; Base clearance rate (Updated)</span></span>
-<span>    abx  <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,     <span class="co">#&lt; Currently on antibiotics (Fixed)</span></span>
-<span>    ever <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>      <span class="co">#&lt; Ever on antibiotics (Fixed)</span></span>
+<span>    rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.01</span>, weight <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,     <span class="co">#&lt; Base clearance rate (Updated)</span></span>
+<span>    abx  <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,      <span class="co">#&lt; Currently on antibiotics (Fixed)</span></span>
+<span>    ever_abx <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>   <span class="co">#&lt; Ever on antibiotics (Fixed)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inunit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/InUnitParams.html">ABXInUnitParams</a></span><span class="op">(</span></span>
@@ -381,8 +387,9 @@ in, and which state they enter in.</p>
 </annotation></semantics></math></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcol</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/OutOfUnitInfectionParams.html">OutOfUnitInfectionParams</a></span><span class="op">(</span></span>
-<span>  acquisition <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>  clearance <span class="op">=</span> <span class="fl">0.5</span></span>
+<span>  acquisition <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.001</span>, weight <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  clearance <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.01</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  progression <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -431,12 +438,14 @@ are the number of positive and negative tests respectively for state
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SurveillanceTestParams.html">SurveillanceTestParams</a></span><span class="op">(</span></span>
 <span>    <span class="co"># Probability of a positive test when uncolonized (false positive rate)</span></span>
-<span>    <span class="co"># Use small non-zero value to avoid -Inf likelihood if data has any false positives</span></span>
-<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    <span class="co"># IMPORTANT: Must be &gt; 0 to avoid -Inf likelihood. Use small value like 1e-10.</span></span>
+<span>    <span class="co"># Setting to exactly 0.0 causes log(0) = -Inf if any uncolonized patient tests positive.</span></span>
+<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1e-10</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
 <span>    <span class="co"># Probability of a positive test when colonized (true positive rate/sensitivity)</span></span>
-<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.9</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    <span class="co"># Starting at 0.8, will be updated during MCMC</span></span>
+<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.8</span>, weight <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>    <span class="co"># Latent state (for 2-state model, this is not used but must be specified)</span></span>
-<span>    latent <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span>    latent <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -448,13 +457,22 @@ within each stage is sampled from a gamma distribution.
 Sensitivity/Specificity are handled the same as surveillance testing and
 the likelihood is multiplicative between rate and effectiveness.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">clin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RandomTestParams.html">ClinicalTestParams</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">clin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RandomTestParams.html">RandomTestParams</a></span><span class="op">(</span></span>
 <span>    <span class="co"># Rate of testing when uncolonized</span></span>
-<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    uncolonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span></span>
+<span>      param <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.5</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, </span>
+<span>      rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
 <span>    <span class="co"># Rate of testing when colonized  </span></span>
-<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    colonized <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span></span>
+<span>      param <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.5</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, </span>
+<span>      rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
 <span>    <span class="co"># Latent state (for 2-state model, not used but must be specified)</span></span>
-<span>    latent <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span><span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span>    latent <span class="op">=</span> <span class="fu"><a href="../reference/ParamWRate.html">ParamWRate</a></span><span class="op">(</span></span>
+<span>      param <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">0.5</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, </span>
+<span>      rate <span class="op">=</span> <span class="fu"><a href="../reference/Param.html">Param</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fl">1.0</span>, weight <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -480,17 +498,21 @@ the likelihood is multiplicative between rate and effectiveness.</p>
 <p>The model is run through the <code><a href="../reference/runMCMC.html">runMCMC()</a></code> function. This
 function takes the following arguments:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runMCMC.html">runMCMC</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">simulated.data</span>,</span>
-<span>  MCMCParameters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    nburn <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>    nsims <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>    outputparam <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    outputfinal <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  modelParameters <span class="op">=</span> <span class="va">params</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
+<span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runMCMC.html">runMCMC</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="va">simulated.data_sorted</span>,</span>
+<span>    MCMCParameters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      nburn <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>      nsims <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>      outputparam <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      outputfinal <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    modelParameters <span class="op">=</span> <span class="va">params</span>,</span>
+<span>    verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;    user  system elapsed </span></span>
+<span><span class="co">#&gt; 173.688 159.921 167.182</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="analyzing-mcmc-results">Analyzing MCMC Results<a class="anchor" aria-label="anchor" href="#analyzing-mcmc-results"></a>
@@ -509,47 +531,47 @@ nested list structure into a tidy data frame format.</p>
 <span><span class="co"># Display first few rows</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">param_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   iteration insitu_uncolonized insitu_colonized surv_test_uncol_neg</span></span>
-<span><span class="co">#&gt; 1         1         0.36352949        0.6364705                   1</span></span>
-<span><span class="co">#&gt; 2         2         0.08540797        0.9145920                   1</span></span>
-<span><span class="co">#&gt; 3         3         0.33773365        0.6622664                   1</span></span>
-<span><span class="co">#&gt; 4         4         0.43523142        0.5647686                   1</span></span>
-<span><span class="co">#&gt; 5         5         0.69401926        0.3059807                   1</span></span>
-<span><span class="co">#&gt; 6         6         0.73077686        0.2692231                   1</span></span>
+<span><span class="co">#&gt; 1         1         0.65408410      0.345915901               1e-10</span></span>
+<span><span class="co">#&gt; 2         2         0.41940536      0.580594642               1e-10</span></span>
+<span><span class="co">#&gt; 3         3         0.00480183      0.995198170               1e-10</span></span>
+<span><span class="co">#&gt; 4         4         0.97985172      0.020148280               1e-10</span></span>
+<span><span class="co">#&gt; 5         5         0.99855862      0.001441382               1e-10</span></span>
+<span><span class="co">#&gt; 6         6         0.39104620      0.608953797               1e-10</span></span>
 <span><span class="co">#&gt;   surv_test_col_neg surv_test_uncol_pos surv_test_col_pos clin_test_uncol</span></span>
-<span><span class="co">#&gt; 1                 0                   1                 0             0.5</span></span>
-<span><span class="co">#&gt; 2                 0                   1                 0             0.5</span></span>
-<span><span class="co">#&gt; 3                 0                   1                 0             0.5</span></span>
-<span><span class="co">#&gt; 4                 0                   1                 0             0.5</span></span>
-<span><span class="co">#&gt; 5                 0                   1                 0             0.5</span></span>
-<span><span class="co">#&gt; 6                 0                   1                 0             0.5</span></span>
+<span><span class="co">#&gt; 1         0.8447528               1e-10         0.9998983             0.5</span></span>
+<span><span class="co">#&gt; 2         0.8029492               1e-10         0.2790169             0.5</span></span>
+<span><span class="co">#&gt; 3         0.8518281               1e-10         1.0000000             0.5</span></span>
+<span><span class="co">#&gt; 4         0.8484905               1e-10         0.9995797             0.5</span></span>
+<span><span class="co">#&gt; 5         0.8526668               1e-10         0.4436542             0.5</span></span>
+<span><span class="co">#&gt; 6         0.7994312               1e-10         0.5293115             0.5</span></span>
 <span><span class="co">#&gt;   clin_test_col clin_rate_uncol clin_rate_col outunit_acquisition</span></span>
-<span><span class="co">#&gt; 1             0               1             0          0.04872909</span></span>
-<span><span class="co">#&gt; 2             0               1             0          0.04872909</span></span>
-<span><span class="co">#&gt; 3             0               1             0          0.04872909</span></span>
-<span><span class="co">#&gt; 4             0               1             0          0.04872909</span></span>
-<span><span class="co">#&gt; 5             0               1             0          0.04872909</span></span>
-<span><span class="co">#&gt; 6             0               1             0          0.04872909</span></span>
-<span><span class="co">#&gt;   outunit_clearance inunit_base inunit_time inunit_mass inunit_freq</span></span>
-<span><span class="co">#&gt; 1         0.0258701 0.002423405           1           1           1</span></span>
-<span><span class="co">#&gt; 2         0.0258701 0.002697885           1           1           1</span></span>
-<span><span class="co">#&gt; 3         0.0258701 0.002706596           1           1           1</span></span>
-<span><span class="co">#&gt; 4         0.0258701 0.002598325           1           1           1</span></span>
-<span><span class="co">#&gt; 5         0.0258701 0.002510386           1           1           1</span></span>
-<span><span class="co">#&gt; 6         0.0258701 0.002608298           1           1           1</span></span>
+<span><span class="co">#&gt; 1           0.5               1             1          0.00103972</span></span>
+<span><span class="co">#&gt; 2           0.5               1             1          0.00103972</span></span>
+<span><span class="co">#&gt; 3           0.5               1             1          0.00103972</span></span>
+<span><span class="co">#&gt; 4           0.5               1             1          0.00103972</span></span>
+<span><span class="co">#&gt; 5           0.5               1             1          0.00103972</span></span>
+<span><span class="co">#&gt; 6           0.5               1             1          0.00103972</span></span>
+<span><span class="co">#&gt;   outunit_clearance  inunit_base inunit_time inunit_mass inunit_freq</span></span>
+<span><span class="co">#&gt; 1              0.01 0.0003624024           1           1           1</span></span>
+<span><span class="co">#&gt; 2              0.01 0.0004016161           1           1           1</span></span>
+<span><span class="co">#&gt; 3              0.01 0.0004127463           1           1           1</span></span>
+<span><span class="co">#&gt; 4              0.01 0.0004347049           1           1           1</span></span>
+<span><span class="co">#&gt; 5              0.01 0.0003035432           1           1           1</span></span>
+<span><span class="co">#&gt; 6              0.01 0.0003274638           1           1           1</span></span>
 <span><span class="co">#&gt;   inunit_colabx inunit_susabx inunit_susever  inunit_clr inunit_clrAbx</span></span>
-<span><span class="co">#&gt; 1             1             1              1 0.001853747             1</span></span>
-<span><span class="co">#&gt; 2             1             1              1 0.001824026             1</span></span>
-<span><span class="co">#&gt; 3             1             1              1 0.001689453             1</span></span>
-<span><span class="co">#&gt; 4             1             1              1 0.001566023             1</span></span>
-<span><span class="co">#&gt; 5             1             1              1 0.001663549             1</span></span>
-<span><span class="co">#&gt; 6             1             1              1 0.001480498             1</span></span>
+<span><span class="co">#&gt; 1             1             1              1 0.002108148             1</span></span>
+<span><span class="co">#&gt; 2             1             1              1 0.002154422             1</span></span>
+<span><span class="co">#&gt; 3             1             1              1 0.002246149             1</span></span>
+<span><span class="co">#&gt; 4             1             1              1 0.002240994             1</span></span>
+<span><span class="co">#&gt; 5             1             1              1 0.002207258             1</span></span>
+<span><span class="co">#&gt; 6             1             1              1 0.002068119             1</span></span>
 <span><span class="co">#&gt;   inunit_clrEver abxrate_uncolonized abxrate_colonized loglikelihood</span></span>
-<span><span class="co">#&gt; 1              1             1054791          629771.8          -Inf</span></span>
-<span><span class="co">#&gt; 2              1             1166696          711553.9          -Inf</span></span>
-<span><span class="co">#&gt; 3              1             1251557          677976.5          -Inf</span></span>
-<span><span class="co">#&gt; 4              1             1102664          658573.4          -Inf</span></span>
-<span><span class="co">#&gt; 5              1             1097877          695118.3          -Inf</span></span>
-<span><span class="co">#&gt; 6              1             1171478          656579.7          -Inf</span></span></code></pre></div>
+<span><span class="co">#&gt; 1              1                   1                 1     -12971.40</span></span>
+<span><span class="co">#&gt; 2              1                   1                 1     -12975.10</span></span>
+<span><span class="co">#&gt; 3              1                   1                 1     -12994.34</span></span>
+<span><span class="co">#&gt; 4              1                   1                 1     -13008.59</span></span>
+<span><span class="co">#&gt; 5              1                   1                 1     -12992.41</span></span>
+<span><span class="co">#&gt; 6              1                   1                 1     -13019.92</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="trace-plots">Trace Plots<a class="anchor" aria-label="anchor" href="#trace-plots"></a>
@@ -600,9 +622,7 @@ parameter after the MCMC sampling.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Posterior Distributions"</span>,</span>
 <span>       subtitle <span class="op">=</span> <span class="st">"Red dashed line shows posterior mean"</span>,</span>
 <span>       x <span class="op">=</span> <span class="st">"Parameter Value"</span>,</span>
-<span>       y <span class="op">=</span> <span class="st">"Density"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 1000 rows containing non-finite outside the scale range</span></span>
-<span><span class="co">#&gt; (`stat_density()`).</span></span></code></pre></div>
+<span>       y <span class="op">=</span> <span class="st">"Density"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="bayesian-transmission_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" width="960"></p>
 </div>
 <div class="section level3">
@@ -633,14 +653,14 @@ parameter after the MCMC sampling.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">summary_stats</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
-<span><span class="co">#&gt;   parameter                    mean       median        sd       q025       q975</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> abxrate_colonized   <span style="text-decoration: underline;">659</span>427.            6.59<span style="color: #949494;">e</span>+5   3.37<span style="color: #949494;">e</span>+4    5.91<span style="color: #949494;">e</span>+5    7.26<span style="color: #949494;">e</span>+5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> insitu_colonized         0.494         4.82<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span>   2.92<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span>    2.73<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>    9.78<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> inunit_base              0.000<span style="text-decoration: underline;">451</span>      3.41<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>   3.69<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>    1.35<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>    1.55<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> loglikelihood         -<span style="color: #BB0000;">Inf</span>          -<span style="color: #BB0000;">Inf</span>   <span style="color: #949494;"> </span>   <span style="color: #BB0000;">NaN</span>   <span style="color: #949494;"> </span>   -<span style="color: #BB0000;">Inf</span>   <span style="color: #949494;"> </span>   -<span style="color: #BB0000;">Inf</span>   <span style="color: #949494;"> </span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> outunit_acquisition      0.002<span style="text-decoration: underline;">29</span>       1.24<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>   6.09<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span>    5.13<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>    1.64<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> surv_test_col_pos        0             0   <span style="color: #949494;"> </span>     0   <span style="color: #949494;"> </span>      0   <span style="color: #949494;"> </span>      0   <span style="color: #949494;"> </span></span></span></code></pre></div>
+<span><span class="co">#&gt;   parameter                    mean        median         sd     q025       q975</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> abxrate_colonized        1             1         0          1   <span style="color: #949494;">e</span>+0   1    <span style="color: #949494;">e</span>+0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> insitu_colonized         0.502         0.502     0.293      2.48<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>   9.74 <span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> inunit_base              0.000<span style="text-decoration: underline;">428</span>      0.000<span style="text-decoration: underline;">100</span>  0.000<span style="text-decoration: underline;">704</span>   2.42<span style="color: #949494;">e</span><span style="color: #BB0000;">-6</span>   2.66 <span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> loglikelihood       -<span style="color: #BB0000; text-decoration: underline;">13</span><span style="color: #BB0000;">008.</span>       -<span style="color: #BB0000; text-decoration: underline;">13</span><span style="color: #BB0000;">008.</span>       24.1       -<span style="color: #BB0000;">1.31</span><span style="color: #949494;">e</span>+4  -<span style="color: #BB0000;">1.30</span> <span style="color: #949494;">e</span>+4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> outunit_acquisition      0.001<span style="text-decoration: underline;">09</span>       0.001<span style="text-decoration: underline;">09</span>   0.000<span style="text-decoration: underline;">081</span>7  9.57<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>   1.25 <span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> surv_test_col_pos        0.803         0.952     0.276      6.47<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>   1.000<span style="color: #949494;">e</span>+0</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

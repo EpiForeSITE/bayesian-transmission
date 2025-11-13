@@ -117,16 +117,19 @@ function. This function takes up to four arguments:
         `FALSE` indicates that the parameter should be fixed, and is by default `TRUE` when `weight` is greater than zero.
     4. `prior`, the mean of the prior distribution.  Taken with the weight will fully parameterize the distribution.
 
+**Important:** Always explicitly specify `init` values for parameters to
+ensure reproducibility and avoid potential numerical issues.
+
 ``` r
 # Fully specified parameter.
 Param(init = 0, weight = 1, update = TRUE, prior = 0.5)
-# Fixed parameter
+# Fixed parameter with explicit init
 # Weight = 0 implies update=FALSE and prior is ignored.
-Param(0, 0)
-# Update parameter that starts at zero.
-Param(0, weight =1, update=TRUE)
-# Parameters specified at zero implies fixed.
-Param(0)
+Param(init = 0, weight = 0)
+# Updated parameter that starts at zero.
+Param(init = 0, weight = 1, update = TRUE)
+# Short form for fixed parameter
+Param(init = 0, weight = 0)
 ```
 
 ### `Abx` Antibiotic use
@@ -142,11 +145,12 @@ function with the following components:
 - `life`, the duration where the antibiotic to be effective.
 
 ``` r
-abx <- AbxParams(onoff = TRUE, delay = 0.3, life = 1)
+abx <- AbxParams(onoff = 0, delay = 0.0, life = 2.0)
 ```
 
 Currently, all antibiotics are assumed to be equally effective and have
-the same duration of effectiveness.
+the same duration of effectiveness. Note: `onoff = 0` means antibiotics
+are turned off for this example (set to 1 to enable).
 
 ### `AbxRate` Antibiotic rates
 
@@ -154,15 +158,16 @@ The `AbxRate` parameter control the antibiotic administration rates.
 
 ``` r
 abxrate <- AbxRateParams(
-  # Uncolonized patients do use antibiotics but at a low rate.
-  uncolonized = 0.05,  
-  # Colonized patients use antibiotics at a high rate.
-  colonized = 0.7      
+  # Fixed parameters when antibiotics are off
+  uncolonized = Param(init = 1.0, weight = 0),
+  colonized = Param(init = 1.0, weight = 0)
 )
 ```
 
 Here since both parameters are non-zero both will be updated. A rate of
 zero for either would indicate that group would never be on antibiotics.
+When antibiotics are turned off (`Abx$onoff = 0`), these parameters are
+typically fixed (weight = 0).
 
 ### `InUnit` In unit infection rate
 
@@ -199,13 +204,13 @@ $$P\left( {Acq(t)} \right) = \left\lbrack e^{\beta_{time}{(t - t_{0})}} \right\r
 
 ``` r
 acquisition <- LinearAbxAcquisitionParams(
-    base = Param(0.01),     #< Base acquisition rate (Updated)
-    time = Param(1, 0),     #< Time effect (Fixed)
-    mass = Param(1),        #< Mass Mixing (Updated)
-    freq = Param(1),        #< Frequency/Density effect (Updated)
-    col_abx = Param(1, 0),  #< Colonized on antibiotics (Fixed)
-    suss_abx = Param(1, 0), #< Susceptible on antibiotics (Fixed)
-    suss_ever = Param(1, 0) #< Ever on antibiotics (Fixed)  
+    base = Param(init = 0.001, weight = 1),     #< Base acquisition rate (Updated)
+    time = Param(init = 1.0, weight = 0),       #< Time effect (Fixed)
+    mass = Param(init = 1.0, weight = 1),       #< Mass Mixing (Updated)
+    freq = Param(init = 1.0, weight = 1),       #< Frequency/Density effect (Updated)
+    col_abx = Param(init = 1.0, weight = 0),    #< Colonized on antibiotics (Fixed)
+    suss_abx = Param(init = 1.0, weight = 0),   #< Susceptible on antibiotics (Fixed)
+    suss_ever = Param(init = 1.0, weight = 0)   #< Ever on antibiotics (Fixed)  
 )
 ```
 
@@ -226,9 +231,9 @@ same.
 
 ``` r
 progression <- ProgressionParams(
-    rate = Param(0.01),     #< Base progression rate (Updated)
-    abx  = Param(1, 0),     #< Currently on antibiotics (Fixed)
-    ever = Param(1, 0)      #< Ever on antibiotics (Fixed)
+    rate = Param(init = 0.0, weight = 0),      #< Base progression rate (Fixed for 2-state)
+    abx  = Param(init = 1.0, weight = 0),      #< Currently on antibiotics (Fixed)
+    ever_abx = Param(init = 1.0, weight = 0)   #< Ever on antibiotics (Fixed)
 )
 ```
 
@@ -239,9 +244,9 @@ normal and the linear cases, the coefficients however are independent.
 
 ``` r
 clearance <- ClearanceParams(
-    rate = Param(0.01),     #< Base clearance rate (Updated)
-    abx  = Param(1, 0),     #< Currently on antibiotics (Fixed)
-    ever = Param(1, 0)      #< Ever on antibiotics (Fixed)
+    rate = Param(init = 0.01, weight = 1),     #< Base clearance rate (Updated)
+    abx  = Param(init = 1.0, weight = 0),      #< Currently on antibiotics (Fixed)
+    ever_abx = Param(init = 1.0, weight = 0)   #< Ever on antibiotics (Fixed)
 )
 ```
 
@@ -262,8 +267,9 @@ $$\log\left( P\left( {state}_{i}\rightarrow{state}_{j} \right)|t \right) = P_{j}
 
 ``` r
 outcol <- OutOfUnitInfectionParams(
-  acquisition = 0.1,
-  clearance = 0.5
+  acquisition = Param(init = 0.001, weight = 1),
+  clearance = Param(init = 0.01, weight = 0),
+  progression = Param(init = 0.0, weight = 0)
 )
 ```
 
@@ -311,12 +317,14 @@ state $s$.
 ``` r
 surv <- SurveillanceTestParams(
     # Probability of a positive test when uncolonized (false positive rate)
-    # Use small non-zero value to avoid -Inf likelihood if data has any false positives
-    uncolonized = Param(0.01, 1),
+    # IMPORTANT: Must be > 0 to avoid -Inf likelihood. Use small value like 1e-10.
+    # Setting to exactly 0.0 causes log(0) = -Inf if any uncolonized patient tests positive.
+    uncolonized = Param(init = 1e-10, weight = 0),
     # Probability of a positive test when colonized (true positive rate/sensitivity)
-    colonized = Param(0.9, 1),
+    # Starting at 0.8, will be updated during MCMC
+    colonized = Param(init = 0.8, weight = 1),
     # Latent state (for 2-state model, this is not used but must be specified)
-    latent = Param(0, 0)
+    latent = Param(init = 0.0, weight = 0)
 )
 ```
 
@@ -329,13 +337,22 @@ handled the same as surveillance testing and the likelihood is
 multiplicative between rate and effectiveness.
 
 ``` r
-clin <- ClinicalTestParams(
+clin <- RandomTestParams(
     # Rate of testing when uncolonized
-    uncolonized = ParamWRate(Param(0.5, 0), rate = Param(1, 0)),
+    uncolonized = ParamWRate(
+      param = Param(init = 0.5, weight = 0), 
+      rate = Param(init = 1.0, weight = 0)
+    ),
     # Rate of testing when colonized  
-    colonized = ParamWRate(Param(0.5, 0), rate = Param(1, 0)),
+    colonized = ParamWRate(
+      param = Param(init = 0.5, weight = 0), 
+      rate = Param(init = 1.0, weight = 0)
+    ),
     # Latent state (for 2-state model, not used but must be specified)
-    latent = ParamWRate(Param(0, 0), rate = Param(0, 0))
+    latent = ParamWRate(
+      param = Param(init = 0.5, weight = 0), 
+      rate = Param(init = 1.0, weight = 0)
+    )
 )
 ```
 
@@ -361,17 +378,21 @@ The model is run through the
 function. This function takes the following arguments:
 
 ``` r
-results <- runMCMC(
-  data = simulated.data,
-  MCMCParameters = list(
-    nburn = 100,
-    nsims = 1000,
-    outputparam = TRUE,
-    outputfinal = TRUE
-  ),
-  modelParameters = params,
-  verbose = FALSE
+system.time(
+  results <- runMCMC(
+    data = simulated.data_sorted,
+    MCMCParameters = list(
+      nburn = 100,
+      nsims = 1000,
+      outputparam = TRUE,
+      outputfinal = TRUE
+    ),
+    modelParameters = params,
+    verbose = FALSE
+  )
 )
+#>    user  system elapsed 
+#> 173.688 159.921 167.182
 ```
 
 ## Analyzing MCMC Results
@@ -392,47 +413,47 @@ param_df <- mcmc_to_dataframe(results)
 # Display first few rows
 head(param_df)
 #>   iteration insitu_uncolonized insitu_colonized surv_test_uncol_neg
-#> 1         1         0.36352949        0.6364705                   1
-#> 2         2         0.08540797        0.9145920                   1
-#> 3         3         0.33773365        0.6622664                   1
-#> 4         4         0.43523142        0.5647686                   1
-#> 5         5         0.69401926        0.3059807                   1
-#> 6         6         0.73077686        0.2692231                   1
+#> 1         1         0.65408410      0.345915901               1e-10
+#> 2         2         0.41940536      0.580594642               1e-10
+#> 3         3         0.00480183      0.995198170               1e-10
+#> 4         4         0.97985172      0.020148280               1e-10
+#> 5         5         0.99855862      0.001441382               1e-10
+#> 6         6         0.39104620      0.608953797               1e-10
 #>   surv_test_col_neg surv_test_uncol_pos surv_test_col_pos clin_test_uncol
-#> 1                 0                   1                 0             0.5
-#> 2                 0                   1                 0             0.5
-#> 3                 0                   1                 0             0.5
-#> 4                 0                   1                 0             0.5
-#> 5                 0                   1                 0             0.5
-#> 6                 0                   1                 0             0.5
+#> 1         0.8447528               1e-10         0.9998983             0.5
+#> 2         0.8029492               1e-10         0.2790169             0.5
+#> 3         0.8518281               1e-10         1.0000000             0.5
+#> 4         0.8484905               1e-10         0.9995797             0.5
+#> 5         0.8526668               1e-10         0.4436542             0.5
+#> 6         0.7994312               1e-10         0.5293115             0.5
 #>   clin_test_col clin_rate_uncol clin_rate_col outunit_acquisition
-#> 1             0               1             0          0.04872909
-#> 2             0               1             0          0.04872909
-#> 3             0               1             0          0.04872909
-#> 4             0               1             0          0.04872909
-#> 5             0               1             0          0.04872909
-#> 6             0               1             0          0.04872909
-#>   outunit_clearance inunit_base inunit_time inunit_mass inunit_freq
-#> 1         0.0258701 0.002423405           1           1           1
-#> 2         0.0258701 0.002697885           1           1           1
-#> 3         0.0258701 0.002706596           1           1           1
-#> 4         0.0258701 0.002598325           1           1           1
-#> 5         0.0258701 0.002510386           1           1           1
-#> 6         0.0258701 0.002608298           1           1           1
+#> 1           0.5               1             1          0.00103972
+#> 2           0.5               1             1          0.00103972
+#> 3           0.5               1             1          0.00103972
+#> 4           0.5               1             1          0.00103972
+#> 5           0.5               1             1          0.00103972
+#> 6           0.5               1             1          0.00103972
+#>   outunit_clearance  inunit_base inunit_time inunit_mass inunit_freq
+#> 1              0.01 0.0003624024           1           1           1
+#> 2              0.01 0.0004016161           1           1           1
+#> 3              0.01 0.0004127463           1           1           1
+#> 4              0.01 0.0004347049           1           1           1
+#> 5              0.01 0.0003035432           1           1           1
+#> 6              0.01 0.0003274638           1           1           1
 #>   inunit_colabx inunit_susabx inunit_susever  inunit_clr inunit_clrAbx
-#> 1             1             1              1 0.001853747             1
-#> 2             1             1              1 0.001824026             1
-#> 3             1             1              1 0.001689453             1
-#> 4             1             1              1 0.001566023             1
-#> 5             1             1              1 0.001663549             1
-#> 6             1             1              1 0.001480498             1
+#> 1             1             1              1 0.002108148             1
+#> 2             1             1              1 0.002154422             1
+#> 3             1             1              1 0.002246149             1
+#> 4             1             1              1 0.002240994             1
+#> 5             1             1              1 0.002207258             1
+#> 6             1             1              1 0.002068119             1
 #>   inunit_clrEver abxrate_uncolonized abxrate_colonized loglikelihood
-#> 1              1             1054791          629771.8          -Inf
-#> 2              1             1166696          711553.9          -Inf
-#> 3              1             1251557          677976.5          -Inf
-#> 4              1             1102664          658573.4          -Inf
-#> 5              1             1097877          695118.3          -Inf
-#> 6              1             1171478          656579.7          -Inf
+#> 1              1                   1                 1     -12971.40
+#> 2              1                   1                 1     -12975.10
+#> 3              1                   1                 1     -12994.34
+#> 4              1                   1                 1     -13008.59
+#> 5              1                   1                 1     -12992.41
+#> 6              1                   1                 1     -13019.92
 ```
 
 ### Trace Plots
@@ -487,8 +508,6 @@ ggplot(trace_long, aes(x = value)) +
        subtitle = "Red dashed line shows posterior mean",
        x = "Parameter Value",
        y = "Density")
-#> Warning: Removed 1000 rows containing non-finite outside the scale range
-#> (`stat_density()`).
 ```
 
 ![](bayesian-transmission_files/figure-html/unnamed-chunk-18-1.png)
@@ -520,12 +539,12 @@ summary_stats <- trace_long %>%
 
 print(summary_stats)
 #> # A tibble: 6 × 6
-#>   parameter                    mean       median        sd       q025       q975
-#>   <chr>                       <dbl>        <dbl>     <dbl>      <dbl>      <dbl>
-#> 1 abxrate_colonized   659427.            6.59e+5   3.37e+4    5.91e+5    7.26e+5
-#> 2 insitu_colonized         0.494         4.82e-1   2.92e-1    2.73e-2    9.78e-1
-#> 3 inunit_base              0.000451      3.41e-4   3.69e-4    1.35e-4    1.55e-3
-#> 4 loglikelihood         -Inf          -Inf       NaN       -Inf       -Inf      
-#> 5 outunit_acquisition      0.00229       1.24e-4   6.09e-3    5.13e-5    1.64e-2
-#> 6 surv_test_col_pos        0             0         0          0          0    
+#>   parameter                    mean        median         sd     q025       q975
+#>   <chr>                       <dbl>         <dbl>      <dbl>    <dbl>      <dbl>
+#> 1 abxrate_colonized        1             1         0          1   e+0   1    e+0
+#> 2 insitu_colonized         0.502         0.502     0.293      2.48e-2   9.74 e-1
+#> 3 inunit_base              0.000428      0.000100  0.000704   2.42e-6   2.66 e-3
+#> 4 loglikelihood       -13008.       -13008.       24.1       -1.31e+4  -1.30 e+4
+#> 5 outunit_acquisition      0.00109       0.00109   0.0000817  9.57e-4   1.25 e-3
+#> 6 surv_test_col_pos        0.803         0.952     0.276      6.47e-2   1.000e+0
 ```

@@ -120,22 +120,6 @@ LogNormalModelParams("LogNormalModel")
 #> $SurveillanceTest
 #> $SurveillanceTest$colonized
 #> $init
-#> [1] 0
-#> 
-#> $update
-#> [1] FALSE
-#> 
-#> $prior
-#> [1] 0
-#> 
-#> $weight
-#> [1] 0
-#> 
-#> attr(,"class")
-#> [1] "Param"
-#> 
-#> $SurveillanceTest$uncolonized
-#> $init
 #> [1] 0.8
 #> 
 #> $update
@@ -146,6 +130,22 @@ LogNormalModelParams("LogNormalModel")
 #> 
 #> $weight
 #> [1] 1
+#> 
+#> attr(,"class")
+#> [1] "Param"
+#> 
+#> $SurveillanceTest$uncolonized
+#> $init
+#> [1] 1e-10
+#> 
+#> $update
+#> [1] FALSE
+#> 
+#> $prior
+#> [1] 1e-10
+#> 
+#> $weight
+#> [1] 0
 #> 
 #> attr(,"class")
 #> [1] "Param"
