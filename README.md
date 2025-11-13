@@ -16,3 +16,5 @@ Provides estimates for critical epidemiological parameters that characterize the
 - Khader K, Thomas A, Huskins WC, Leecaster M, Zhang Y, Greene T, Redd A, Samore MH (2017). [A dynamic transmission model to evaluate the effectiveness of infection control strategies](https://doi.org/10.1093/ofid/ofw247). Open Forum Infect Dis.
 
 - Thomas A, Redd A, Khader K, Leecaster M, Greene T, Samore M (2015). [Efficient parameter estimation for models of healthcare-associated pathogen transmission in discrete and continuous time](https://doi.org/10.1093/imammb/dqt021). Math Med Biol, 32(1), 79-98."
+
+This work was supported by the Centers for Disease Control and Prevention, Modeling Infectious Diseases in Healthcare Network award U01CK000585.
