@@ -227,6 +227,9 @@ OutOfUnitInfectionParams <- function(
 #' @param colonized Also known as the true positive rate for a two state model.
 #' @param uncolonized Also known as the false positive rate for a two state model.
 #' @param latent The rate of positive tests when the individual is in the (optional) latent state.
+#' 
+#' @rerurns A list of parameters for surveillance testing.
+#' 
 #' @export
 #' @examples
 #' SurveillanceTestParams()
@@ -234,6 +237,9 @@ SurveillanceTestParams <- function(
     colonized = Param(init = 0.8, weight = 1),       # High sensitivity for detecting colonized
     uncolonized = Param(init = 1e-10, weight = 0),   # Very low false positive rate
     latent = Param(init = 0.0, weight = 0)) {        # Not used in 2-state model
+    colonized <- check_param(colonized)
+    uncolonized <- check_param(uncolonized)
+    latent <- check_param(latent)
   list(
     colonized = colonized,
     uncolonized = uncolonized,
@@ -247,6 +253,8 @@ SurveillanceTestParams <- function(
 #' @param delay The delay in using antibiotics.
 #' @param life The life of antibiotics.
 #' @export
+#'
+#' @returns list of parameters for antibiotic effect
 #'
 #' @examples
 #' AbxParams()
@@ -296,17 +304,39 @@ AbxRateParams <- function(
 #'     \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
 #' \left\{e^{\beta_0}
 #'     \left[
-#'         \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})\right)
+#'         \left(
+#'           \frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})
+#'         \right)
 #'         e^{\beta_\mathrm{mass}}\left(
 #'             (N_c(t) - N_{ca}(t)) + e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
 #'             \right)
 #'         + 1 - e^{\beta_\mathrm{mass}}
 #'         \right]
 #'     \right\}\\
-#' \left[
-#'     N_S(t) - N_E(t) + e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right) +A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
-#'     \right]
-#' }{TODO: Add equation to the documentation}
+#'  \left[
+#'      N_S(t) - N_E(t) +
+#'      e^{\beta_\mathrm{suss\_ever}}
+#'      \left(
+#'        \left(
+#'          E_i(t) - A_i(t)
+#'        \right)
+#'        + A_i(t)e^{\beta_\mathrm{suss\_abx}}
+#'      \right)
+#'  \right]
+#' }{
+#'  P(Acq(t)) = exp(β_time*(t-t0)) * {
+#'    exp(β_0) * [
+#'      (β_freq/P(t)
+#'    + (1-exp(β_freq))) * exp(β_mass) * ((N_c(t) - N_ca(t)) + exp(β_col_abx)*N_ca(t)) + 1 - exp(β_mass)]
+#'  }
+#'  * [
+#'    N_S(t) - N_E(t) + exp(β_suss_ever)*((E_i(t)-A_i(t)) + A_i(t)*exp(β_suss_abx))
+#'  ]
+#' }
+#' where P(Acq(t)) is the acquisition probability at time t, with effects from time (β_time), 
+#' mass action (β_mass), frequency dependence (β_freq), 
+#' colonized individuals on antibiotics (β_col_abx), 
+#' and susceptible individuals currently (β_suss_abx) or ever (β_suss_ever) on antibiotics.}
 #'
 #' @param base The base rate of acquisition.
 #' @param time The time effect on acquisition.
@@ -387,10 +417,12 @@ ClearanceParams <- function(
 
 #' In Unit Parameters
 #'
-#' @param acquisition Acquisition, for rate of acquisition of the disease moving into latent state.
+#' @param acquisition Acquisition, for rate of acquisition of the disease moving into 
+#'                    colonized(2-State)/latent(3-state) state.
 #' @param progression Progression from latent state to colonized state.
 #' @param clearance Clearance from colonized state to uncolonized state.
 #'
+#' @returns A list of parameters for in unit infection.
 #' @export
 #' @examples
 #' InUnitParams(

@@ -17,19 +17,19 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 CharacterVector CodeToEvent(IntegerVector x) {
   CharacterVector out(x.size());
-
+  
   for(auto i = x.begin(); i != x.end(); ++i) {
     out[i - x.begin()] = infect::EventCoding::eventString(*i);
   }
-
+  
   return(out);
 }
 
 std::string tolower(const std::string& s) {
   string out(s);
-    for(auto c = out.begin(); c != out.end(); ++c) {
-      *c = std::tolower(*c);
-    }
+  for(auto c = out.begin(); c != out.end(); ++c) {
+    *c = std::tolower(*c);
+  }
   return s;
 }
 
@@ -39,6 +39,9 @@ std::string tolower(const std::string& s) {
 //' @return A vector of integers
 //'
 //' @export
+//' @examples
+//' EventToCode(c("admission", "discharge", "postest", "negtest"))
+//' EventToCode(c("abxon", "abxoff", "isolon", "isoloff"))
 // [[Rcpp::export]]
 std::vector<int> EventToCode(const std::vector<std::string> x) {
     std::vector<int> out(x.size());

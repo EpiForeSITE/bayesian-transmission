@@ -19,6 +19,9 @@ CodeToEvent <- function(x) {
 #' @return A vector of integers
 #'
 #' @export
+#' @examples
+#' EventToCode(c("admission", "discharge", "postest", "negtest"))
+#' EventToCode(c("abxon", "abxoff", "isolon", "isoloff"))
 EventToCode <- function(x) {
     .Call(`_bayestransmission_EventToCode`, x)
 }

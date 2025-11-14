@@ -15,3 +15,7 @@ A vector of integers
 \description{
 Convert string events to coded events
 }
+\examples{
+EventToCode(c("admission", "discharge", "postest", "negtest"))
+EventToCode(c("abxon", "abxoff", "isolon", "isoloff"))
+}
