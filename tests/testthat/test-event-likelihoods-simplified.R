@@ -140,9 +140,7 @@ test_that("Simple admission has expected likelihood range", {
   expect_true(is.finite(result$ll))
   expect_true(result$ll <= 0)
   
-  # Store the value for reference - actual value depends on gap probabilities
-  # which accumulate over the 10-day stay with surveillance and clinical test rates
-  cat(sprintf("\nSimple admission likelihood: %f\n", result$ll))
+  # Diagnostic (quiet): result$ll is stored via expectations below
   
   # Should be reasonably negative but not -Inf
   expect_true(result$ll > -10000, info = sprintf("Got likelihood: %f", result$ll))
@@ -281,18 +279,22 @@ test_that("Discharge events contribute 0 to likelihood", {
   discharge_info <- Filter(Negate(is.null), discharge_info)
   
   if (length(discharge_info) > 0) {
-    cat("\nDischarge event contributions:\n")
-    for (info in discharge_info) {
-      cat(sprintf("  Level: %s, Time: %f, LL: %f\n", 
-                  info$level, info$time, info$ll))
-    }
-    
+    # Build failure-only diagnostic summary
+    diag_lines <- vapply(discharge_info, function(info) {
+      sprintf("Level: %s, Time: %f, LL: %f", info$level, info$time, info$ll)
+    }, character(1))
+    diag_text <- paste0("Discharge event contributions:\n", paste(diag_lines, collapse = "\n"))
+
     # Check that at least one discharge contributes 0 (patient-level)
     discharge_lls <- sapply(discharge_info, function(x) x$ll)
     zero_discharges <- sum(abs(discharge_lls) < 1e-10)
     expect_true(zero_discharges > 0,
-                info = sprintf("Found %d zero-contribution discharges out of %d total", 
-                              zero_discharges, length(discharge_lls)))
+                info = paste0(
+                  sprintf("Found %d zero-contribution discharges out of %d total", 
+                          zero_discharges, length(discharge_lls)),
+                  "\n",
+                  diag_text
+                ))
   }
 })
 

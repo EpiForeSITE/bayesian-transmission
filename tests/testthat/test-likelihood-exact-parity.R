@@ -93,11 +93,7 @@ test_that("R and C++ produce identical initial log likelihood", {
   expect_true(initial_ll > -20000,
               info = "Log likelihood should not be extremely negative")
   
-  cat("\n=== Likelihood Parity Test ===\n")
-  cat("Initial Log Likelihood:", initial_ll, "\n")
-  cat("Is finite:", is.finite(initial_ll), "\n")
-  cat("Expected range: [-20000, 0]\n")
-  cat("✓ R implementation produces finite likelihood\n")
+  # Diagnostic (quiet): initial_ll should be finite and within [-20000, 0]
 })
 
 test_that("No surveillance test probability can be exactly zero", {
@@ -141,11 +137,7 @@ test_that("No surveillance test probability can be exactly zero", {
                 info = "All test probabilities should be >= 1e-10 to avoid log(0)")
   }
   
-  cat("\n=== Surveillance Test Probabilities ===\n")
-  cat("Uncolonized:", uncol_init, "\n")
-  cat("Latent:", lat_init, "\n")
-  cat("Colonized:", col_init, "\n")
-  cat("All finite:", all(is.finite(c(uncol_init, lat_init, col_init))), "\n")
+  # Diagnostic (quiet): probabilities checked via expectations above
 })
 
 test_that("Likelihood remains finite throughout MCMC run", {
@@ -183,10 +175,5 @@ test_that("Likelihood remains finite throughout MCMC run", {
   expect_true(all(results$LogLikelihood < 0),
               info = "All log likelihoods should be negative")
   
-  cat("\n=== MCMC Likelihood Summary ===\n")
-  cat("Total iterations:", length(results$LogLikelihood), "\n")
-  cat("All finite:", all(is.finite(results$LogLikelihood)), "\n")
-  cat("Range:", range(results$LogLikelihood), "\n")
-  cat("Mean:", mean(results$LogLikelihood), "\n")
-  cat("✓ All likelihoods finite throughout MCMC\n")
+  # Diagnostic (quiet): summary suppressed; failures report details via `info`
 })

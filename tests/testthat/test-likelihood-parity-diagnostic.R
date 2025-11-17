@@ -84,12 +84,7 @@ test_that("Diagnostic: Track where -Inf likelihood originates", {
   # Test 3: Check the initial likelihood
   initial_ll <- results$LogLikelihood[1]
   
-  cat("\n=== DIAGNOSTIC RESULTS ===\n")
-  cat("Initial Log Likelihood:", initial_ll, "\n")
-  cat("Expected (from C++):", -12942.9, "\n")
-  cat("Difference:", abs(initial_ll - (-12942.9)), "\n")
-  cat("Is -Inf?", is.infinite(initial_ll), "\n")
-  cat("Is finite?", is.finite(initial_ll), "\n")
+  # Diagnostic (quiet): attach details to failure messages below
   
   # Test 4: The actual expectation - should be finite and close to C++ value
   expect_true(is.finite(initial_ll), 
@@ -106,7 +101,7 @@ test_that("Diagnostic: Identify which parameter causes -Inf", {
   # Test with progressively more constrained parameters to isolate the issue
   
   # Hypothesis 1: SurveillanceTest with P(+|uncolonized) = 0.0 causes -Inf
-  cat("\n--- Testing Hypothesis 1: Surveillance Test P=0 ---\n")
+  # Hypothesis 1: Surveillance Test P=0 (quiet)
   
   params_h1 <- LinearAbxModel(
     nstates = 2,
@@ -124,11 +119,10 @@ test_that("Diagnostic: Identify which parameter causes -Inf", {
     verbose = FALSE
   )
   
-  cat("With P(+|uncolonized) = 1e-10: LL =", results_h1$LogLikelihood[1], "\n")
-  cat("Is finite?", is.finite(results_h1$LogLikelihood[1]), "\n")
+  # attach diagnostics to expectations only on failure
   
   # Hypothesis 2: Episode initialization issue
-  cat("\n--- Testing Hypothesis 2: Episode Initialization ---\n")
+  # Hypothesis 2: Episode Initialization (quiet)
   
   # Try with different initial probabilities
   params_h2 <- LinearAbxModel(
@@ -147,11 +141,10 @@ test_that("Diagnostic: Identify which parameter causes -Inf", {
     verbose = FALSE
   )
   
-  cat("With 50/50 initial split: LL =", results_h2$LogLikelihood[1], "\n")
-  cat("Is finite?", is.finite(results_h2$LogLikelihood[1]), "\n")
+  # attach diagnostics to expectations only on failure
   
   # Hypothesis 3: Acquisition rate issue
-  cat("\n--- Testing Hypothesis 3: Acquisition Rate ---\n")
+  # Hypothesis 3: Acquisition Rate (quiet)
   
   params_h3 <- LinearAbxModel(
     nstates = 2,
@@ -175,11 +168,9 @@ test_that("Diagnostic: Identify which parameter causes -Inf", {
     verbose = FALSE
   )
   
-  cat("With base = 0.01: LL =", results_h3$LogLikelihood[1], "\n")
-  cat("Is finite?", is.finite(results_h3$LogLikelihood[1]), "\n")
+  # attach diagnostics to expectations only on failure
   
   # Summary
-  cat("\n=== HYPOTHESIS TEST SUMMARY ===\n")
   results_summary <- data.frame(
     Hypothesis = c("Original", "P=1e-10", "50/50 init", "base=0.01"),
     LogLikelihood = c(
@@ -196,12 +187,13 @@ test_that("Diagnostic: Identify which parameter causes -Inf", {
     )
   )
   
-  print(results_summary)
+  # Attach summary table to failure only
+  summary_text <- paste(capture.output(print(results_summary)), collapse = "\n")
   
   # At least ONE configuration should produce finite likelihood
   expect_true(
     any(results_summary$IsFinite, na.rm = TRUE),
-    info = "At least one parameter configuration should produce finite likelihood"
+    info = paste0("At least one parameter configuration should produce finite likelihood\n", summary_text)
   )
 })
 
@@ -213,26 +205,17 @@ test_that("Diagnostic: Check data for impossible events", {
   
   data <- simulated.data_sorted
   
-  cat("\n=== DATA DIAGNOSTICS ===\n")
-  cat("Total events:", nrow(data), "\n")
-  cat("Event types:\n")
-  print(table(CodeToEvent(data$type)))
+  # Data diagnostics (quiet)
+  # total <- nrow(data)
+  # types <- table(CodeToEvent(data$type))
   
   # Check for surveillance test results
   surv_tests <- data[data$type %in% c(1, 2), ]  # Negative=1, Positive=2
-  cat("\nSurveillance tests:", nrow(surv_tests), "\n")
-  if (nrow(surv_tests) > 0) {
-    cat("  Negative:", sum(surv_tests$type == 1), "\n")
-    cat("  Positive:", sum(surv_tests$type == 2), "\n")
-  }
+  # Surveillance test counts (quiet)
   
   # Check for clinical test results
   clin_tests <- data[data$type %in% c(4, 5), ]  # Negative=4, Positive=5
-  cat("\nClinical tests:", nrow(clin_tests), "\n")
-  if (nrow(clin_tests) > 0) {
-    cat("  Negative:", sum(clin_tests$type == 4), "\n")
-    cat("  Positive:", sum(clin_tests$type == 5), "\n")
-  }
+  # Clinical test counts (quiet)
   
   # CRITICAL: If we have P(+|uncolonized) = 0.0 and ANY positive surveillance tests,
   # those tests MUST occur when patient is colonized, or we get -Inf

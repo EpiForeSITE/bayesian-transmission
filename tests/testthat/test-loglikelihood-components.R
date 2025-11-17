@@ -108,13 +108,9 @@ test_that("Simple MCMC with minimal iterations", {
     list(error = e$message, trace = capture.output(traceback()))
   })
   
-  if (!is.null(results$error)) {
-    message("Error details: ", results$error)
-    if (!is.null(results$trace)) {
-      message("Traceback:\n", paste(results$trace, collapse = "\n"))
-    }
-  }
+  # Quiet: don't print errors; assertion below includes details on failure
   
   expect_true(is.null(results$error), 
-              info = paste("MCMC failed:", results$error))
+              info = paste("MCMC failed:", results$error,
+                            if (!is.null(results$trace)) paste0("\nTraceback:\n", paste(results$trace, collapse = "\n")) else ""))
 })

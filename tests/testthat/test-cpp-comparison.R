@@ -258,6 +258,7 @@ test_that("R package can compute individual link likelihoods for simulated data"
   expect_equal(length(lls), n_test)
   
   # Print for inspection
+  # Quiet by default; interactive summary retained for local debugging
   if (interactive()) {
     cat("\nFirst", n_test, "link likelihoods:\n")
     for (i in 1:n_test) {
@@ -299,11 +300,7 @@ test_that("Number of history links matches between R and C++", {
   n_r_links <- length(links)
   
   # Compare counts
-  if (n_r_links != n_cpp_links) {
-    cat(sprintf("\nWARNING: Link count mismatch!\n"))
-    cat(sprintf("  C++ has %d links\n", n_cpp_links))
-    cat(sprintf("  R has %d links\n", n_r_links))
-  }
+  # Quiet: on mismatch, rely on assertions below for failure messaging
   
   # This might not match exactly if there are differences in how
   # hierarchical events are created, but should be close
@@ -445,16 +442,21 @@ test_that("Can identify discrepancies between R and C++ likelihoods", {
   n_cpp <- nrow(cpp_data)
   n_r <- length(links)
   
-  cat(sprintf("\nComparison summary:\n"))
-  cat(sprintf("  C++ links: %d\n", n_cpp))
-  cat(sprintf("  R links: %d\n", n_r))
+  # Quiet by default; show comparison only when run interactively
+  if (interactive()) {
+    cat(sprintf("\nComparison summary:\n"))
+    cat(sprintf("  C++ links: %d\n", n_cpp))
+    cat(sprintf("  R links: %d\n", n_r))
+  }
   
   # Count -Inf cases (C++ uses string "-inf", need to check before converting)
   cpp_inf <- sum(cpp_data$LogLik == "-inf", na.rm = TRUE)
   r_inf <- sum(is.infinite(r_lls) & r_lls < 0)
   
-  cat(sprintf("  C++ -Inf: %d (%.1f%%)\n", cpp_inf, 100*cpp_inf/n_cpp))
-  cat(sprintf("  R -Inf: %d (%.1f%%)\n", r_inf, 100*r_inf/n_r))
+  if (interactive()) {
+    cat(sprintf("  C++ -Inf: %d (%.1f%%)\n", cpp_inf, 100*cpp_inf/n_cpp))
+    cat(sprintf("  R -Inf: %d (%.1f%%)\n", r_inf, 100*r_inf/n_r))
+  }
   
   # This test documents the current state - adjust expectations as needed
   expect_gt(n_r, 0)
