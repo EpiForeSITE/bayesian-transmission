@@ -44,7 +44,7 @@ test_that("runMCMC Works", {
     nburn = 2,
     outputparam = TRUE,
     outputfinal = TRUE,
-    verbose = TRUE
+    verbose = FALSE
   )
 })
 

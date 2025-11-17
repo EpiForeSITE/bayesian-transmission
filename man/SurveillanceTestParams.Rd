@@ -17,6 +17,9 @@ SurveillanceTestParams(
 
 \item{latent}{The rate of positive tests when the individual is in the (optional) latent state.}
 }
+\value{
+A list of parameters for surveillance testing.
+}
 \description{
 Specify the rates of positive tests for each state of the model.
 }

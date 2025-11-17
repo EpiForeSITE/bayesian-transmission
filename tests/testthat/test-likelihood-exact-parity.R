@@ -71,12 +71,10 @@ test_that("R and C++ produce identical initial log likelihood", {
   set.seed(42)
   results <- runMCMC(
     data = simulated.data_sorted,
-    MCMCParameters = list(
-      nburn = 0,
-      nsims = 1,
-      outputparam = TRUE,
-      outputfinal = TRUE
-    ),
+    nburn = 0,
+    nsims = 1,
+    outputparam = TRUE,
+    outputfinal = TRUE,
     modelParameters = params,
     verbose = FALSE
   )
@@ -167,12 +165,10 @@ test_that("Likelihood remains finite throughout MCMC run", {
   set.seed(123)
   results <- runMCMC(
     data = simulated.data_sorted,
-    MCMCParameters = list(
-      nburn = 10,
-      nsims = 20,
-      outputparam = TRUE,
-      outputfinal = TRUE
-    ),
+    nburn = 10,
+    nsims = 20,
+    outputparam = TRUE,
+    outputfinal = TRUE,
     modelParameters = params,
     verbose = FALSE
   )

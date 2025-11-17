@@ -227,9 +227,9 @@ OutOfUnitInfectionParams <- function(
 #' @param colonized Also known as the true positive rate for a two state model.
 #' @param uncolonized Also known as the false positive rate for a two state model.
 #' @param latent The rate of positive tests when the individual is in the (optional) latent state.
-#' 
-#' @rerurns A list of parameters for surveillance testing.
-#' 
+#'
+#' @returns A list of parameters for surveillance testing.
+#'
 #' @export
 #' @examples
 #' SurveillanceTestParams()
@@ -327,7 +327,8 @@ AbxRateParams <- function(
 #'  P(Acq(t)) = exp(β_time*(t-t0)) * {
 #'    exp(β_0) * [
 #'      (β_freq/P(t)
-#'    + (1-exp(β_freq))) * exp(β_mass) * ((N_c(t) - N_ca(t)) + exp(β_col_abx)*N_ca(t)) + 1 - exp(β_mass)]
+#'    + (1-exp(β_freq))) * exp(β_mass) * ((N_c(t) - N_ca(t)) + exp(β_col_abx)*N_ca(t)) + 1 - exp(β_mass)
+#'    ]
 #'  }
 #'  * [
 #'    N_S(t) - N_E(t) + exp(β_suss_ever)*((E_i(t)-A_i(t)) + A_i(t)*exp(β_suss_abx))
@@ -336,7 +337,7 @@ AbxRateParams <- function(
 #' where P(Acq(t)) is the acquisition probability at time t, with effects from time (β_time), 
 #' mass action (β_mass), frequency dependence (β_freq), 
 #' colonized individuals on antibiotics (β_col_abx), 
-#' and susceptible individuals currently (β_suss_abx) or ever (β_suss_ever) on antibiotics.}
+#' and susceptible individuals currently (β_suss_abx) or ever (β_suss_ever) on antibiotics.
 #'
 #' @param base The base rate of acquisition.
 #' @param time The time effect on acquisition.

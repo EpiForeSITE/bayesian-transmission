@@ -41,17 +41,40 @@ P(\mathrm{Acq(t)}) =
     \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
 \left\{e^{\beta_0}
     \left[
-        \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})\right)
+        \left(
+          \frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})
+        \right)
         e^{\beta_\mathrm{mass}}\left(
             (N_c(t) - N_{ca}(t)) + e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
             \right)
         + 1 - e^{\beta_\mathrm{mass}}
         \right]
     \right\}\\
-\left[
-    N_S(t) - N_E(t) + e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right) +A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
-    \right]
-}{TODO: Add equation to the documentation}
+ \left[
+     N_S(t) - N_E(t) +
+     e^{\beta_\mathrm{suss\_ever}}
+     \left(
+       \left(
+         E_i(t) - A_i(t)
+       \right)
+       + A_i(t)e^{\beta_\mathrm{suss\_abx}}
+     \right)
+ \right]
+}{
+ P(Acq(t)) = exp(β_time*(t-t0)) * {
+   exp(β_0) * [
+     (β_freq/P(t)
+   + (1-exp(β_freq))) * exp(β_mass) * ((N_c(t) - N_ca(t)) + exp(β_col_abx)*N_ca(t)) + 1 - exp(β_mass)
+   ]
+ }
+ * [
+   N_S(t) - N_E(t) + exp(β_suss_ever)*((E_i(t)-A_i(t)) + A_i(t)*exp(β_suss_abx))
+ ]
+}
+where P(Acq(t)) is the acquisition probability at time t, with effects from time (β_time),
+mass action (β_mass), frequency dependence (β_freq),
+colonized individuals on antibiotics (β_col_abx),
+and susceptible individuals currently (β_suss_abx) or ever (β_suss_ever) on antibiotics.
 }
 \examples{
 LinearAbxAcquisitionParams()

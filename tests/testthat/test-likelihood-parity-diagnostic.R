@@ -73,14 +73,12 @@ test_that("Diagnostic: Track where -Inf likelihood originates", {
   set.seed(42)
   results <- runMCMC(
     data = simulated.data_sorted,
-    MCMCParameters = list(
-      nburn = 0,
-      nsims = 1,
-      outputparam = TRUE,
-      outputfinal = TRUE
-    ),
+    nburn = 0,
+    nsims = 1,
+    outputparam = TRUE,
+    outputfinal = TRUE,
     modelParameters = params,
-    verbose = TRUE  # Keep verbose to see diagnostic output
+    verbose = FALSE  # Keep verbose to see diagnostic output
   )
   
   # Test 3: Check the initial likelihood
@@ -121,7 +119,7 @@ test_that("Diagnostic: Identify which parameter causes -Inf", {
   
   results_h1 <- runMCMC(
     data = simulated.data_sorted,
-    MCMCParameters = list(nburn = 0, nsims = 1, outputparam = TRUE, outputfinal = TRUE),
+    nburn = 0, nsims = 1, outputparam = TRUE, outputfinal = TRUE,
     modelParameters = params_h1,
     verbose = FALSE
   )
@@ -144,7 +142,7 @@ test_that("Diagnostic: Identify which parameter causes -Inf", {
   
   results_h2 <- runMCMC(
     data = simulated.data_sorted,
-    MCMCParameters = list(nburn = 0, nsims = 1, outputparam = TRUE, outputfinal = TRUE),
+    nburn = 0, nsims = 1, outputparam = TRUE, outputfinal = TRUE,
     modelParameters = params_h2,
     verbose = FALSE
   )
@@ -172,7 +170,7 @@ test_that("Diagnostic: Identify which parameter causes -Inf", {
   
   results_h3 <- runMCMC(
     data = simulated.data_sorted,
-    MCMCParameters = list(nburn = 0, nsims = 1, outputparam = TRUE, outputfinal = TRUE),
+    nburn = 0, nsims = 1, outputparam = TRUE, outputfinal = TRUE,
     modelParameters = params_h3,
     verbose = FALSE
   )

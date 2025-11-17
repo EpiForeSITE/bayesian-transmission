@@ -18,11 +18,15 @@ ABXInUnitParams(
 )
 }
 \arguments{
-\item{acquisition}{Acquisition, for rate of acquisition of the disease moving into latent state.}
+\item{acquisition}{Acquisition, for rate of acquisition of the disease moving into
+colonized(2-State)/latent(3-state) state.}
 
 \item{progression}{Progression from latent state to colonized state.}
 
 \item{clearance}{Clearance from colonized state to uncolonized state.}
+}
+\value{
+A list of parameters for in unit infection.
 }
 \description{
 In Unit Parameters

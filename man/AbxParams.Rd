@@ -13,6 +13,9 @@ AbxParams(onoff = FALSE, delay = 0, life = 1)
 
 \item{life}{The life of antibiotics.}
 }
+\value{
+list of parameters for antibiotic effect
+}
 \description{
 Antibiotic Parameters
 }

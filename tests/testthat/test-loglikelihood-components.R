@@ -19,7 +19,7 @@ test_that("Log likelihood components work correctly", {
   
   # Try to create a model
   model_result <- tryCatch({
-    newModelExport(modelParameters, verbose = TRUE)
+    newModelExport(modelParameters, verbose = FALSE)
   }, error = function(e) {
     list(error = e$message)
   })
@@ -97,14 +97,12 @@ test_that("Simple MCMC with minimal iterations", {
   results <- tryCatch({
     runMCMC(
       data = simulated.data,
-      MCMCParameters = list(
-        nburn = 0,  # No burn-in
-        nsims = 1,   # Just 1 iteration
-        outputparam = TRUE,
-        outputfinal = FALSE
-      ),
+      nburn = 0,  # No burn-in
+      nsims = 1,   # Just 1 iteration
+      outputparam = TRUE,
+      outputfinal = FALSE,
       modelParameters = modelParameters,
-      verbose = TRUE
+      verbose = FALSE
     )
   }, error = function(e) {
     list(error = e$message, trace = capture.output(traceback()))
