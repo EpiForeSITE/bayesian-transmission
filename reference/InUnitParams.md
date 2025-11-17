@@ -22,8 +22,8 @@ ABXInUnitParams(
 
 - acquisition:
 
-  Acquisition, for rate of acquisition of the disease moving into latent
-  state.
+  Acquisition, for rate of acquisition of the disease moving into
+  colonized(2-State)/latent(3-state) state.
 
 - progression:
 
@@ -32,6 +32,10 @@ ABXInUnitParams(
 - clearance:
 
   Clearance from colonized state to uncolonized state.
+
+## Value
+
+A list of parameters for in unit infection.
 
 ## Functions
 

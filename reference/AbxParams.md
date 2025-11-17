@@ -22,6 +22,10 @@ AbxParams(onoff = FALSE, delay = 0, life = 1)
 
   The life of antibiotics.
 
+## Value
+
+list of parameters for antibiotic effect
+
 ## Examples
 
 ``` r

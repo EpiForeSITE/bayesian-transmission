@@ -54,12 +54,16 @@ A list of parameters for acquisition.
 
 \$\$ P(\mathrm{Acq(t)}) =
 \left\[e^{\beta\_\mathrm{time}(t-t_0)}\right\]\\ \left\\e^{\beta_0}
-\left\[ \left(\frac{\beta\_\mathrm{freq}}{P(t)}+(1 -
-e^{\beta\_\mathrm{freq}})\right) e^{\beta\_\mathrm{mass}}\left(
+\left\[ \left( \frac{\beta\_\mathrm{freq}}{P(t)}+(1 -
+e^{\beta\_\mathrm{freq}}) \right) e^{\beta\_\mathrm{mass}}\left(
 (N_c(t) - N\_{ca}(t)) + e^{\beta\_\mathrm{col\\abx}}N\_{ca}(t) \right) +
 1 - e^{\beta\_\mathrm{mass}} \right\] \right\\\\ \left\[ N_S(t) -
-N_E(t) + e^{\beta\_\mathrm{suss\\ever}}\left(\left(E_i(t)-A_i(t)\right)
-+A_i(t)e^{\beta\_\mathrm{suss\\abx}}\right) \right\] \$\$
+N_E(t) + e^{\beta\_\mathrm{suss\\ever}} \left( \left( E_i(t) - A_i(t)
+\right) + A_i(t)e^{\beta\_\mathrm{suss\\abx}} \right) \right\] \$\$
+where P(Acq(t)) is the acquisition probability at time t, with effects
+from time (β_time), mass action (β_mass), frequency dependence (β_freq),
+colonized individuals on antibiotics (β_col_abx), and susceptible
+individuals currently (β_suss_abx) or ever (β_suss_ever) on antibiotics.
 
 ## Examples
 

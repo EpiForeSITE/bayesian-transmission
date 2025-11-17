@@ -96,17 +96,30 @@ P(\mathrm{Acq(t)}) =
     \left[e^{\beta_\mathrm{time}(t-t_0)}\right]\\
 \left\{e^{\beta_0}
     \left[
-        \left(\frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})\right)
+        \left(
+          \frac{\beta_\mathrm{freq}}{P(t)}+(1 - e^{\beta_\mathrm{freq}})
+        \right)
         e^{\beta_\mathrm{mass}}\left(
             (N_c(t) - N_{ca}(t)) + e^{\beta_\mathrm{col\_abx}}N_{ca}(t)
             \right)
         + 1 - e^{\beta_\mathrm{mass}}
         \right]
     \right\}\\
-\left[
-    N_S(t) - N_E(t) + e^{\beta_\mathrm{suss\_ever}}\left(\left(E_i(t)-A_i(t)\right) +A_i(t)e^{\beta_\mathrm{suss\_abx}}\right)
-    \right]
-$$</p>
+ \left[
+     N_S(t) - N_E(t) +
+     e^{\beta_\mathrm{suss\_ever}}
+     \left(
+       \left(
+         E_i(t) - A_i(t)
+       \right)
+       + A_i(t)e^{\beta_\mathrm{suss\_abx}}
+     \right)
+ \right]
+$$
+where P(Acq(t)) is the acquisition probability at time t, with effects from time (β_time),
+mass action (β_mass), frequency dependence (β_freq),
+colonized individuals on antibiotics (β_col_abx),
+and susceptible individuals currently (β_suss_abx) or ever (β_suss_ever) on antibiotics.</p>
     </div>
 
     <div class="section level2">

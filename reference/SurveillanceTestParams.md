@@ -27,6 +27,10 @@ SurveillanceTestParams(
   The rate of positive tests when the individual is in the (optional)
   latent state.
 
+## Value
+
+A list of parameters for surveillance testing.
+
 ## Examples
 
 ``` r
