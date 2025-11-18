@@ -1,4 +1,4 @@
-# bayesian-transmission
+# Bayesian Transmission Modeling
 
 ``` r
 library(bayestransmission)
@@ -78,7 +78,7 @@ specified models can be used. The currently implemented models are:
 
 Model specification and all parameters are controlled through
 constructor functions of the same name, or generically through the
-[`LogNormalModelParams()`](https://epiforesite.github.io/bayesian-transmission/reference/LogNormalModelParams.md)
+[`LogNormalModelParams()`](https://epiforesite.github.io/bayestransmission/reference/LogNormalModelParams.md)
 function.
 
 For all models there is the choice of either a 2 state (susceptible and
@@ -108,7 +108,7 @@ fixed or be sampled at each iteration of the MCMC.
 #### Specifying parameters
 
 Parameters for the model may be specified by the
-[`Param()`](https://epiforesite.github.io/bayesian-transmission/reference/Param.md)
+[`Param()`](https://epiforesite.github.io/bayestransmission/reference/Param.md)
 function. This function takes up to four arguments:
 
     1. `init`, is the initial value of the parameter.
@@ -136,7 +136,7 @@ Param(init = 0, weight = 0)
 
 Antibiotic use is specified by the `Abx` parameter. This parameter is a
 list constructed with the
-[`AbxParams()`](https://epiforesite.github.io/bayesian-transmission/reference/AbxParams.md)
+[`AbxParams()`](https://epiforesite.github.io/bayestransmission/reference/AbxParams.md)
 function with the following components:
 
 - `onoff`, If antibiotics are being used or not. The two following
@@ -173,11 +173,11 @@ typically fixed (weight = 0).
 
 Transmission within unit is the main defining characteristic that
 differentiates models. For example the linear antibiotic model,
-[`LinearAbxModel()`](https://epiforesite.github.io/bayesian-transmission/reference/LogNormalModelParams.md),
+[`LinearAbxModel()`](https://epiforesite.github.io/bayestransmission/reference/LogNormalModelParams.md),
 is differentiated from the log normal model,
-[`LogNormalModelParams()`](https://epiforesite.github.io/bayesian-transmission/reference/LogNormalModelParams.md)
+[`LogNormalModelParams()`](https://epiforesite.github.io/bayestransmission/reference/LogNormalModelParams.md)
 by the use of a
-[`ABXInUnitParams()`](https://epiforesite.github.io/bayesian-transmission/reference/InUnitParams.md)
+[`ABXInUnitParams()`](https://epiforesite.github.io/bayestransmission/reference/InUnitParams.md)
 for the `InUnit` argument rather than the `LogNormalInUnitAcquisition()`
 which does not take into account antibiotic use. All in unit
 transmission is defined in terms of acquisition, progression, and
@@ -374,7 +374,7 @@ params <- LinearAbxModel(
 ## Running the Model
 
 The model is run through the
-[`runMCMC()`](https://epiforesite.github.io/bayesian-transmission/reference/runMCMC.md)
+[`runMCMC()`](https://epiforesite.github.io/bayestransmission/reference/runMCMC.md)
 function. The function takes the following arguments:
 
 - `data`: The data frame with patient event data
@@ -399,7 +399,7 @@ system.time(
   )
 )
 #>    user  system elapsed 
-#> 204.062 133.089 168.895
+#> 172.984 158.879 166.302
 ```
 
 ## Analyzing MCMC Results
@@ -409,7 +409,7 @@ system.time(
 The `results$Parameters` object contains the MCMC chain of all model
 parameters. To create trace plots and posterior distributions, we use
 the
-[`mcmc_to_dataframe()`](https://epiforesite.github.io/bayesian-transmission/reference/mcmc_to_dataframe.md)
+[`mcmc_to_dataframe()`](https://epiforesite.github.io/bayestransmission/reference/mcmc_to_dataframe.md)
 function to convert this nested list structure into a tidy data frame
 format.
 

@@ -2,4 +2,5 @@
 
 ### All vignettes
 
-- [bayesian-transmission](https://epiforesite.github.io/bayesian-transmission/articles/bayesian-transmission.md):
+- [Bayesian Transmission
+  Modeling](https://epiforesite.github.io/bayestransmission/articles/bayesian-transmission.md):

@@ -2,7 +2,7 @@
 
 This is a sorted version of the simulated transmission data. The data is
 sorted by time, then by patient. See
-[`simulated.data`](https://epiforesite.github.io/bayesian-transmission/reference/simulated.data.md)
+[`simulated.data`](https://epiforesite.github.io/bayestransmission/reference/simulated.data.md)
 for column descriptions.
 
 ## Usage

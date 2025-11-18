@@ -19,10 +19,10 @@ newCppModel(modelParameters, verbose = FALSE)
   List of model parameters created using functions from constructors.R,
   such as:
 
-  - [`LogNormalModelParams()`](https://epiforesite.github.io/bayesian-transmission/reference/LogNormalModelParams.md) -
+  - [`LogNormalModelParams()`](https://epiforesite.github.io/bayestransmission/reference/LogNormalModelParams.md) -
     Basic log-normal model
 
-  - [`LinearAbxModel()`](https://epiforesite.github.io/bayesian-transmission/reference/LogNormalModelParams.md) -
+  - [`LinearAbxModel()`](https://epiforesite.github.io/bayestransmission/reference/LogNormalModelParams.md) -
     Linear antibiotic model
 
   - Or custom parameter lists containing:
@@ -39,27 +39,27 @@ newCppModel(modelParameters, verbose = FALSE)
     - `cheat`: Cheat flag for debugging
 
     - `Insitu`: In situ parameters from
-      [`InsituParams()`](https://epiforesite.github.io/bayesian-transmission/reference/InsituParams.md)
+      [`InsituParams()`](https://epiforesite.github.io/bayestransmission/reference/InsituParams.md)
 
     - `SurveillanceTest`: Surveillance test parameters from
-      [`SurveillanceTestParams()`](https://epiforesite.github.io/bayesian-transmission/reference/SurveillanceTestParams.md)
+      [`SurveillanceTestParams()`](https://epiforesite.github.io/bayestransmission/reference/SurveillanceTestParams.md)
 
     - `ClinicalTest`: Clinical test parameters from
-      [`ClinicalTestParams()`](https://epiforesite.github.io/bayesian-transmission/reference/RandomTestParams.md)
+      [`ClinicalTestParams()`](https://epiforesite.github.io/bayestransmission/reference/RandomTestParams.md)
 
     - `OutCol`: Out-of-unit infection parameters from
-      [`OutOfUnitInfectionParams()`](https://epiforesite.github.io/bayesian-transmission/reference/OutOfUnitInfectionParams.md)
+      [`OutOfUnitInfectionParams()`](https://epiforesite.github.io/bayestransmission/reference/OutOfUnitInfectionParams.md)
 
     - `InCol`: In-unit parameters from
-      [`InUnitParams()`](https://epiforesite.github.io/bayesian-transmission/reference/InUnitParams.md)
+      [`InUnitParams()`](https://epiforesite.github.io/bayestransmission/reference/InUnitParams.md)
       or
-      [`ABXInUnitParams()`](https://epiforesite.github.io/bayesian-transmission/reference/InUnitParams.md)
+      [`ABXInUnitParams()`](https://epiforesite.github.io/bayestransmission/reference/InUnitParams.md)
 
     - `Abx`: Antibiotic parameters from
-      [`AbxParams()`](https://epiforesite.github.io/bayesian-transmission/reference/AbxParams.md)
+      [`AbxParams()`](https://epiforesite.github.io/bayestransmission/reference/AbxParams.md)
 
     - `AbxRate`: Antibiotic rate parameters from
-      [`AbxRateParams()`](https://epiforesite.github.io/bayesian-transmission/reference/AbxRateParams.md)
+      [`AbxRateParams()`](https://epiforesite.github.io/bayestransmission/reference/AbxRateParams.md)
 
 - verbose:
 
@@ -119,17 +119,17 @@ R reference class based on the model type specified in
 
 ## See also
 
-- [`LogNormalModelParams()`](https://epiforesite.github.io/bayesian-transmission/reference/LogNormalModelParams.md)
+- [`LogNormalModelParams()`](https://epiforesite.github.io/bayestransmission/reference/LogNormalModelParams.md)
   for creating model parameters
 
-- [`LinearAbxModel()`](https://epiforesite.github.io/bayesian-transmission/reference/LogNormalModelParams.md)
+- [`LinearAbxModel()`](https://epiforesite.github.io/bayestransmission/reference/LogNormalModelParams.md)
   for linear antibiotic model parameters
 
-- [`InsituParams()`](https://epiforesite.github.io/bayesian-transmission/reference/InsituParams.md),
-  [`SurveillanceTestParams()`](https://epiforesite.github.io/bayesian-transmission/reference/SurveillanceTestParams.md),
+- [`InsituParams()`](https://epiforesite.github.io/bayestransmission/reference/InsituParams.md),
+  [`SurveillanceTestParams()`](https://epiforesite.github.io/bayestransmission/reference/SurveillanceTestParams.md),
   etc. for parameter components
 
-- [`newModelExport()`](https://epiforesite.github.io/bayesian-transmission/reference/newModelExport.md)
+- [`newModelExport()`](https://epiforesite.github.io/bayestransmission/reference/newModelExport.md)
   for extracting parameter values from a model
 
 ## Examples

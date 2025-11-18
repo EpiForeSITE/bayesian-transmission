@@ -15,7 +15,7 @@ mcmc_to_dataframe(mcmc_results)
 - mcmc_results:
 
   The results object returned by
-  [`runMCMC()`](https://epiforesite.github.io/bayesian-transmission/reference/runMCMC.md).
+  [`runMCMC()`](https://epiforesite.github.io/bayestransmission/reference/runMCMC.md).
   Must contain a `Parameters` component and a `LogLikelihood` component.
 
 ## Value

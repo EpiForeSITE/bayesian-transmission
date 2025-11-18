@@ -16,12 +16,12 @@
 
 Redd A (2025). *bayestransmission: Bayesian Transmission Models*. R
 package version 0.0.0.9000,
-<https://epiforesite.github.io/bayesian-transmission/>.
+<https://epiforesite.github.io/bayestransmission/>.
 
     @Manual{,
       title = {bayestransmission: Bayesian Transmission Models},
       author = {Andrew Redd},
       year = {2025},
       note = {R package version 0.0.0.9000},
-      url = {https://epiforesite.github.io/bayesian-transmission/},
+      url = {https://epiforesite.github.io/bayestransmission/},
     }

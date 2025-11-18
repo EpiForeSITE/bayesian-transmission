@@ -22,14 +22,14 @@ install.packages("bayestransmission")
 
 To get a bug fix or to use a feature from the development version, you
 can install the development version of `bayestransmission` from
-[GitHub](https://github.com/EpiForeSITE/bayesian-transmission) with:
+[GitHub](https://github.com/EpiForeSITE/bayestransmission) with:
 
 You can install the development version of bayestransmission from GitHub
 with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("EpiForeSITE/bayesian-transmission")
+devtools::install_github("EpiForeSITE/bayestransmission")
 ```
 
 ### System Requirements

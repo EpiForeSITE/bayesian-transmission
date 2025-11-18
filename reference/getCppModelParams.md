@@ -2,7 +2,7 @@
 
 Convenience function to extract all parameter values from a C++ model
 object created with
-[`newCppModel()`](https://epiforesite.github.io/bayesian-transmission/reference/newCppModel.md).
+[`newCppModel()`](https://epiforesite.github.io/bayestransmission/reference/newCppModel.md).
 This is essentially a wrapper around accessing the model's parameter
 properties.
 
@@ -17,7 +17,7 @@ getCppModelParams(model)
 - model:
 
   A C++ model object created with
-  [`newCppModel()`](https://epiforesite.github.io/bayesian-transmission/reference/newCppModel.md)
+  [`newCppModel()`](https://epiforesite.github.io/bayestransmission/reference/newCppModel.md)
 
 ## Value
 
