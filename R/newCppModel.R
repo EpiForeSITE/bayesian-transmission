@@ -133,12 +133,15 @@ newCppModel <- function(modelParameters, verbose = FALSE) {
 #' @param model A C++ model object created with `newCppModel()`
 #'
 #' @return A named list containing all model parameter values:
-#'   * `Insitu` - In situ parameter values
-#'   * `SurveillanceTest` - Surveillance test parameter values
-#'   * `ClinicalTest` - Clinical test parameter values
-#'   * `OutCol` - Out-of-unit colonization parameter values
-#'   * `InCol` - In-unit colonization parameter values
-#'   * `Abx` - Antibiotic parameter values (if applicable)
+#'   * `Insitu` - Named numeric vector of in situ parameter values
+#'   * `SurveillanceTest` - Named numeric vector of surveillance test parameter values
+#'   * `ClinicalTest` - Named numeric vector of clinical test parameter values
+#'   * `OutCol` - Named numeric vector of out-of-unit colonization parameter values
+#'   * `InCol` - Named numeric vector of in-unit colonization parameter values
+#'   * `Abx` - Named numeric vector of antibiotic parameter values (if applicable)
+#'
+#'   If a component's names cannot be determined or lengths mismatch, the vector
+#'   is returned unnamed.
 #'
 #' @export
 #'
@@ -157,44 +160,67 @@ getCppModelParams <- function(model) {
   
   # Try to access each parameter component
   # Use tryCatch in case some are NULL
+  assign_named <- function(values, names_vec) {
+    if (is.null(values)) return(values)
+    if (!is.null(names_vec) && length(names_vec) == length(values)) {
+      names(values) <- names_vec
+    }
+    values
+  }
+
+  # InsituParams
   tryCatch({
-    result$Insitu <- model$InsituParams$values
-  }, error = function(e) {
-    result$Insitu <<- NULL
-  })
-  
+    vals <- model$InsituParams$values
+    nms <- NULL
+    if (!is.null(model$InsituParams$paramNames)) nms <- model$InsituParams$paramNames
+    result$Insitu <- assign_named(vals, nms)
+  }, error = function(e) { result$Insitu <<- NULL })
+
+  # SurveillanceTestParams (Random/TestParams use 'names')
   tryCatch({
-    result$SurveillanceTest <- model$SurveillanceTestParams$values
-  }, error = function(e) {
-    result$SurveillanceTest <<- NULL
-  })
-  
+    vals <- model$SurveillanceTestParams$values
+    nms <- NULL
+    if (!is.null(model$SurveillanceTestParams$names)) nms <- model$SurveillanceTestParams$names
+    result$SurveillanceTest <- assign_named(vals, nms)
+  }, error = function(e) { result$SurveillanceTest <<- NULL })
+
+  # ClinicalTestParams (RandomTestParams inherits TestParams)
   tryCatch({
-    result$ClinicalTest <- model$ClinicalTestParams$values
-  }, error = function(e) {
-    result$ClinicalTest <<- NULL
-  })
-  
+    vals <- model$ClinicalTestParams$values
+    nms <- NULL
+    if (!is.null(model$ClinicalTestParams$names)) nms <- model$ClinicalTestParams$names
+    result$ClinicalTest <- assign_named(vals, nms)
+  }, error = function(e) { result$ClinicalTest <<- NULL })
+
+  # OutColParams (has names property)
   tryCatch({
-    result$OutCol <- model$OutColParams$values
-  }, error = function(e) {
-    result$OutCol <<- NULL
-  })
-  
+    vals <- model$OutColParams$values
+    nms <- NULL
+    if (!is.null(model$OutColParams$names)) nms <- model$OutColParams$names
+    result$OutCol <- assign_named(vals, nms)
+  }, error = function(e) { result$OutCol <<- NULL })
+
+  # InColParams (LogNormalAbxICP / LogNormalICP provide names)
   tryCatch({
-    result$InCol <- model$InColParams$values
-  }, error = function(e) {
-    result$InCol <<- NULL
-  })
-  
+    vals <- model$InColParams$values
+    nms <- NULL
+    # Some implementations expose 'names'; others may expose 'paramNames'
+    if (!is.null(model$InColParams$names)) nms <- model$InColParams$names else if (!is.null(model$InColParams$paramNames)) nms <- model$InColParams$paramNames
+    result$InCol <- assign_named(vals, nms)
+  }, error = function(e) { result$InCol <<- NULL })
+
+  # AbxParams
   tryCatch({
     abx_params <- model$AbxParams
     if (!is.null(abx_params)) {
-      result$Abx <- abx_params$values
+      vals <- abx_params$values
+      nms <- NULL
+      if (!is.null(abx_params$names)) nms <- abx_params$names
+      result$Abx <- assign_named(vals, nms)
+    } else {
+      result$Abx <- NULL
     }
-  }, error = function(e) {
-    result$Abx <<- NULL
-  })
+  }, error = function(e) { result$Abx <<- NULL })
   
   return(result)
 }
