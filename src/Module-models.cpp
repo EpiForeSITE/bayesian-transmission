@@ -36,6 +36,8 @@ RCPP_EXPOSED_AS(infect::Unit)
 RCPP_EXPOSED_AS(infect::UnitEpisodeHistory)
 RCPP_EXPOSED_AS(models::TestParams)
 RCPP_EXPOSED_AS(models::InsituParams)
+RCPP_EXPOSED_AS(models::OutColParams)
+RCPP_EXPOSED_AS(models::AbxParams)
 
 void init_Module_models(){
     class_<models::TestParams>("CppTestParams")
@@ -75,7 +77,16 @@ void init_Module_models(){
     class_<OutColParams>("CppOutColParams")
         .derives<util::Object>("CppObject")
         .property("NStates", &models::OutColParams::getNStates)
+        .property("values", &models::OutColParams::getValues)
+        .property("names", &models::OutColParams::paramNames)
         .method("logProb", &models::OutColParams::logProb)
+    ;
+    
+    class_<models::AbxParams>("CppAbxParams")
+        .derives<util::Object>("CppObject")
+        .property("NStates", &models::AbxParams::getNStates)
+        .property("values", &models::AbxParams::getValues)
+        .property("names", &models::AbxParams::paramNames)
     ;
     class_<models::UnitLinkedModel>("CppUnitLinkedModel")
         .derives<infect::Model>("CppModel")

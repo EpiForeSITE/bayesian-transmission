@@ -58,6 +58,7 @@ void init_Module_lognormal(){
         .method("logProbGap", &lognormal::LogNormalICP::logProbGap)
         .method("unTransform", &lognormal::LogNormalICP::unTransform)
         .property("names", &lognormal::LogNormalICP::paramNames)
+        .property("values", &lognormal::LogNormalICP::getValues)
         .property("timeOrigin", &lognormal::LogNormalICP::getTimeOrigin, &lognormal::LogNormalICP::setTimeOrigin)
     ;
 

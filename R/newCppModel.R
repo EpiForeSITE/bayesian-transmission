@@ -143,14 +143,11 @@ newCppModel <- function(modelParameters, verbose = FALSE) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' params <- LinearAbxModel()
 #' model <- newCppModel(params)
 #' 
 #' # Extract all parameters
-#' all_params <- getCppModelParams(model)
-#' print(all_params$InCol)
-#' }
+#' getCppModelParams(model)
 getCppModelParams <- function(model) {
   if (!inherits(model, "C++Object")) {
     stop("model must be a C++ model object created with newCppModel()")

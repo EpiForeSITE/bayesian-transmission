@@ -12,7 +12,7 @@ Authors@R: c(
 Description: Provides Bayesian inference methods for infectious disease transmission 
     models in healthcare settings. Implements Markov Chain Monte Carlo (MCMC) algorithms 
     for estimating transmission parameters from patient-level data including admission, 
-    discharge, and testing events.
+    discharge, and testing events as described in Thomas, Et Al. (2015) <doi:10.1093/imammb/dqt021>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
