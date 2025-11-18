@@ -110,6 +110,22 @@ lognormal::LogNormalModel* newModel(
 //'   * `waic1` the WAIC1 estimate
 //'   * `waic2` the WAIC2 estimate
 //'   * and optionally (if outputfinal=TRUE) `FinalModel` the final model state.
+//' @examples
+//' \dontrun{
+//'   # Minimal example: create parameters and run a very short MCMC
+//'   params <- LinearAbxModel(nstates = 2)
+//'   data(simulated.data_sorted, package = "bayestransmission")
+//'   results <- runMCMC(
+//'     data = simulated.data_sorted,
+//'     modelParameters = params,
+//'     nsims = 1,
+//'     nburn = 0,
+//'     outputparam = TRUE,
+//'     outputfinal = FALSE,
+//'     verbose = FALSE
+//'   )
+//'   str(results)
+//' }
 //' @export
 // [[Rcpp::export]]
 SEXP runMCMC(
@@ -396,7 +412,8 @@ SEXP newModelExport(
 //'   * `linkLogLikelihoods` - vector of log likelihoods for each link
 //'   * `overallLogLikelihood` - total log likelihood from model->logLikelihood()
 //'   * `numLinks` - number of history links
-//' @export
+//' @keywords internal
+//' @noRd
 // [[Rcpp::export]]
 Rcpp::List testHistoryLinkLogLikelihoods(Rcpp::List modelParameters) {
     
@@ -463,7 +480,8 @@ Rcpp::List testHistoryLinkLogLikelihoods(Rcpp::List modelParameters) {
 //' The returned object provides access to model methods and properties including:
 //'   * InColParams, OutColParams, InsituParams, etc.
 //'   * logLikelihood(), getHistoryLinkLogLikelihoods(), etc.
-//' @export
+//' @keywords internal
+//' @noRd
 // [[Rcpp::export]]
 SEXP newCppModelInternal(
     Rcpp::List modelParameters,

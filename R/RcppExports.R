@@ -88,7 +88,8 @@ newModelExport <- function(modelParameters, verbose = FALSE) {
 #'   * `linkLogLikelihoods` - vector of log likelihoods for each link
 #'   * `overallLogLikelihood` - total log likelihood from model->logLikelihood()
 #'   * `numLinks` - number of history links
-#' @export
+#' @keywords internal
+#' @noRd
 testHistoryLinkLogLikelihoods <- function(modelParameters) {
     .Call(`_bayestransmission_testHistoryLinkLogLikelihoods`, modelParameters)
 }
@@ -111,7 +112,8 @@ testHistoryLinkLogLikelihoods <- function(modelParameters) {
 #' The returned object provides access to model methods and properties including:
 #'   * InColParams, OutColParams, InsituParams, etc.
 #'   * logLikelihood(), getHistoryLinkLogLikelihoods(), etc.
-#' @export
+#' @keywords internal
+#' @noRd
 newCppModelInternal <- function(modelParameters, verbose = FALSE) {
     .Call(`_bayestransmission_newCppModelInternal`, modelParameters, verbose)
 }
