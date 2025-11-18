@@ -1,4 +1,4 @@
 # License
 
     YEAR: 2025
-    COPYRIGHT HOLDER: Andrew Redd
+    COPYRIGHT HOLDER: University of Utah

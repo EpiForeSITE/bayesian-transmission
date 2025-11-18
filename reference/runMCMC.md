@@ -70,3 +70,23 @@ A list with the following elements:
 
 - and optionally (if outputfinal=TRUE) `FinalModel` the final model
   state.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+  # Minimal example: create parameters and run a very short MCMC
+  params <- LinearAbxModel(nstates = 2)
+  data(simulated.data_sorted, package = "bayestransmission")
+  results <- runMCMC(
+    data = simulated.data_sorted,
+    modelParameters = params,
+    nsims = 1,
+    nburn = 0,
+    outputparam = TRUE,
+    outputfinal = FALSE,
+    verbose = FALSE
+  )
+  str(results)
+} # }
+```

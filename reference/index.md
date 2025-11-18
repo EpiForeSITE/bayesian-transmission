@@ -41,8 +41,6 @@
   : Convert MCMC Parameters to Data Frame
 - [`newCppModel()`](https://epiforesite.github.io/bayestransmission/reference/newCppModel.md)
   : Create a new C++ model object with parameters
-- [`newCppModelInternal()`](https://epiforesite.github.io/bayestransmission/reference/newCppModelInternal.md)
-  : Create a new C++ model object wrapped in appropriate reference class
 - [`newModelExport()`](https://epiforesite.github.io/bayestransmission/reference/newModelExport.md)
   : Create a new model object
 - [`runMCMC()`](https://epiforesite.github.io/bayestransmission/reference/runMCMC.md)
@@ -51,5 +49,3 @@
   : Simulated Transmission Data
 - [`simulated.data_sorted`](https://epiforesite.github.io/bayestransmission/reference/simulated.data_sorted.md)
   : Simulated Transmission Data (Sorted)
-- [`testHistoryLinkLogLikelihoods()`](https://epiforesite.github.io/bayestransmission/reference/testHistoryLinkLogLikelihoods.md)
-  : Get Individual HistoryLink Log Likelihoods (Diagnostic Function)

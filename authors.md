@@ -5,6 +5,10 @@
 - **Andrew Redd**. Author, maintainer.
   [](https://orcid.org/0000-0002-6149-2438)
 
+- **Alun Thomas**. Author.
+
+- **University of Utah**. Copyright holder.
+
 - **CDC's Center for Forecasting and Outbreak Analytics**. Funder.  
   This project was made possible by cooperative agreement
   CDC-RFA-FT-23-0069 (grant \# NU38FT000009-01-00) from the CDC's Center
@@ -14,13 +18,13 @@
 
 ## Citation
 
-Redd A (2025). *bayestransmission: Bayesian Transmission Models*. R
-package version 0.0.0.9000,
+Redd A, Thomas A (2025). *bayestransmission: Bayesian Transmission
+Models*. R package version 0.0.0.9000,
 <https://epiforesite.github.io/bayestransmission/>.
 
     @Manual{,
       title = {bayestransmission: Bayesian Transmission Models},
-      author = {Andrew Redd},
+      author = {Andrew Redd and Alun Thomas},
       year = {2025},
       note = {R package version 0.0.0.9000},
       url = {https://epiforesite.github.io/bayestransmission/},
