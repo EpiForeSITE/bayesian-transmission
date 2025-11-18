@@ -1,8 +1,8 @@
 ---
-title: "bayesian-transmission"
+title: "Bayesian Transmission Modeling"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{bayesian-transmission}
+  %\VignetteIndexEntry{bayestransmission}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

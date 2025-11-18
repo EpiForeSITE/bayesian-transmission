@@ -1,7 +1,7 @@
 # Likelihood Computation Documentation
 
 **Date:** October 30, 2025  
-**Purpose:** Comprehensive documentation of how likelihoods are computed for each event type in the bayesian-transmission package  
+**Purpose:** Comprehensive documentation of how likelihoods are computed for each event type in the bayestransmission package  
 **Focus:** Actual implementation in code, noting any deviations from expected statistical practices
 
 ---
@@ -700,4 +700,4 @@ These choices are **reasonable** for many applications but should be considered 
 
 **Document Author:** AI Analysis  
 **Last Updated:** October 30, 2025  
-**Code Version:** bayesian-transmission main branch
+**Code Version:** bayestransmission main branch

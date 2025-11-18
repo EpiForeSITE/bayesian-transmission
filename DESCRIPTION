@@ -38,5 +38,5 @@ Suggests:
     rmarkdown,
     pillar
 RcppModules: Infect
-URL: https://epiforesite.github.io/bayesian-transmission/
+URL: https://epiforesite.github.io/bayestransmission/
 VignetteBuilder: knitr
