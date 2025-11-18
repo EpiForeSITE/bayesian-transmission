@@ -34,11 +34,3 @@ Creates and initializes a model object based on the provided parameters.
 This allows direct creation and inspection of model objects without running MCMC.
 Returns a list with all model parameter values for verification.
 }
-
-\examples{
-\dontrun{
-	params <- LinearAbxModel(nstates = 2)
-	model_export <- newModelExport(params, verbose = FALSE)
-	names(model_export)
-}
-}

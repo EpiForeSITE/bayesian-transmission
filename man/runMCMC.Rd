@@ -46,7 +46,6 @@ A list with the following elements:
 \description{
 Run Bayesian Transmission MCMC
 }
-
 \examples{
 \dontrun{
   # Minimal example: create parameters and run a very short MCMC
